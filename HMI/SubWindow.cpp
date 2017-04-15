@@ -5,6 +5,7 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      QWidget* pParent):QMdiSubWindow(pParent),
                                        m_WidgetManipImage(this),
                                        m_qFileInfo(qFileInfo),
+                                       m_qImage(qImage),
                                        m_pqActionSelectImage(nullptr)
 {
    setMouseTracking(true);
@@ -12,7 +13,7 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
 
-   m_WidgetManipImage.setImage(qImage);
+   m_WidgetManipImage.setImage(m_qImage);
    setWidget(m_WidgetManipImage);
 }
 
@@ -187,7 +188,39 @@ WidgetManipImage& SubWindow::GetWidgetManipImage(void)
    return m_WidgetManipImage;
 }
 
+bool SubWindow::bIsPalette(void) const
+{
+   if(m_qImage.colorCount() == 0)
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
+}
+
+unsigned int SubWindow::uiNbColorDefined(void) const
+{
+   QMap<QRgba64, unsigned int> qmapColor;
+   for(int x = 0; x < m_qImage.width(); x++)
+   {
+      for(int y = 0; y < m_qImage.height(); y++)
+      {
+         QColor qColorPix = m_qImage.pixelColor(x, y);
+         qmapColor[qColorPix.rgba64()]++;
+      }
+   }
+
+   return qmapColor.size();
+}
+
 QPixmap SubWindow::qPixmap(void) const
 {
    return m_WidgetManipImage.qPixmap();
+}
+
+QImage SubWindow::qImage(void) const
+{
+   return m_qImage;
 }

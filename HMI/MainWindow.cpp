@@ -8,9 +8,12 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
-                                          m_pLabelSizePicture(nullptr)
+                                          m_pLabelSizePicture(nullptr),
+                                          m_pWidgetManipColor(nullptr)
 {
    SetMenuAndToolbar();
+   CreateDockWindow();
+   CreateCentralWidget();
 
    ReadSettings();
 
@@ -137,15 +140,6 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
 
    // On ajoute les images sélectionnés sur le widget central
    MdiArea* pqMdiArea = dynamic_cast<MdiArea*>(centralWidget());
-   if(pqMdiArea == nullptr)
-   {
-      pqMdiArea = new MdiArea(this);
-      setCentralWidget(pqMdiArea);
-
-      connect(pqMdiArea, &MdiArea::CleanStatusBar,
-              this, &MainWindow::CleanStatusBar);
-   }
-
    foreach(const QString& qstrFile, qlstrListFiles)
    {
       if(bImageExist(qstrFile) == true)
@@ -294,6 +288,25 @@ void MainWindow::closeEvent(QCloseEvent* pqEvent)
    QMainWindow::closeEvent(pqEvent);
 }
 
+void MainWindow::SubWindowActivated(QMdiSubWindow* pMdiSubWindow)
+{
+   if(pMdiSubWindow == nullptr)
+   {
+      m_pWidgetManipColor->hide();
+   }
+   else
+   {
+      SubWindow* pSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
+      m_pWidgetManipColor->SetSizePalette(pSubWindow->qImage().colorCount());
+      m_pWidgetManipColor->SetColorNumber(pSubWindow->uiNbColorDefined());
+      m_pWidgetManipColor->SetDepth(pSubWindow->qImage().depth());
+      m_pWidgetManipColor->SetBitsUsedPerPixel(
+                                       pSubWindow->qImage().bitPlaneCount());
+      m_pWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
+      m_pWidgetManipColor->show();
+   }
+}
+
 bool MainWindow::bImageExist(const QString& qstrAbsoluteFilePath) const
 {
    if(centralWidget() == nullptr)
@@ -330,4 +343,25 @@ void MainWindow::RedrawAllImage(void)
    {
       dynamic_cast<SubWindow*>(pMdiSubWindow)->Redraw();
    }
+}
+
+void MainWindow::CreateDockWindow(void)
+{
+   QDockWidget* pqDock = new QDockWidget(tr("Color"), this);
+   pqDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+
+   m_pWidgetManipColor = new WidgetManipColor(this);
+   pqDock->setWidget(m_pWidgetManipColor);
+
+   addDockWidget(Qt::RightDockWidgetArea, pqDock);
+}
+
+void MainWindow::CreateCentralWidget(void)
+{
+   MdiArea* pqMdiArea = new MdiArea(this);
+   setCentralWidget(pqMdiArea);
+   connect(pqMdiArea, &MdiArea::CleanStatusBar,
+           this, &MainWindow::CleanStatusBar);
+   connect(pqMdiArea, &QMdiArea::subWindowActivated,
+           this, &MainWindow::SubWindowActivated);
 }

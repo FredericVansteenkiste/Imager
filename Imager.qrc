@@ -4,5 +4,8 @@
         <file>HMI/Icones/image.png</file>
         <file>HMI/Icones/resize.png</file>
         <file>HMI/Icones/ArrierePlan.png</file>
+        <file>HMI/Icones/crayon.png</file>
+        <file>HMI/Icones/loupe.png</file>
+        <file>HMI/Icones/baguette_magique.png</file>
     </qresource>
 </RCC>

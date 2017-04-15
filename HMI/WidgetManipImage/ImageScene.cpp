@@ -24,7 +24,8 @@ ImageScene::~ImageScene()
 void ImageScene::setPixmap(const QPixmap& qPixmap)
 {
    m_pqGraphicsPixmapItem->setPixmap(qPixmap);
-   ScaleImage(1.0);
+   ScaleImage(dScale());
+   m_pqCadreItem->setRect(m_pqGraphicsPixmapItem->boundingRect());
 }
 
 QPixmap ImageScene::qPixmap(void) const

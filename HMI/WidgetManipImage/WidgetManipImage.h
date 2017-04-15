@@ -29,9 +29,9 @@ public:
 
 private:
    // Scene where the image is drawn
-   ImageScene*          m_pqGraphicsScene;
+   ImageScene*   m_pqGraphicsScene;
    // View to display the image
-   ImageView*           m_pqGraphicsView;
+   ImageView*    m_pqGraphicsView;
 
    // J'interdis toute forme de recopie de ma classe:
    WidgetManipImage(const WidgetManipImage&);

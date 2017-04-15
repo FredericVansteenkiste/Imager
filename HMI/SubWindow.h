@@ -20,7 +20,10 @@ public:
    QAction* pqActionSelectImage(void);
    void Redraw(void);
    QPixmap qPixmap(void) const;
+   QImage  qImage(void) const;
    WidgetManipImage& GetWidgetManipImage(void);
+   bool bIsPalette(void) const;
+   unsigned int uiNbColorDefined(void) const;
 
 signals:
    void closeWindow(SubWindow* pSubWindow);
@@ -39,6 +42,7 @@ protected:
 private:
    WidgetManipImage m_WidgetManipImage;
    QFileInfo        m_qFileInfo;
+   QImage           m_qImage;
    QAction*         m_pqActionSelectImage;
 
    // J'interdis toute forme de recopie de ma classe:

@@ -6,6 +6,7 @@
 
 #include "MdiArea.h"
 #include "SubWindow.h"
+#include "WidgetManipColor.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,19 +26,23 @@ private slots:
    void UpdateLabelSizePicture(const QString& qstrLabel);
    void CleanStatusBar(void);
    virtual void closeEvent(QCloseEvent* pqEvent);
+   void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
 
 private:
-   QAction* m_pActionReduceImage;
-   QMenu*   m_pWindowMenu;
-   QLabel*  m_pLabelCoordMouse;
-   QLabel*  m_pLabelColorPixel;
-   QLabel*  m_pLabelSizePicture;
+   QAction*          m_pActionReduceImage;
+   QMenu*            m_pWindowMenu;
+   QLabel*           m_pLabelCoordMouse;
+   QLabel*           m_pLabelColorPixel;
+   QLabel*           m_pLabelSizePicture;
+   WidgetManipColor* m_pWidgetManipColor;
 
    void SetMenuAndToolbar(void);
    void ReadSettings(void);
    void WriteSettings(void) const;
    void OpenListFile(const QStringList& qlstrListFiles);
    void RedrawAllImage(void);
+   void CreateDockWindow(void);
+   void CreateCentralWidget(void);
 
    bool bImageExist(const QString& qstrAbsoluteFilePath) const;
 
