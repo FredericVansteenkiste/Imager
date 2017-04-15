@@ -171,6 +171,18 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+/*   QScrollBar* pHorScrollBar = GetWidgetManipImage()
+                                          .pImageView()
+                                         ->horizontalScrollBar();
+   QScrollBar* pVerScrollBar = GetWidgetManipImage()
+                                          .pImageView()
+                                         ->verticalScrollBar();
+   qDebug() << pHorScrollBar->isEnabled();
+   qDebug() << pHorScrollBar->isHidden();
+   qDebug() << pHorScrollBar->height();
+   qDebug() << pVerScrollBar->isEnabled();
+   qDebug() << pVerScrollBar->isHidden();
+   qDebug() << pVerScrollBar->width();*/
 }
 
 void SubWindow::SelectSubWindow(void)

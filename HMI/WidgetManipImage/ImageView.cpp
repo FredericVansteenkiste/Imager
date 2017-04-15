@@ -14,15 +14,15 @@ ImageView::ImageView(QWidget* pParent):
 
    setCacheMode(QGraphicsView::CacheBackground);
 
-   // Sur windows, je dois désactiver les scrollbars dans les coins de l'image,
-   // sinon si j'ouvre un grand nombre d'image j'ai des resizeEvent qui sont
-   // continuellement émis. Causes inconnues : à explorer
+   // Sur windows, je dois activer les scrollbars en permance, sinon si j'ouvre
+   // un grand nombre d'image j'ai des resizeEvent qui sont continuellement
+   // émis. Causes inconnues : à explorer
    // Ce problème n'apparait pas sous Linux; YES vive linux !!!
 #ifdef Q_OS_WIN
-   // Disable scroll bar to avoid an unwanted resize recursion
+   // Enable scroll bar to avoid an unwanted resize recursion
    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-#endif
+#endif   // Q_OS_WIN
 
    setBackgroundBrush(QBrush(QPixmap(ADRESS_BACKGROUND_PICTURE)));
 }

@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
    UpdateLabelCoordMouse(QString());
    UpdateLabelColorPixel(QString());
    UpdateLabelSizePicture(QString());
+   SubWindowActivated(nullptr);
 
    QStringList qlstrArguments(qApp->arguments());
    qlstrArguments.removeFirst();
@@ -168,6 +169,7 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       // On crée un fenêtre avec notre image
       SubWindow* pSubWindow = new SubWindow(qFileInfo, qImage, this);
       pqMdiArea->addSubWindow(pSubWindow);
+
       m_pActionReduceImage->setEnabled(true);
       m_pActionAppelMacro->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
@@ -175,6 +177,25 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       connect(m_pActionAppelMacro, &QAction::triggered,
               pSubWindow, &SubWindow::AppelMacro);
       pSubWindow->show();
+
+      // Si les scrollbars sont actives, il faut prendre en compte leurs
+      // dimensions.
+      QSize qSizeSubWindow = pSubWindow->size();
+      QScrollBar* pHorScrollBar = pSubWindow->GetWidgetManipImage()
+                                             .pImageView()
+                                            ->horizontalScrollBar();
+      if(pHorScrollBar->isHidden() == false)
+      {
+         qSizeSubWindow.rheight() += pHorScrollBar->height();
+      }
+      QScrollBar* pVerScrollBar = pSubWindow->GetWidgetManipImage()
+                                             .pImageView()
+                                            ->verticalScrollBar();
+      if(pVerScrollBar->isHidden() == false)
+      {
+         qSizeSubWindow.rwidth() += pVerScrollBar->width();
+      }
+      pSubWindow->resize(qSizeSubWindow);
 
       QAction* pActionSelectImage = new QAction(qFileInfo.fileName(), this);
       connect(pActionSelectImage, &QAction::triggered,
