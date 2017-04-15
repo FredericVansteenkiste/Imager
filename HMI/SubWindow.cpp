@@ -1,18 +1,17 @@
 #include "SubWindow.h"
 
-SubWindow::SubWindow(const QFileInfo& qFileInfo, QWidget *parent):
-                                                QMdiSubWindow(parent),
-                                                m_WidgetManipImage(true, this),
-                                                m_qFileInfo(qFileInfo),
-                                                m_pActionSelectImage(nullptr)
+SubWindow::SubWindow(const QFileInfo& qFileInfo,
+                     const QImage& qImage,
+                     QWidget *parent):QMdiSubWindow(parent),
+                                      m_WidgetManipImage(this),
+                                      m_qFileInfo(qFileInfo),
+                                      m_pqActionSelectImage(nullptr)
 {
    setAttribute(Qt::WA_DeleteOnClose);
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
 
-   m_WidgetManipImage.setImage(QImage(qstrAbsoluteFilePath()));
-//   m_pqWidgetManipImage->setBackgroundBrush(QBrush(QColor(0x7F,0x7F,0x7F)));
-//   m_pqWidgetManipImage->setBackgroundBrush(QBrush(QPixmap(":/HMI/Icones/ArrierePlan.png")));
+   m_WidgetManipImage.setImage(qImage);
    setWidget(m_WidgetManipImage);
 }
 
@@ -28,12 +27,12 @@ QString SubWindow::qstrAbsoluteFilePath(void) const
 
 void SubWindow::SetActionSelectImage(QAction* pActionSelectImage)
 {
-   m_pActionSelectImage = pActionSelectImage;
+   m_pqActionSelectImage = pActionSelectImage;
 }
 
 QAction* SubWindow::pqActionSelectImage(void)
 {
-   return m_pActionSelectImage;
+   return m_pqActionSelectImage;
 }
 
 void SubWindow::ResizeTransparency(void)
@@ -148,10 +147,39 @@ void SubWindow::ResizeTransparency(void)
 
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(qNewImage);
-   m_pActionSelectImage->setText(m_qFileInfo.fileName());
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
 void SubWindow::SelectSubWindow(void)
 {
    mdiArea()->setActiveSubWindow(this);
+}
+
+void SubWindow::moveEvent(QMoveEvent* pqEvent)
+{
+   QMdiSubWindow::moveEvent(pqEvent);
+
+   emit RedrawAllImage();
+}
+
+void SubWindow::resizeEvent(QResizeEvent* pqEvent)
+{
+   QMdiSubWindow::resizeEvent(pqEvent);
+
+   emit RedrawAllImage();
+}
+
+void SubWindow::Redraw(void)
+{
+   m_WidgetManipImage.pImageView()->resetCachedContent();
+}
+
+WidgetManipImage& SubWindow::GetWidgetManipImage(void)
+{
+   return m_WidgetManipImage;
+}
+
+QPixmap SubWindow::qPixmap(void) const
+{
+   return m_WidgetManipImage.qPixmap();
 }

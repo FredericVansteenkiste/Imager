@@ -12,10 +12,7 @@ ImageView::ImageView(QWidget* pParent):
    // experience trouble
    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
-   // When zooming, the view stay centered over the mouse
-   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-
-   setResizeAnchor(QGraphicsView::AnchorViewCenter);
+   setCacheMode(QGraphicsView::CacheBackground);
 
    // Sur windows, je dois désactiver les scrollbars dans les coins de l'image,
    // sinon si j'ouvre un grand nombre d'image j'ai des resizeEvent qui sont
@@ -23,8 +20,8 @@ ImageView::ImageView(QWidget* pParent):
    // Ce problème n'apparait pas sous Linux; YES vive linux !!!
 #ifdef Q_OS_WIN
    // Disable scroll bar to avoid an unwanted resize recursion
-   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 #endif
 
    setBackgroundBrush(QBrush(QPixmap(ADRESS_BACKGROUND_PICTURE)));
@@ -49,6 +46,21 @@ void ImageView::setZoomFactor(const double dFactor)
 void ImageView::setZoomCtrlFactor(const double dFactor)
 {
    m_dZoomCtrlFactor = dFactor;
+}
+
+ImageScene* ImageView::pqImageScene(void) const
+{
+   return dynamic_cast<ImageScene*>(scene());
+}
+
+QPointF ImageView::mapToPixmapItem(const QPoint& qCoordView)
+{
+   return pqImageScene()->mapToPixmapItem(mapToScene(qCoordView));
+}
+
+QPoint ImageView::mapFromPixmapItem(const QPointF& qCoordPixmap)
+{
+   return mapFromScene(pqImageScene()->mapFromPixmapItem(qCoordPixmap));
 }
 
 void ImageView::mousePressEvent(QMouseEvent* pqEvent)
@@ -78,9 +90,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent* pqEvent)
 
 void ImageView::wheelEvent(QWheelEvent* pqEvent)
 {
-   // When zooming, the view stay centered over the mouse
-   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-
+   // On vérifie s'il s'agit d'un zoom rapide ou non
    qreal dFactor(0);
    if(pqEvent->modifiers() & Qt::ControlModifier)
    {
@@ -91,8 +101,8 @@ void ImageView::wheelEvent(QWheelEvent* pqEvent)
       dFactor = m_dZoomFactor;
    }
 
-   QTransform qTransform = transform();
-   qreal dScale(qTransform.m11());
+   // On détermine quelle est la nouvelle valeur du zoom
+   qreal dScale(pqImageScene()->dScale());
    qreal dNewScale(0.0);
    if(pqEvent->delta() > 0)
    {
@@ -125,18 +135,32 @@ void ImageView::wheelEvent(QWheelEvent* pqEvent)
       }
    }
 
-   qTransform.setMatrix(     dNewScale, qTransform.m12(), qTransform.m13(),
-                      qTransform.m21(),        dNewScale, qTransform.m23(),
-                      qTransform.m31(), qTransform.m32(), qTransform.m33());
+   // Je regarde où était la souris sur l'image par rapport au centre de la vue
+   QPointF qCoordPixelUnderMouseF = mapToPixmapItem(pqEvent->pos());
+   int iWidthView(size().width());
+   int iHeightView(size().height());
+   // Je prends en compte l'espace qu'occupe les scrollbars
+   if(verticalScrollBar()->isVisible() == true)
+   {
+      iWidthView -= verticalScrollBar()->size().width();
+   }
+   if(horizontalScrollBar()->isVisible() == true)
+   {
+      iHeightView -= horizontalScrollBar()->size().height();
+   }
+   // J'en déduis de combien est décalé la souris par rapport au centre de la
+   // vue
+   QPointF qDecalageCentre = pqEvent->pos() - QPoint(iWidthView / 2,
+                                                     iHeightView / 2);
 
-   // Zoom in
-   setTransform(qTransform);
+   // J'applique le zoom que l'on a déterminé
+   pqImageScene()->ScaleImage(dNewScale);
 
-   // On redessine le fond de l'écran
-   QPixmap qPixmapBackground(ADRESS_BACKGROUND_PICTURE);
-   qPixmapBackground = qPixmapBackground.scaled(
-                                          qPixmapBackground.size() / dNewScale);
-   setBackgroundBrush(QBrush(qPixmapBackground));
+   // Je repositionne le centre de la vue afin que la souris reste sur le même
+   // pixel.
+   QPointF qNewCoordPixelUnderMouseF = pqImageScene()->mapFromPixmapItem(
+                                                      qCoordPixelUnderMouseF);
+   centerOn(qNewCoordPixelUnderMouseF - qDecalageCentre);
 
    // The event is processed
    pqEvent->accept();
@@ -146,72 +170,49 @@ void ImageView::wheelEvent(QWheelEvent* pqEvent)
 
 void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
 {
-   // Get the coordinates of the mouse in the scene
-   QPointF qImagePoint = mapToScene(QPoint(pqEvent->x(), pqEvent->y()));
+   // On indique dans la barre d'état la taille de l'image courante.
+   QString qstrLabel("Size = (%1x%2)");
+   ImageScene* pScene = pqImageScene();
+   qstrLabel = qstrLabel.arg(pScene->qPixmap().size().width())
+                        .arg(pScene->qPixmap().size().height());
+   emit SizeImage(qstrLabel);
 
-   // Call the function that create the tool tip
-   setToolTip(setToolTipText(QPoint(static_cast<int>(qImagePoint.x()),
-                                    static_cast<int>(qImagePoint.y()))));
+   // On récupére les coordonnées de la souris dans la scéne
+   QPointF qMousePointScene = mapToScene(QPoint(pqEvent->x(), pqEvent->y()));
 
-   // Call the parent's function (for dragging)
+   // On appelle la fonction qui met à jour le tooltip
+   setToolTip(setToolTipText(QPoint(static_cast<int>(qMousePointScene.x()),
+                                    static_cast<int>(qMousePointScene.y()))));
+
+   // On indique quelle est la position de la souris et le code couleur du pixel
+   // correspondant
+   QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(qMousePointScene);
+   QRectF qRectImageF(QPoint(0, 0), pqImageScene()->qPixmap().size());
+   if(qRectImageF.contains(qMousePointItemF) == true)
+   {
+      qstrLabel = "Coord = (%1, %2)";
+      QPoint qMousePointItem(qMousePointItemF.x(), qMousePointItemF.y());
+      qstrLabel = qstrLabel.arg(qMousePointItem.x())
+                           .arg(qMousePointItem.y());
+      emit CoordMouse(qstrLabel);
+
+      qstrLabel = "A = %1 R = %2 G = %3 B = %4";
+      QRgb qPixel = pqImageScene()->qPixmap().toImage().pixel(qMousePointItem);
+      qstrLabel = qstrLabel.arg(qAlpha(qPixel))
+                           .arg(qRed(qPixel))
+                           .arg(qGreen(qPixel))
+                           .arg(qBlue(qPixel));
+      emit ColorPixel(qstrLabel);
+   }
+   else
+   {
+      qstrLabel = "";
+      emit CoordMouse(qstrLabel);
+      emit ColorPixel(qstrLabel);
+   }
+
+   // On appelle la fonction parente pour les déplacements de l'image
    QGraphicsView::mouseMoveEvent(pqEvent);
-}
-
-void ImageView::drawForeground(QPainter* pqPainter, const QRectF& qRrect)
-{
-   Q_UNUSED(qRrect)
-
-   ImageScene* pScene = dynamic_cast<ImageScene*>(scene());
-
-   if(pScene == nullptr)
-   {
-      return;
-   }
-
-   // Call the function to draw over the image
-   drawOnImage(pqPainter, pScene->qPixmap().size());
-
-   // Reset transformation and call the function draw in the view port
-   pqPainter->resetTransform();
-
-   // Call the function to draw in the view port
-   drawInViewPort(pqPainter, viewport()->size());
-}
-
-void ImageView::resizeEvent(QResizeEvent* pqEvent)
-{
-   // First call, the scene is created
-   if(  (pqEvent->oldSize().width()  == -1)
-      ||(pqEvent->oldSize().height() == -1))
-   {
-      return;
-   }
-
-   // Get the previous rectangle of the scene in the viewport
-   QPointF P1 = mapToScene(QPoint(0,0));
-   QPointF P2 = mapToScene(QPoint(pqEvent->oldSize().width(),
-                                  pqEvent->oldSize().height()));
-
-   // Stretch the rectangle around the scene
-   if(P1.x() < 0)
-   {
-      P1.setX(0);
-   }
-   if(P1.y() < 0)
-   {
-      P1.setY(0);
-   }
-   if(P2.x() > scene()->width())
-   {
-      P2.setX(scene()->width());
-   }
-   if(P2.y() > scene()->height())
-   {
-      P2.setY(scene()->height());
-   }
-
-   // Fit the previous area in the scene
-   this->fitInView(QRect(P1.toPoint(), P2.toPoint()), Qt::KeepAspectRatio);
 }
 
 QString ImageView::setToolTipText(QPoint qImageCoordinates)
@@ -221,18 +222,6 @@ QString ImageView::setToolTipText(QPoint qImageCoordinates)
    return QString("");
 }
 
-void ImageView::drawOnImage(QPainter* pqPainter, QSize qImageSize)
-{
-   Q_UNUSED(pqPainter)
-   Q_UNUSED(qImageSize)
-}
-
-void ImageView::drawInViewPort(QPainter* pqPainter, QSize qPortSize)
-{
-   Q_UNUSED(pqPainter)
-   Q_UNUSED(qPortSize)
-}
-
 void ImageView::showContextMenu(const QPoint& qPos)
 {
    // Get the mouse position in the scene
@@ -240,26 +229,13 @@ void ImageView::showContextMenu(const QPoint& qPos)
 
    // Create the menu and add action
    QMenu contextMenu;
-   contextMenu.addAction("Reset view", this, SLOT(FitImage()));
+   contextMenu.addAction("Reset zoom", this, &ImageView::ResetZoom);
 
    // Display the menu
    contextMenu.exec(qGlobalPos);
 }
 
-void ImageView::FitImage(void)
+void ImageView::ResetZoom(void)
 {
-   // Get current scroll bar policy
-   Qt::ScrollBarPolicy eCurrentHorizontalPolicy = horizontalScrollBarPolicy();
-   Qt::ScrollBarPolicy eCurrentverticalPolicy = verticalScrollBarPolicy();
-
-   // Disable scroll bar to avoid a margin around the image
-   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-   // Fit the scene in the QGraphicsView
-   fitInView(scene()->sceneRect(), Qt::KeepAspectRatio);
-
-   // Restaure scroll bar policy
-   setHorizontalScrollBarPolicy(eCurrentHorizontalPolicy);
-   setVerticalScrollBarPolicy(eCurrentverticalPolicy);
+   pqImageScene()->ScaleImage(1);
 }

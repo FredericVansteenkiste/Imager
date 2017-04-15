@@ -3,13 +3,20 @@
 #define ORGANISATION     ("FredericVansteenkiste")
 #define NAME_APPLICATION ("Imager")
 
-MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),
-                                        m_pActionReduceImage(nullptr),
-                                        m_pWindowMenu(nullptr)
+MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
+                                          m_pActionReduceImage(nullptr),
+                                          m_pWindowMenu(nullptr),
+                                          m_pLabelCoordMouse(nullptr),
+                                          m_pLabelColorPixel(nullptr),
+                                          m_pLabelSizePicture(nullptr)
 {
    SetMenuAndToolbar();
 
    ReadSettings();
+
+   QStringList qlstrArguments(qApp->arguments());
+   qlstrArguments.removeFirst();
+   OpenListFile(qlstrArguments);
 }
 
 MainWindow::~MainWindow()
@@ -25,7 +32,8 @@ void MainWindow::SetMenuAndToolbar(void)
                                       this);
 #else
    QStyle* pqStyle = QApplication::style();
-   QAction* pActionOpen = new QAction(pqStyle->standardIcon(QStyle::SP_DirOpenIcon),
+   QAction* pActionOpen = new QAction(pqStyle->standardIcon(
+                                                      QStyle::SP_DirOpenIcon),
                                       tr("&Open"),
                                       this);
 #endif
@@ -73,6 +81,13 @@ void MainWindow::SetMenuAndToolbar(void)
 
    QToolBar* macroToolBar = addToolBar(tr("Macro"));
    macroToolBar->addAction(m_pActionReduceImage);
+
+   m_pLabelCoordMouse = new QLabel("");
+   m_pLabelColorPixel = new QLabel("");
+   m_pLabelSizePicture = new QLabel("");
+   statusBar()->addPermanentWidget(m_pLabelCoordMouse);
+   statusBar()->addPermanentWidget(m_pLabelColorPixel);
+   statusBar()->addPermanentWidget(m_pLabelSizePicture);
 }
 
 void MainWindow::ReadSettings(void)
@@ -100,12 +115,20 @@ void MainWindow::OpenFile(void)
                                  qSettings.value("currentDirectory").toString(),
                                  "Images (*.png *.bmp *.jpg)");
 
+   OpenListFile(qlstrListFiles);
+}
+
+void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
+{
    if(qlstrListFiles.isEmpty() == true)
    {
       return;
    }
 
    QFileInfo qFileInfoTmp(qlstrListFiles.first());
+
+   // On enregistre le répertoire courant
+   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue("currentDirectory", qFileInfoTmp.absolutePath());
 
    // On ajoute les images sélectionnés sur le widget central
@@ -125,33 +148,42 @@ void MainWindow::OpenFile(void)
 
       QFileInfo qFileInfo(qstrFile);
 
-      // ?? Un peu tordue : on crée l'image pour voir si on pourra la crée dans
-      // la sous-fenêtre. Donc on crée deux fois l'image; il y a surement mieux
-      // à faire ...
-      QImage qImageTemp(qFileInfo.absoluteFilePath());
-      if(qImageTemp.isNull() == true)
+      // On crée l'image pour s'assurer que le fichier est correcte
+      QImage qImage(qFileInfo.absoluteFilePath());
+      if(qImage.isNull() == true)
       {
          continue;
       }
 
       // On crée un fenêtre avec notre image
-      SubWindow* pSubWindow = new SubWindow(qFileInfo, this);
+      SubWindow* pSubWindow = new SubWindow(qFileInfo, qImage, this);
       pqMdiArea->addSubWindow(pSubWindow);
       m_pActionReduceImage->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
               pSubWindow, &SubWindow::ResizeTransparency);
-      connect(pSubWindow, &SubWindow::closeWindow,
-              this, &MainWindow::CheckEnabledActionReduceImage,
-              Qt::QueuedConnection);
       pSubWindow->show();
 
       QAction* pActionSelectImage = new QAction(qFileInfo.fileName(), this);
       connect(pActionSelectImage, &QAction::triggered,
               pSubWindow, &SubWindow::SelectSubWindow);
-      connect(pSubWindow, &SubWindow::closeWindow,
-              this, &MainWindow::UpdateMenuWindow);
       pSubWindow->SetActionSelectImage(pActionSelectImage);
       m_pWindowMenu->addAction(pActionSelectImage);
+
+      connect(pSubWindow, &SubWindow::closeWindow,
+              this, &MainWindow::UpdateMenuWindow);
+      connect(pSubWindow, &SubWindow::closeWindow,
+              this, &MainWindow::CheckEnabledActionReduceImage,
+              Qt::QueuedConnection);
+      connect(pSubWindow, &SubWindow::RedrawAllImage,
+              this, &MainWindow::RedrawAllImage,
+              Qt::QueuedConnection);
+      ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
+      connect(pImageView, &ImageView::SizeImage,
+              this, &MainWindow::UpdateLabelSizePicture);
+      connect(pImageView, &ImageView::CoordMouse,
+              this, &MainWindow::UpdateLabelCoordMouse);
+      connect(pImageView, &ImageView::ColorPixel,
+              this, &MainWindow::UpdateLabelColorPixel);
    }
 }
 
@@ -159,7 +191,7 @@ void MainWindow::About(void)
 {
    QMessageBox::about(this,
                       tr("About Application"),
-                      tr("<b>AGCO corp.</b> : Imager application. Done by "
+                      tr("<b>VTK Industries</b> : Imager application. Done by "
                          "Frédéric Vansteenkiste"));
 }
 
@@ -189,6 +221,62 @@ void MainWindow::UpdateMenuWindow(SubWindow* pSubWindow)
    m_pWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
 }
 
+void MainWindow::UpdateLabelCoordMouse(const QString& qstrLabel)
+{
+   if(qstrLabel.isEmpty() == true)
+   {
+      m_pLabelCoordMouse->hide();
+   }
+   else
+   {
+      m_pLabelCoordMouse->setText(qstrLabel);
+      m_pLabelCoordMouse->show();
+   }
+}
+
+void MainWindow::UpdateLabelColorPixel(const QString& qstrLabel)
+{
+   if(qstrLabel.isEmpty() == true)
+   {
+      m_pLabelColorPixel->hide();
+   }
+   else
+   {
+      m_pLabelColorPixel->setText(qstrLabel);
+      m_pLabelColorPixel->show();
+   }
+}
+
+void MainWindow::UpdateLabelSizePicture(const QString& qstrLabel)
+{
+   if(qstrLabel.isEmpty() == true)
+   {
+      m_pLabelSizePicture->hide();
+   }
+   else
+   {
+      m_pLabelSizePicture->setText(qstrLabel);
+      m_pLabelSizePicture->show();
+   }
+}
+
+void MainWindow::closeEvent(QCloseEvent* pqEvent)
+{
+   if(centralWidget() != nullptr)
+   {
+      QList<QMdiSubWindow*> qlpSubWindow
+                  = dynamic_cast<QMdiArea*>(centralWidget())->subWindowList();
+
+      foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)
+      {
+         SubWindow* pSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
+         disconnect(pSubWindow, 0, 0, 0);
+      }
+   }
+
+   QMainWindow::closeEvent(pqEvent);
+}
+
 bool MainWindow::bImageExist(const QString& qstrAbsoluteFilePath) const
 {
    if(centralWidget() == nullptr)
@@ -209,4 +297,20 @@ bool MainWindow::bImageExist(const QString& qstrAbsoluteFilePath) const
    }
 
    return false;
+}
+
+void MainWindow::RedrawAllImage(void)
+{
+   if(centralWidget() == nullptr)
+   {
+      return;
+   }
+
+   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<QMdiArea*>(centralWidget())
+                                                             ->subWindowList();
+
+   foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)
+   {
+      dynamic_cast<SubWindow*>(pMdiSubWindow)->Redraw();
+   }
 }

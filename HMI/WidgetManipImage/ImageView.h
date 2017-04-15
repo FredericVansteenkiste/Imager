@@ -13,6 +13,7 @@
 
 class ImageView : public QGraphicsView
 {
+   Q_OBJECT
 public:
    ImageView(QWidget* pParent = nullptr);
    virtual ~ImageView();
@@ -27,25 +28,23 @@ public:
    // zoom factor (>1)
    void setZoomCtrlFactor(const double dFactor);
 
+   // La méthode suivante renvoie un pointeur sur ImageScene. C'est équivalent à
+   // scene()
+   ImageScene* pqImageScene(void) const;
+
+   // La méthode suivante permet de convertir les coordonnées de la vue en
+   // coordonnées de l'image
+   QPointF mapToPixmapItem(const QPoint& qCoordView);
+   // La méthode suivante permet de convertir les coordonnées de l'image en
+   // coordonnées de la vue
+   QPoint mapFromPixmapItem(const QPointF& qCoordPixmap);
+
+signals:
+   void SizeImage(const QString& qstrLabel);
+   void CoordMouse(const QString& qstrLabel);
+   void ColorPixel(const QString& qstrlabel);
+
 protected:
-   // Overload this function to draw over the image
-   // Painter for drawing
-   // Size of the image
-   virtual void drawOnImage(QPainter* pqPainter, QSize qImageSize);
-
-   // Overload this function to draw in the view port
-   // Painter for drawing
-   // Size of the view port
-   virtual void drawInViewPort(QPainter* pqPainter, QSize qPortSize);
-
-   // Drawing he foreground of the scene
-   // When overloading this function, you must call it parent before
-   // exiting the function, otherwise drawOnImage and drawInViewPort
-   // will not work properly
-   // Painter for drawing
-   // The area of the scene displayed in the view port
-   virtual void drawForeground(QPainter* pqPainter, const QRectF& qRrect);
-
    // Display the tool tip over the mouse
    // Coordinates of the mouse in the image's frame
    // The function returns the QString that is displayed over the image
@@ -67,23 +66,23 @@ protected:
    // mouse move event
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
-   // Overload this function to process the window resizing event
-   // resize event
-   virtual void resizeEvent(QResizeEvent* pqEvent);
-
 private slots:
    // Display the contextual menu (on right click)
    // Position of the mouse in the widget
    virtual void showContextMenu(const QPoint& qPos);
 
-   // This function fit the image in the view while keeping aspect ratio
-   void FitImage(void);
+   // This function set the zoom to 1
+   void ResetZoom(void);
 
 private:
    // Zoom factor
-   double            m_dZoomFactor;
+   double m_dZoomFactor;
    // Zoom factor when the CTRL key is pressed
-   double            m_dZoomCtrlFactor;
+   double m_dZoomCtrlFactor;
+
+   // J'interdis toute forme de recopie de ma classe:
+   ImageView(const ImageView&);
+   ImageView& operator=(const ImageView&);
 };
 
 #endif // IMAGEVIEW_H

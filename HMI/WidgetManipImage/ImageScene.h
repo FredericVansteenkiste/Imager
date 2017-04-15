@@ -2,6 +2,7 @@
 #define IMAGESCENE_H
 
 #include <QtWidgets>
+#include "GraphicsPixmapItem.h"
 
 class ImageScene : public QGraphicsScene
 {
@@ -12,9 +13,26 @@ public:
    void setPixmap(const QPixmap& qPixmap);
    QPixmap qPixmap(void) const;
 
+   void ScaleImage(const qreal& dScale);
+   qreal dScale(void) const;
+
+   GraphicsPixmapItem* pqItem(void) const;
+
+   // La méthode suivante permet de convertir les coordonnées de la scéne en
+   // coordonnées de l'image
+   QPointF mapToPixmapItem(const QPointF& qCoordScene);
+   // La méthode suivante permet de convertir les coordonnées de l'image en
+   // coordonnées de la scéne
+   QPointF mapFromPixmapItem(const QPointF& qCoordPixmap);
+
 private:
    // Pixmap item containing the image
-   QGraphicsPixmapItem* m_pqGraphicsPixmapItem;
+   GraphicsPixmapItem* m_pqGraphicsPixmapItem;
+   QGraphicsRectItem*  m_pqCadreItem;
+
+   // J'interdis toute forme de recopie de ma classe:
+   ImageScene(const ImageScene&);
+   ImageScene& operator=(const ImageScene&);
 };
 
 #endif // IMAGESCENE_H
