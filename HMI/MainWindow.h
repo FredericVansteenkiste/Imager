@@ -30,6 +30,7 @@ private slots:
 
 private:
    QAction*          m_pActionReduceImage;
+   QAction*          m_pActionAppelMacro;
    QMenu*            m_pWindowMenu;
    QLabel*           m_pLabelCoordMouse;
    QLabel*           m_pLabelColorPixel;

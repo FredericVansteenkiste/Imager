@@ -39,16 +39,14 @@ QAction* SubWindow::pqActionSelectImage(void)
 
 void SubWindow::ResizeTransparency(void)
 {
-   QImage qCurrentImage(qstrAbsoluteFilePath());
-
    int  iFirstLineVisible(0);
    bool bIsFound = false;
-   for(int y = 0; y < qCurrentImage.height(); y++)
+   for(int y = 0; y < m_qImage.height(); y++)
    {
       iFirstLineVisible = y;
-      for(int x = 0; x < qCurrentImage.width(); x++)
+      for(int x = 0; x < m_qImage.width(); x++)
       {
-         QRgb qColorPixel = qCurrentImage.pixel(x, y);
+         QRgb qColorPixel = m_qImage.pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -63,12 +61,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iLastLineVisible(0);
    bIsFound = false;
-   for(int y = (qCurrentImage.height() - 1); y >= 0; y--)
+   for(int y = (m_qImage.height() - 1); y >= 0; y--)
    {
       iLastLineVisible = y;
-      for(int x = 0; x < qCurrentImage.width(); x++)
+      for(int x = 0; x < m_qImage.width(); x++)
       {
-         QRgb qColorPixel = qCurrentImage.pixel(x, y);
+         QRgb qColorPixel = m_qImage.pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -83,12 +81,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iFirstColumnVisible(0);
    bIsFound = false;
-   for(int x = 0; x < qCurrentImage.width(); x++)
+   for(int x = 0; x < m_qImage.width(); x++)
    {
       iFirstColumnVisible = x;
-      for(int y = 0; y < qCurrentImage.height(); y++)
+      for(int y = 0; y < m_qImage.height(); y++)
       {
-         QRgb qColorPixel = qCurrentImage.pixel(x, y);
+         QRgb qColorPixel = m_qImage.pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -103,12 +101,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iLastColumnVisible(0);
    bIsFound = false;
-   for(int x = (qCurrentImage.width() - 1); x >= 0; x--)
+   for(int x = (m_qImage.width() - 1); x >= 0; x--)
    {
       iLastColumnVisible = x;
-      for(int y = 0; y < qCurrentImage.height(); y++)
+      for(int y = 0; y < m_qImage.height(); y++)
       {
-         QRgb qColorPixel = qCurrentImage.pixel(x, y);
+         QRgb qColorPixel = m_qImage.pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -124,17 +122,16 @@ void SubWindow::ResizeTransparency(void)
    // Si aucun changement n'est recquis, on quitte la macro:
    if(  (iFirstColumnVisible == 0)
       &&(iFirstLineVisible   == 0)
-      &&(iLastColumnVisible  == qCurrentImage.width() - 1)
-      &&(iLastLineVisible    == qCurrentImage.height() - 1))
+      &&(iLastColumnVisible  == m_qImage.width() - 1)
+      &&(iLastLineVisible    == m_qImage.height() - 1))
    {
       return;
    }
 
-   QImage qNewImage = qCurrentImage.copy(
-                                 iFirstColumnVisible,
-                                 iFirstLineVisible,
-                                 iLastColumnVisible - iFirstColumnVisible + 1,
-                                 iLastLineVisible - iFirstLineVisible + 1);
+   m_qImage = m_qImage.copy(iFirstColumnVisible,
+                            iFirstLineVisible,
+                            iLastColumnVisible - iFirstColumnVisible + 1,
+                            iLastLineVisible - iFirstLineVisible + 1);
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
    qstrFileName.replace("." + qstrSuffix, "")
@@ -145,10 +142,34 @@ void SubWindow::ResizeTransparency(void)
                .append(".")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-   qNewImage.save(m_qFileInfo.absoluteFilePath());
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_WidgetManipImage.setImage(qNewImage);
+   m_WidgetManipImage.setImage(m_qImage);
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+}
+
+void SubWindow::AppelMacro(void)
+{
+   int x(316);
+   int y(291);
+   int iWidth(164);
+   int iHeight(220);
+   m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
+   QString qstrSuffix = m_qFileInfo.suffix();
+   QString qstrFileName = m_qFileInfo.fileName();
+   qstrFileName.replace("." + qstrSuffix, "")
+               .append("_")
+               .append(QString::number(x))
+               .append("x")
+               .append(QString::number(y))
+               .append(".")
+               .append(qstrSuffix);
+   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+   setWindowTitle(m_qFileInfo.fileName());
+   m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 

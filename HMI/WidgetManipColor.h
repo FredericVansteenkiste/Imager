@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 
+#define SIZE_BUTTON (25)
+
 class WidgetManipColor : public QWidget
 {
 public:
@@ -16,12 +18,15 @@ public:
    void SetSizeImage(const QSize& qSize);
 
 private:
-   QLabel* m_pqSizePalette;      // Size of the used palette if any
-   QLabel* m_pqColorNumber;      // Number of color in the image
-   QLabel* m_pqDepth;            // bits per pixel (bpp) (may contain unused
-                                 // bits)
-   QLabel* m_pqBitUsedPerPixel;  // bits used to define a pixel
-   QLabel* m_pqSizeImage;
+   QPushButton* m_pqPen;
+   QPushButton* m_pqPipette;
+
+   QLabel*      m_pqSizePalette;       // Size of the used palette if any
+   QLabel*      m_pqColorNumber;       // Number of color in the image
+   QLabel*      m_pqDepth;             // bits per pixel (bpp) (may contain
+                                       // unused bits)
+   QLabel*      m_pqBitUsedPerPixel;   // bits used to define a pixel
+   QLabel*      m_pqSizeImage;
 };
 
 #endif // WIDGETMANIPCOLOR_H

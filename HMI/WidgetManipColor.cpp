@@ -2,6 +2,8 @@
 
 WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    QWidget(pParent),
+                                                   m_pqPen(nullptr),
+                                                   m_pqPipette(nullptr),
                                                    m_pqSizePalette(nullptr),
                                                    m_pqColorNumber(nullptr),
                                                    m_pqDepth(nullptr),
@@ -14,7 +16,27 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqBitUsedPerPixel = new QLabel(this);
    m_pqSizeImage       = new QLabel(this);
 
+   m_pqPen       = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
+                                         "",
+                                         this);
+   m_pqPen->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
+   m_pqPen->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+   m_pqPen->setFlat(true);
+
+   m_pqPipette       = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
+                                         "",
+                                         this);
+   m_pqPipette->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
+   m_pqPipette->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+   m_pqPipette->setFlat(true);
+
+   QHBoxLayout* pqHBoxLayout = new QHBoxLayout;
+   pqHBoxLayout->addStretch();
+   pqHBoxLayout->addWidget(m_pqPen);
+   pqHBoxLayout->addWidget(m_pqPipette);
+
    QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
+   pqVBoxLayout->addLayout(pqHBoxLayout);
    pqVBoxLayout->addStretch();
    pqVBoxLayout->addWidget(m_pqSizePalette);
    pqVBoxLayout->addWidget(m_pqColorNumber);

@@ -32,6 +32,7 @@ signals:
 
 public slots:
    void ResizeTransparency(void);
+   void AppelMacro(void);
    void SelectSubWindow(void);
 
 protected:

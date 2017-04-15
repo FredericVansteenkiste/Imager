@@ -5,6 +5,7 @@
 
 MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pActionReduceImage(nullptr),
+                                          m_pActionAppelMacro(nullptr),
                                           m_pWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
@@ -54,6 +55,12 @@ void MainWindow::SetMenuAndToolbar(void)
    m_pActionReduceImage->setDisabled(true);
 
 
+   m_pActionAppelMacro = new QAction(QIcon(":/HMI/Icones/Engrenages.png"),
+                                     tr("Resize"),
+                                     this);
+   m_pActionAppelMacro->setDisabled(true);
+
+
 #ifdef Q_OS_LINUX
    QAction* pActionAbout = new QAction(QIcon::fromTheme("help-about"),
                                        tr("&About"),
@@ -77,6 +84,7 @@ void MainWindow::SetMenuAndToolbar(void)
 
    QMenu* macroMenu = menuBar()->addMenu(tr("&Macro"));
    macroMenu->addAction(m_pActionReduceImage);
+   macroMenu->addAction(m_pActionAppelMacro);
 
    m_pWindowMenu = menuBar()->addMenu(tr("&Window"));
 
@@ -88,6 +96,7 @@ void MainWindow::SetMenuAndToolbar(void)
 
    QToolBar* macroToolBar = addToolBar(tr("Macro"));
    macroToolBar->addAction(m_pActionReduceImage);
+   macroToolBar->addAction(m_pActionAppelMacro);
 
    m_pLabelCoordMouse = new QLabel("");
    m_pLabelColorPixel = new QLabel("");
@@ -160,8 +169,11 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       SubWindow* pSubWindow = new SubWindow(qFileInfo, qImage, this);
       pqMdiArea->addSubWindow(pSubWindow);
       m_pActionReduceImage->setEnabled(true);
+      m_pActionAppelMacro->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
               pSubWindow, &SubWindow::ResizeTransparency);
+      connect(m_pActionAppelMacro, &QAction::triggered,
+              pSubWindow, &SubWindow::AppelMacro);
       pSubWindow->show();
 
       QAction* pActionSelectImage = new QAction(qFileInfo.fileName(), this);
@@ -204,6 +216,7 @@ void MainWindow::CheckEnabledActionReduceImage(void)
    if(centralWidget() == nullptr)
    {
       m_pActionReduceImage->setEnabled(false);
+      m_pActionAppelMacro->setEnabled(false);
 
       return;
    }
@@ -213,10 +226,12 @@ void MainWindow::CheckEnabledActionReduceImage(void)
    if(qlpSubWindow.isEmpty() == true)
    {
       m_pActionReduceImage->setEnabled(false);
+      m_pActionAppelMacro->setEnabled(false);
    }
    else
    {
       m_pActionReduceImage->setEnabled(true);
+      m_pActionAppelMacro->setEnabled(true);
    }
 }
 
