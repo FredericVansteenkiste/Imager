@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>HMI/Icones/open.png</file>
+        <file>HMI/Icones/application.ico</file>
+        <file>HMI/Icones/image.png</file>
+        <file>HMI/Icones/resize.png</file>
+        <file>HMI/Icones/ArrierePlan.png</file>
+    </qresource>
+</RCC>
