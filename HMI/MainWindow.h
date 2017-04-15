@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QMainWindow>
 
+#include "MdiArea.h"
 #include "SubWindow.h"
 
 class MainWindow : public QMainWindow
@@ -22,6 +23,7 @@ private slots:
    void UpdateLabelCoordMouse(const QString& qstrLabel);
    void UpdateLabelColorPixel(const QString& qstrLabel);
    void UpdateLabelSizePicture(const QString& qstrLabel);
+   void CleanStatusBar(void);
    virtual void closeEvent(QCloseEvent* pqEvent);
 
 private:

@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
 
    ReadSettings();
 
+   UpdateLabelCoordMouse(QString());
+   UpdateLabelColorPixel(QString());
+   UpdateLabelSizePicture(QString());
+
    QStringList qlstrArguments(qApp->arguments());
    qlstrArguments.removeFirst();
    OpenListFile(qlstrArguments);
@@ -132,11 +136,14 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
    qSettings.setValue("currentDirectory", qFileInfoTmp.absolutePath());
 
    // On ajoute les images sélectionnés sur le widget central
-   QMdiArea* pqMdiArea = dynamic_cast<QMdiArea*>(centralWidget());
+   MdiArea* pqMdiArea = dynamic_cast<MdiArea*>(centralWidget());
    if(pqMdiArea == nullptr)
    {
-      pqMdiArea = new QMdiArea(this);
+      pqMdiArea = new MdiArea(this);
       setCentralWidget(pqMdiArea);
+
+      connect(pqMdiArea, &MdiArea::CleanStatusBar,
+              this, &MainWindow::CleanStatusBar);
    }
 
    foreach(const QString& qstrFile, qlstrListFiles)
@@ -177,6 +184,9 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       connect(pSubWindow, &SubWindow::RedrawAllImage,
               this, &MainWindow::RedrawAllImage,
               Qt::QueuedConnection);
+      connect(pSubWindow, &SubWindow::CleanStatusBar,
+              this, &MainWindow::CleanStatusBar);
+
       ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
       connect(pImageView, &ImageView::SizeImage,
               this, &MainWindow::UpdateLabelSizePicture);
@@ -204,7 +214,7 @@ void MainWindow::CheckEnabledActionReduceImage(void)
       return;
    }
 
-   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<QMdiArea*>(centralWidget())
+   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<MdiArea*>(centralWidget())
                                                              ->subWindowList();
    if(qlpSubWindow.isEmpty() == true)
    {
@@ -260,12 +270,19 @@ void MainWindow::UpdateLabelSizePicture(const QString& qstrLabel)
    }
 }
 
+void MainWindow::CleanStatusBar(void)
+{
+   m_pLabelCoordMouse->hide();
+   m_pLabelColorPixel->hide();
+   m_pLabelSizePicture->hide();
+}
+
 void MainWindow::closeEvent(QCloseEvent* pqEvent)
 {
    if(centralWidget() != nullptr)
    {
       QList<QMdiSubWindow*> qlpSubWindow
-                  = dynamic_cast<QMdiArea*>(centralWidget())->subWindowList();
+                  = dynamic_cast<MdiArea*>(centralWidget())->subWindowList();
 
       foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)
       {
@@ -284,7 +301,7 @@ bool MainWindow::bImageExist(const QString& qstrAbsoluteFilePath) const
       return false;
    }
 
-   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<QMdiArea*>(centralWidget())
+   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<MdiArea*>(centralWidget())
                                                              ->subWindowList();
 
    foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)
@@ -306,7 +323,7 @@ void MainWindow::RedrawAllImage(void)
       return;
    }
 
-   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<QMdiArea*>(centralWidget())
+   QList<QMdiSubWindow*> qlpSubWindow = dynamic_cast<MdiArea*>(centralWidget())
                                                              ->subWindowList();
 
    foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)

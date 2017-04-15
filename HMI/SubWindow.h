@@ -11,7 +11,7 @@ class SubWindow : public QMdiSubWindow
 public:
    SubWindow(const QFileInfo& qFileInfo,
              const QImage& qImage,
-             QWidget *parent = 0);
+             QWidget* pParent = nullptr);
    virtual ~SubWindow();
 
    QString qstrAbsoluteFilePath(void) const;
@@ -25,6 +25,7 @@ public:
 signals:
    void closeWindow(SubWindow* pSubWindow);
    void RedrawAllImage(void);
+   void CleanStatusBar(void);
 
 public slots:
    void ResizeTransparency(void);
@@ -33,6 +34,7 @@ public slots:
 protected:
    virtual void moveEvent(QMoveEvent* pqEvent);
    virtual void resizeEvent(QResizeEvent* pqEvent);
+   virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
 private:
    WidgetManipImage m_WidgetManipImage;

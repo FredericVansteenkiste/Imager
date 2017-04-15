@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     HMI/WidgetManipImage/WidgetManipImage.cpp \
     HMI/WidgetManipImage/ImageScene.cpp \
     HMI/WidgetManipImage/ImageView.cpp \
-    HMI/WidgetManipImage/GraphicsPixmapItem.cpp
+    HMI/WidgetManipImage/GraphicsPixmapItem.cpp \
+    HMI/MdiArea.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -26,7 +27,8 @@ HEADERS += \
     HMI/WidgetManipImage/WidgetManipImage.h \
     HMI/WidgetManipImage/ImageScene.h \
     HMI/WidgetManipImage/ImageView.h \
-    HMI/WidgetManipImage/GraphicsPixmapItem.h
+    HMI/WidgetManipImage/GraphicsPixmapItem.h \
+    HMI/MdiArea.h
 
 RESOURCES += \
     Imager.qrc

@@ -2,11 +2,12 @@
 
 SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      const QImage& qImage,
-                     QWidget *parent):QMdiSubWindow(parent),
-                                      m_WidgetManipImage(this),
-                                      m_qFileInfo(qFileInfo),
-                                      m_pqActionSelectImage(nullptr)
+                     QWidget* pParent):QMdiSubWindow(pParent),
+                                       m_WidgetManipImage(this),
+                                       m_qFileInfo(qFileInfo),
+                                       m_pqActionSelectImage(nullptr)
 {
+   setMouseTracking(true);
    setAttribute(Qt::WA_DeleteOnClose);
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
@@ -167,6 +168,13 @@ void SubWindow::resizeEvent(QResizeEvent* pqEvent)
    QMdiSubWindow::resizeEvent(pqEvent);
 
    emit RedrawAllImage();
+}
+
+void SubWindow::mouseMoveEvent(QMouseEvent* pqEvent)
+{
+   emit CleanStatusBar();
+
+   QMdiSubWindow::mouseMoveEvent(pqEvent);
 }
 
 void SubWindow::Redraw(void)
