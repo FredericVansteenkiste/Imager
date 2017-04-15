@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 
-#include "DisplayImage.h"
+#include "WidgetManipImage/WidgetManipImage.h"
 
 class SubWindow : public QMdiSubWindow
 {
@@ -25,9 +25,9 @@ public slots:
    void SelectSubWindow(void);
 
 private:
-   DisplayImage* m_pqDisplayImage;
-   QFileInfo     m_qFileInfo;
-   QAction*      m_pActionSelectImage;
+   WidgetManipImage m_WidgetManipImage;
+   QFileInfo        m_qFileInfo;
+   QAction*         m_pActionSelectImage;
 };
 
 #endif // SUBWINDOW_H

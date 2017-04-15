@@ -15,12 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp \
     HMI/MainWindow.cpp \
     HMI/SubWindow.cpp \
-    HMI/DisplayImage.cpp
+    HMI/WidgetManipImage/WidgetManipImage.cpp \
+    HMI/WidgetManipImage/ImageScene.cpp \
+    HMI/WidgetManipImage/ImageView.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
     HMI/SubWindow.h \
-    HMI/DisplayImage.h
+    HMI/WidgetManipImage/WidgetManipImage.h \
+    HMI/WidgetManipImage/ImageScene.h \
+    HMI/WidgetManipImage/ImageView.h
 
 RESOURCES += \
     Imager.qrc

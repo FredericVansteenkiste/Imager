@@ -1,20 +1,19 @@
 #include "SubWindow.h"
 
 SubWindow::SubWindow(const QFileInfo& qFileInfo, QWidget *parent):
-                                                   QMdiSubWindow(parent),
-                                                   m_pqDisplayImage(nullptr),
-                                                   m_qFileInfo(qFileInfo),
-                                                   m_pActionSelectImage(nullptr)
+                                                QMdiSubWindow(parent),
+                                                m_WidgetManipImage(true, this),
+                                                m_qFileInfo(qFileInfo),
+                                                m_pActionSelectImage(nullptr)
 {
    setAttribute(Qt::WA_DeleteOnClose);
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
 
-   m_pqDisplayImage = new DisplayImage(true, this);
-   m_pqDisplayImage->setImage(QImage(qstrAbsoluteFilePath()));
-//   m_pqDisplayImage->setBackgroundBrush(QBrush(QColor(0x7F,0x7F,0x7F))); ??
-   m_pqDisplayImage->setBackgroundBrush(QBrush(QColor(0xFF,0xFF,0xFF)));
-   setWidget(m_pqDisplayImage);
+   m_WidgetManipImage.setImage(QImage(qstrAbsoluteFilePath()));
+//   m_pqWidgetManipImage->setBackgroundBrush(QBrush(QColor(0x7F,0x7F,0x7F)));
+//   m_pqWidgetManipImage->setBackgroundBrush(QBrush(QPixmap(":/HMI/Icones/ArrierePlan.png")));
+   setWidget(m_WidgetManipImage);
 }
 
 SubWindow::~SubWindow()
@@ -148,7 +147,7 @@ void SubWindow::ResizeTransparency(void)
    qNewImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqDisplayImage->setImage(qNewImage);
+   m_WidgetManipImage.setImage(qNewImage);
    m_pActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
