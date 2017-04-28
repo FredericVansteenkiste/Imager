@@ -121,6 +121,13 @@ void MainWindow::WriteSettings(void) const
    qSettings.setValue("geometry", saveGeometry());
 }
 
+void MainWindow::OpenFiles(const QString& qstrFile)
+{
+   QStringList qlstrListFiles = qstrFile.split("\n");
+
+   OpenListFile(qlstrListFiles);
+}
+
 void MainWindow::OpenFile(void)
 {
    // On demande à l'utilisateur l'adresse des images à afficher

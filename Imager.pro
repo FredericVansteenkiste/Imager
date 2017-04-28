@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Imager
 TEMPLATE = app
 
+include(QtSingleCoreApplication/src/qtsingleapplication.pri)
 
 SOURCES += main.cpp \
     HMI/MainWindow.cpp \
@@ -40,7 +41,5 @@ OTHER_FILES +=
 CONFIG += c++11
 
 RC_ICONS = HMI/Icones/application.ico
-
-DISTFILES +=
 
 QMAKE_CXXFLAGS += -Wall #-Weffc++

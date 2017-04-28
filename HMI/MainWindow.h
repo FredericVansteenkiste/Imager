@@ -16,6 +16,9 @@ public:
    MainWindow(QWidget* pqParent = nullptr);
    ~MainWindow();
 
+public slots:
+   void OpenFiles(const QString& qstrFile);
+
 private slots:
    void OpenFile(void);
    void About(void);
