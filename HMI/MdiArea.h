@@ -12,9 +12,12 @@ public:
 
 signals:
    void CleanStatusBar(void);
+   void NewFileReceived(const QStringList& qlstrListFiles);
 
 protected:
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
+   virtual void dragEnterEvent(QDragEnterEvent* pqEvent);
+   virtual void dropEvent(QDropEvent* pqEvent);
 };
 
 #endif // MDIAREA_H

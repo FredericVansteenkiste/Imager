@@ -407,4 +407,6 @@ void MainWindow::CreateCentralWidget(void)
            this, &MainWindow::CleanStatusBar);
    connect(pqMdiArea, &QMdiArea::subWindowActivated,
            this, &MainWindow::SubWindowActivated);
+   connect(pqMdiArea, &MdiArea::NewFileReceived,
+           this, &MainWindow::OpenListFile);
 }

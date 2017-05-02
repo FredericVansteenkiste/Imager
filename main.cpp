@@ -22,8 +22,6 @@ int main(int argc, char *argv[])
 
    qApplication.setActivationWindow(&qMainWindow);
 
-/*   QObject::connect(&qApplication, SIGNAL(messageReceived(const QString&)),
-                    &qMainWindow, SLOT(OpenFiles(const QString&)));*/
    QObject::connect(&qApplication, &QtSingleApplication::messageReceived,
                     &qMainWindow, &MainWindow::OpenFiles);
 
