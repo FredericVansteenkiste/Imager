@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
-                                          m_pLabelSizePicture(nullptr),
                                           m_pWidgetManipColor(nullptr)
 {
    SetMenuAndToolbar();
@@ -20,7 +19,6 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
 
    UpdateLabelCoordMouse(QString());
    UpdateLabelColorPixel(QString());
-   UpdateLabelSizePicture(QString());
    SubWindowActivated(nullptr);
 
    QStringList qlstrArguments(qApp->arguments());
@@ -101,10 +99,8 @@ void MainWindow::SetMenuAndToolbar(void)
 
    m_pLabelCoordMouse = new QLabel("");
    m_pLabelColorPixel = new QLabel("");
-   m_pLabelSizePicture = new QLabel("");
    statusBar()->addPermanentWidget(m_pLabelCoordMouse);
    statusBar()->addPermanentWidget(m_pLabelColorPixel);
-   statusBar()->addPermanentWidget(m_pLabelSizePicture);
 }
 
 void MainWindow::ReadSettings(void)
@@ -222,8 +218,6 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
               this, &MainWindow::CleanStatusBar);
 
       ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
-      connect(pImageView, &ImageView::SizeImage,
-              this, &MainWindow::UpdateLabelSizePicture);
       connect(pImageView, &ImageView::CoordMouse,
               this, &MainWindow::UpdateLabelCoordMouse);
       connect(pImageView, &ImageView::ColorPixel,
@@ -294,24 +288,10 @@ void MainWindow::UpdateLabelColorPixel(const QString& qstrLabel)
    }
 }
 
-void MainWindow::UpdateLabelSizePicture(const QString& qstrLabel)
-{
-   if(qstrLabel.isEmpty() == true)
-   {
-      m_pLabelSizePicture->hide();
-   }
-   else
-   {
-      m_pLabelSizePicture->setText(qstrLabel);
-      m_pLabelSizePicture->show();
-   }
-}
-
 void MainWindow::CleanStatusBar(void)
 {
    m_pLabelCoordMouse->hide();
    m_pLabelColorPixel->hide();
-   m_pLabelSizePicture->hide();
 }
 
 void MainWindow::closeEvent(QCloseEvent* pqEvent)

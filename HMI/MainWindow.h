@@ -26,7 +26,6 @@ private slots:
    void UpdateMenuWindow(SubWindow* pSubWindow);
    void UpdateLabelCoordMouse(const QString& qstrLabel);
    void UpdateLabelColorPixel(const QString& qstrLabel);
-   void UpdateLabelSizePicture(const QString& qstrLabel);
    void CleanStatusBar(void);
    virtual void closeEvent(QCloseEvent* pqEvent);
    void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
@@ -37,7 +36,6 @@ private:
    QMenu*            m_pWindowMenu;
    QLabel*           m_pLabelCoordMouse;
    QLabel*           m_pLabelColorPixel;
-   QLabel*           m_pLabelSizePicture;
    WidgetManipColor* m_pWidgetManipColor;
 
    void SetMenuAndToolbar(void);
