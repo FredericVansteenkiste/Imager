@@ -18,15 +18,16 @@ public:
    void SetSizeImage(const QSize& qSize);
 
 private:
+   QLabel*      m_pqCurrentColor;
    QPushButton* m_pqPen;
    QPushButton* m_pqPipette;
 
-   QLabel*      m_pqSizePalette;       // Size of the used palette if any
-   QLabel*      m_pqColorNumber;       // Number of color in the image
+   QLabel*      m_pqSizePalette;       // Size of the used palette if any.
+   QLabel*      m_pqColorNumber;       // Number of color in the image.
    QLabel*      m_pqDepth;             // bits per pixel (bpp) (may contain
-                                       // unused bits)
-   QLabel*      m_pqBitUsedPerPixel;   // bits used to define a pixel
-   QLabel*      m_pqSizeImage;
+                                       // unused bits).
+   QLabel*      m_pqBitUsedPerPixel;   // bits used to define a pixel.
+   QLabel*      m_pqSizeImage;         // Size of the picture.
 };
 
 #endif // WIDGETMANIPCOLOR_H

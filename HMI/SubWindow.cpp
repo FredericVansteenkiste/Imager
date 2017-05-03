@@ -6,8 +6,15 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                                        m_WidgetManipImage(this),
                                        m_qFileInfo(qFileInfo),
                                        m_qImage(qImage),
-                                       m_pqActionSelectImage(nullptr)
+                                       m_pqActionSelectImage(nullptr),
+                                       m_qCurrentColor(Qt::black)
 {
+   // On choisi une couleur de travail
+   if(m_qImage.colorTable().isEmpty() == false)
+   {
+      m_qCurrentColor = m_qImage.colorTable()[0];
+   }
+
    setMouseTracking(true);
    setAttribute(Qt::WA_DeleteOnClose);
    setWindowTitle(m_qFileInfo.fileName());
@@ -122,8 +129,8 @@ void SubWindow::ResizeTransparency(void)
    // Si aucun changement n'est recquis, on quitte la macro:
    if(  (iFirstColumnVisible == 0)
       &&(iFirstLineVisible   == 0)
-      &&(iLastColumnVisible  == m_qImage.width() - 1)
-      &&(iLastLineVisible    == m_qImage.height() - 1))
+      &&(iLastColumnVisible  == (m_qImage.width() - 1))
+      &&(iLastLineVisible    == (m_qImage.height() - 1)))
    {
       return;
    }
@@ -171,18 +178,6 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
-/*   QScrollBar* pHorScrollBar = GetWidgetManipImage()
-                                          .pImageView()
-                                         ->horizontalScrollBar();
-   QScrollBar* pVerScrollBar = GetWidgetManipImage()
-                                          .pImageView()
-                                         ->verticalScrollBar();
-   qDebug() << pHorScrollBar->isEnabled();
-   qDebug() << pHorScrollBar->isHidden();
-   qDebug() << pHorScrollBar->height();
-   qDebug() << pVerScrollBar->isEnabled();
-   qDebug() << pVerScrollBar->isHidden();
-   qDebug() << pVerScrollBar->width();*/
 }
 
 void SubWindow::SelectSubWindow(void)

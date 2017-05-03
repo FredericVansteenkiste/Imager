@@ -2,6 +2,7 @@
 
 WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    QWidget(pParent),
+                                                   m_pqCurrentColor(nullptr),
                                                    m_pqPen(nullptr),
                                                    m_pqPipette(nullptr),
                                                    m_pqSizePalette(nullptr),
@@ -15,6 +16,13 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqDepth           = new QLabel(this);
    m_pqBitUsedPerPixel = new QLabel(this);
    m_pqSizeImage       = new QLabel(this);
+
+   m_pqCurrentColor = new QLabel();
+   m_pqCurrentColor->setFixedSize(1.5 * QSize(SIZE_BUTTON, SIZE_BUTTON));
+   m_pqCurrentColor->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+   QPixmap qCurrentColor(1.5 * QSize(SIZE_BUTTON, SIZE_BUTTON));
+   qCurrentColor.fill(Qt::black);
+   m_pqCurrentColor->setPixmap(qCurrentColor);
 
    m_pqPen       = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
                                          "",
@@ -30,13 +38,19 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqPipette->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
    m_pqPipette->setFlat(true);
 
-   QHBoxLayout* pqHBoxLayout = new QHBoxLayout;
-   pqHBoxLayout->addStretch();
-   pqHBoxLayout->addWidget(m_pqPen);
-   pqHBoxLayout->addWidget(m_pqPipette);
+   QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
+   pqHBoxLayout1->addStretch();
+   pqHBoxLayout1->addWidget(m_pqCurrentColor);
+   pqHBoxLayout1->addStretch();
+
+   QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
+   pqHBoxLayout2->addWidget(m_pqPen);
+   pqHBoxLayout2->addWidget(m_pqPipette);
+   pqHBoxLayout2->addStretch();
 
    QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
-   pqVBoxLayout->addLayout(pqHBoxLayout);
+   pqVBoxLayout->addLayout(pqHBoxLayout1);
+   pqVBoxLayout->addLayout(pqHBoxLayout2);
    pqVBoxLayout->addStretch();
    pqVBoxLayout->addWidget(m_pqSizePalette);
    pqVBoxLayout->addWidget(m_pqColorNumber);
