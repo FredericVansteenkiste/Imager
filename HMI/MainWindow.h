@@ -6,7 +6,7 @@
 
 #include "MdiArea.h"
 #include "SubWindow.h"
-#include "WidgetManipColor.h"
+#include "WidgetManipColor/WidgetManipColor.h"
 
 class MainWindow : public QMainWindow
 {

@@ -21,7 +21,12 @@ SOURCES += main.cpp \
     HMI/WidgetManipImage/ImageView.cpp \
     HMI/WidgetManipImage/GraphicsPixmapItem.cpp \
     HMI/MdiArea.cpp \
-    HMI/WidgetManipColor.cpp
+    CStateMachine/CStateMachine.cpp \
+    HMI/WidgetManipColor/CStateMouse.cpp \
+    HMI/WidgetManipColor/CStateMouseDefault.cpp \
+    HMI/WidgetManipColor/CStateMousePen.cpp \
+    HMI/WidgetManipColor/CStateMousePipette.cpp \
+    HMI/WidgetManipColor/WidgetManipColor.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -31,7 +36,12 @@ HEADERS += \
     HMI/WidgetManipImage/ImageView.h \
     HMI/WidgetManipImage/GraphicsPixmapItem.h \
     HMI/MdiArea.h \
-    HMI/WidgetManipColor.h
+    CStateMachine/CStateMachine.h \
+    HMI/WidgetManipColor/CStateMouse.h \
+    HMI/WidgetManipColor/CStateMouseDefault.h \
+    HMI/WidgetManipColor/CStateMousePen.h \
+    HMI/WidgetManipColor/CStateMousePipette.h \
+    HMI/WidgetManipColor/WidgetManipColor.h
 
 RESOURCES += \
     Imager.qrc
