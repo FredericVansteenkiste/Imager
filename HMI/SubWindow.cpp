@@ -178,8 +178,6 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
-<<<<<<< HEAD
-=======
 }
 
 void SubWindow::CreatePalette(void)
@@ -236,7 +234,6 @@ void SubWindow::SupprPalette(void)
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
->>>>>>> aefd1f00c187e8849a671a61eae0cd71fc1406e0
 }
 
 void SubWindow::SelectSubWindow(void)

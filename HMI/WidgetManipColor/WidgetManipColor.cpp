@@ -2,10 +2,7 @@
 
 WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    QWidget(pParent),
-<<<<<<< HEAD:HMI/WidgetManipColor.cpp
-=======
                                                    m_StateMachine(),
->>>>>>> 79e9d42059e5657067b4a2d31fb2aaeac0daba2f:HMI/WidgetManipColor/WidgetManipColor.cpp
                                                    m_pqCurrentColor(nullptr),
                                                    m_pqPen(nullptr),
                                                    m_pqPipette(nullptr),
@@ -53,14 +50,6 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqHBoxLayout1->addWidget(m_pqCurrentColor);
    pqHBoxLayout1->addStretch();
 
-<<<<<<< HEAD:HMI/WidgetManipColor.cpp
-   QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
-   pqHBoxLayout1->addStretch();
-   pqHBoxLayout1->addWidget(m_pqCurrentColor);
-   pqHBoxLayout1->addStretch();
-
-=======
->>>>>>> 79e9d42059e5657067b4a2d31fb2aaeac0daba2f:HMI/WidgetManipColor/WidgetManipColor.cpp
    QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
    pqHBoxLayout2->addWidget(m_pqPen);
    pqHBoxLayout2->addWidget(m_pqPipette);
