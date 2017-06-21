@@ -171,18 +171,62 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
-/*   QScrollBar* pHorScrollBar = GetWidgetManipImage()
-                                          .pImageView()
-                                         ->horizontalScrollBar();
-   QScrollBar* pVerScrollBar = GetWidgetManipImage()
-                                          .pImageView()
-                                         ->verticalScrollBar();
-   qDebug() << pHorScrollBar->isEnabled();
-   qDebug() << pHorScrollBar->isHidden();
-   qDebug() << pHorScrollBar->height();
-   qDebug() << pVerScrollBar->isEnabled();
-   qDebug() << pVerScrollBar->isHidden();
-   qDebug() << pVerScrollBar->width();*/
+}
+
+void SubWindow::CreatePalette(void)
+{
+   // Si l'image courante à déjà une palette ...
+   if(m_qImage.format() == QImage::Format_Indexed8)
+   {
+      // ... alors on sort de la fonction sans rien faire.
+      return;
+   }
+
+   // On crée une palette pour l'image.
+   m_qImage = m_qImage.convertToFormat(QImage::Format_Indexed8);
+
+   // On sauvegarde notre image
+   QString qstrSuffix = m_qFileInfo.suffix();
+   QString qstrFileName = m_qFileInfo.fileName();
+   qstrFileName.replace("." + qstrSuffix, "")
+               .append("_WithPalette.")
+               .append(qstrSuffix);
+   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+   setWindowTitle(m_qFileInfo.fileName());
+   m_WidgetManipImage.setImage(m_qImage);
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   emit UpdateWidgetManipColor();
+}
+
+void SubWindow::SupprPalette(void)
+{
+   // Si l'image courante n'a pas de palette ...
+   if(m_qImage.format() != QImage::Format_Indexed8)
+   {
+      // ... alors on sort de la fonction sans rien faire.
+      return;
+   }
+
+   // On crée une palette pour l'image.
+   m_qImage = m_qImage.convertToFormat(QImage::Format_ARGB32);
+
+   // On sauvegarde notre image
+   QString qstrSuffix = m_qFileInfo.suffix();
+   QString qstrFileName = m_qFileInfo.fileName();
+   qstrFileName.replace("." + qstrSuffix, "")
+               .append("_WithoutPalette.")
+               .append(qstrSuffix);
+   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+   setWindowTitle(m_qFileInfo.fileName());
+   m_WidgetManipImage.setImage(m_qImage);
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   emit UpdateWidgetManipColor();
 }
 
 void SubWindow::SelectSubWindow(void)

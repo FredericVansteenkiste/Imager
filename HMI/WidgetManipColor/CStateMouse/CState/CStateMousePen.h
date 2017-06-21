@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "CStateMachine/CStateMachine.h"
+#include "../CState.h"
 
-class CStateMousePen : public CStateMachine
+class CStateMousePen : public CState
 {
    Q_OBJECT
 

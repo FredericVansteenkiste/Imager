@@ -33,7 +33,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqPen->setCheckable(true);
    m_pqPen->setChecked(false);
    connect(m_pqPen,         &QPushButton::clicked,
-           &m_StateMachine, &CStateMachine::eButtonPenClicked);
+           &m_StateMachine, &CState::eButtonPenClicked);
 
    m_pqPipette       = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
                                          "",
@@ -43,7 +43,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqPipette->setCheckable(true);
    m_pqPipette->setChecked(false);
    connect(m_pqPipette,     &QPushButton::clicked,
-           &m_StateMachine, &CStateMachine::eButtonPipetteClicked);
+           &m_StateMachine, &CState::eButtonPipetteClicked);
 
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
    pqHBoxLayout1->addStretch();
@@ -66,9 +66,9 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqVBoxLayout->addWidget(m_pqSizeImage);
    setLayout(pqVBoxLayout);
 
-   connect(&m_StateMachine, &CStateMachine::ButtonPenChecked,
+   connect(&m_StateMachine, &CState::ButtonPenChecked,
            m_pqPen,         &QPushButton::setChecked);
-   connect(&m_StateMachine, &CStateMachine::ButtonPipetteChecked,
+   connect(&m_StateMachine, &CState::ButtonPipetteChecked,
            m_pqPipette,     &QPushButton::setChecked);
 }
 

@@ -6,6 +6,8 @@
 MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pActionReduceImage(nullptr),
                                           m_pActionAppelMacro(nullptr),
+                                          m_pActionCreatePalette(nullptr),
+                                          m_pActionSupprPalette(nullptr),
                                           m_pWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
@@ -55,10 +57,21 @@ void MainWindow::SetMenuAndToolbar(void)
 
 
    m_pActionAppelMacro = new QAction(QIcon(":/HMI/Icones/Engrenages.png"),
-                                     tr("Resize"),
+                                     tr("Macro"),
                                      this);
    m_pActionAppelMacro->setDisabled(true);
 
+   m_pActionCreatePalette = new QAction(
+                                    QIcon(":/HMI/Icones/CreatePalette.png"),
+                                    tr("Creating a palette for the picture(s)"),
+                                    this);
+   m_pActionCreatePalette->setDisabled(true);
+
+   m_pActionSupprPalette = new QAction(
+                              QIcon(":/HMI/Icones/DeletePalette.png"),
+                              tr("Deleting a palette for the picture(s)"),
+                              this);
+   m_pActionSupprPalette->setDisabled(true);
 
 #ifdef Q_OS_LINUX
    QAction* pActionAbout = new QAction(QIcon::fromTheme("help-about"),
@@ -84,6 +97,8 @@ void MainWindow::SetMenuAndToolbar(void)
    QMenu* macroMenu = menuBar()->addMenu(tr("&Macro"));
    macroMenu->addAction(m_pActionReduceImage);
    macroMenu->addAction(m_pActionAppelMacro);
+   macroMenu->addAction(m_pActionCreatePalette);
+   macroMenu->addAction(m_pActionSupprPalette);
 
    m_pWindowMenu = menuBar()->addMenu(tr("&Window"));
 
@@ -96,6 +111,8 @@ void MainWindow::SetMenuAndToolbar(void)
    QToolBar* macroToolBar = addToolBar(tr("Macro"));
    macroToolBar->addAction(m_pActionReduceImage);
    macroToolBar->addAction(m_pActionAppelMacro);
+   macroToolBar->addAction(m_pActionCreatePalette);
+   macroToolBar->addAction(m_pActionSupprPalette);
 
    m_pLabelCoordMouse = new QLabel("");
    m_pLabelColorPixel = new QLabel("");
@@ -175,10 +192,16 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
 
       m_pActionReduceImage->setEnabled(true);
       m_pActionAppelMacro->setEnabled(true);
+      m_pActionCreatePalette->setEnabled(true);
+      m_pActionSupprPalette->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
               pSubWindow, &SubWindow::ResizeTransparency);
       connect(m_pActionAppelMacro, &QAction::triggered,
               pSubWindow, &SubWindow::AppelMacro);
+      connect(m_pActionCreatePalette, &QAction::triggered,
+              pSubWindow, &SubWindow::CreatePalette);
+      connect(m_pActionSupprPalette, &QAction::triggered,
+              pSubWindow, &SubWindow::SupprPalette);
       pSubWindow->show();
 
       // Si les scrollbars sont actives, il faut prendre en compte leurs
@@ -216,6 +239,8 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
               Qt::QueuedConnection);
       connect(pSubWindow, &SubWindow::CleanStatusBar,
               this, &MainWindow::CleanStatusBar);
+      connect(pSubWindow, &SubWindow::UpdateWidgetManipColor,
+              this, &MainWindow::UpdateWidgetManipColor);
 
       ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
       connect(pImageView, &ImageView::CoordMouse,
@@ -239,6 +264,8 @@ void MainWindow::CheckEnabledActionReduceImage(void)
    {
       m_pActionReduceImage->setEnabled(false);
       m_pActionAppelMacro->setEnabled(false);
+      m_pActionCreatePalette->setEnabled(false);
+      m_pActionSupprPalette->setEnabled(false);
 
       return;
    }
@@ -249,11 +276,15 @@ void MainWindow::CheckEnabledActionReduceImage(void)
    {
       m_pActionReduceImage->setEnabled(false);
       m_pActionAppelMacro->setEnabled(false);
+      m_pActionCreatePalette->setEnabled(false);
+      m_pActionSupprPalette->setEnabled(false);
    }
    else
    {
       m_pActionReduceImage->setEnabled(true);
       m_pActionAppelMacro->setEnabled(true);
+      m_pActionCreatePalette->setEnabled(true);
+      m_pActionSupprPalette->setEnabled(true);
    }
 }
 
@@ -328,6 +359,17 @@ void MainWindow::SubWindowActivated(QMdiSubWindow* pMdiSubWindow)
       m_pWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
       m_pWidgetManipColor->show();
    }
+}
+
+void MainWindow::UpdateWidgetManipColor(void)
+{
+   if (centralWidget() == nullptr)
+   {
+      return;
+   }
+
+   SubWindowActivated(dynamic_cast<MdiArea*>(centralWidget())
+                                                         ->activeSubWindow());
 }
 
 bool MainWindow::bImageExist(const QString& qstrAbsoluteFilePath) const
