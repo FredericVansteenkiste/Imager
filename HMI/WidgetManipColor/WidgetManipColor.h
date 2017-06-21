@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 
+#include "CStateMouse.h"
+
 #define SIZE_BUTTON (25)
 
 class WidgetManipColor : public QWidget
@@ -18,6 +20,11 @@ public:
    void SetSizeImage(const QSize& qSize);
 
 private:
+<<<<<<< HEAD:HMI/WidgetManipColor.h
+=======
+   CStateMouse  m_StateMachine;
+
+>>>>>>> 79e9d42059e5657067b4a2d31fb2aaeac0daba2f:HMI/WidgetManipColor/WidgetManipColor.h
    QLabel*      m_pqCurrentColor;
    QPushButton* m_pqPen;
    QPushButton* m_pqPipette;
