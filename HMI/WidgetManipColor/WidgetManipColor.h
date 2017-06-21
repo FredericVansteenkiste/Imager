@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 
-#include "CStateMouse.h"
+#include "CStateMouse/CStateMouse.h"
 
 #define SIZE_BUTTON (25)
 

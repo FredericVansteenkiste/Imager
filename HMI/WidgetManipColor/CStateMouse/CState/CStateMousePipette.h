@@ -1,17 +1,17 @@
-#ifndef CSTATEMOUSEDEFAULT_H
-#define CSTATEMOUSEDEFAULT_H
+#ifndef CSTATEMOUSEPIPETTE_H
+#define CSTATEMOUSEPIPETTE_H
 
 #include <QObject>
 
-#include "CStateMachine/CStateMachine.h"
+#include "../CState.h"
 
-class CStateMouseDefault : public CStateMachine
+class CStateMousePipette : public CState
 {
    Q_OBJECT
 
 public:
-   CStateMouseDefault();
-   virtual ~CStateMouseDefault();
+   CStateMousePipette();
+   virtual ~CStateMousePipette();
 
    virtual void Execute(void);
 
@@ -22,4 +22,4 @@ public slots:
    virtual e_state_machine eButtonPipetteClicked(void);
 };
 
-#endif // CSTATEMOUSEDEFAULT_H
+#endif // CSTATEMOUSEPIPETTE_H

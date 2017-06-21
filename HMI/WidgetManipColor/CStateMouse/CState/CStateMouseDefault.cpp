@@ -14,17 +14,17 @@ void CStateMouseDefault::Execute(void)
 {
 }
 
-CStateMachine::e_state_machine CStateMouseDefault::eCurrentState(void)
+CState::e_state_machine CStateMouseDefault::eCurrentState(void)
 {
    return DEFAULT;
 }
 
-CStateMachine::e_state_machine CStateMouseDefault::eButtonPenClicked(void)
+CState::e_state_machine CStateMouseDefault::eButtonPenClicked(void)
 {
    return PEN;
 }
 
-CStateMachine::e_state_machine CStateMouseDefault::eButtonPipetteClicked(void)
+CState::e_state_machine CStateMouseDefault::eButtonPipetteClicked(void)
 {
    return PIPETTE;
 }

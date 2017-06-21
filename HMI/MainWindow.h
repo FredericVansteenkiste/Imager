@@ -29,10 +29,13 @@ private slots:
    void CleanStatusBar(void);
    virtual void closeEvent(QCloseEvent* pqEvent);
    void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
+   void UpdateWidgetManipColor(void);
 
 private:
    QAction*          m_pActionReduceImage;
    QAction*          m_pActionAppelMacro;
+   QAction*          m_pActionCreatePalette;
+   QAction*          m_pActionSupprPalette;
    QMenu*            m_pWindowMenu;
    QLabel*           m_pLabelCoordMouse;
    QLabel*           m_pLabelColorPixel;

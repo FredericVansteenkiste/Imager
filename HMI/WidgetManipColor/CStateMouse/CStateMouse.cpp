@@ -1,6 +1,6 @@
 #include "CStateMouse.h"
 
-CStateMouse::CStateMouse():CStateMachine(),
+CStateMouse::CStateMouse():CState(),
                            m_pCurrentState(nullptr)
 {
    m_pCurrentState = new CStateMouseDefault();
@@ -16,12 +16,19 @@ void CStateMouse::Execute(void)
 {
 }
 
-CStateMachine::e_state_machine CStateMouse::eCurrentState(void)
+CState::e_state_machine CStateMouse::eCurrentState(void)
 {
-   return NONE;
+   if(m_pCurrentState == nullptr)
+   {
+      return NONE;
+   }
+   else
+   {
+      return m_pCurrentState->eCurrentState();
+   }
 }
 
-CStateMachine::e_state_machine CStateMouse::eButtonPenClicked(void)
+CState::e_state_machine CStateMouse::eButtonPenClicked(void)
 {
    e_state_machine eChangeState = m_pCurrentState->eButtonPenClicked();
 
@@ -44,10 +51,10 @@ CStateMachine::e_state_machine CStateMouse::eButtonPenClicked(void)
       Connect();
    }
 
-   return NONE;
+   return eCurrentState();
 }
 
-CStateMachine::e_state_machine CStateMouse::eButtonPipetteClicked(void)
+CState::e_state_machine CStateMouse::eButtonPipetteClicked(void)
 {
    e_state_machine eChangeState = m_pCurrentState->eButtonPipetteClicked();
 
@@ -70,13 +77,13 @@ CStateMachine::e_state_machine CStateMouse::eButtonPipetteClicked(void)
       Connect();
    }
 
-   return NONE;
+   return eCurrentState();
 }
 
 void CStateMouse::Connect(void) const
 {
-   connect(m_pCurrentState, &CStateMachine::ButtonPenChecked,
+   connect(m_pCurrentState, &CState::ButtonPenChecked,
            this,            &CStateMouse::ButtonPenChecked);
-   connect(m_pCurrentState, &CStateMachine::ButtonPipetteChecked,
+   connect(m_pCurrentState, &CState::ButtonPipetteChecked,
            this,            &CStateMouse::ButtonPipetteChecked);
 }

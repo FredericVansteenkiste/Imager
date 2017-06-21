@@ -8,5 +8,7 @@
         <file>HMI/Icones/MagnifyingGlass.png</file>
         <file>HMI/Icones/Engrenages.png</file>
         <file>HMI/Icones/Pipette.png</file>
+        <file>HMI/Icones/CreatePalette.png</file>
+        <file>HMI/Icones/DeletePalette.png</file>
     </qresource>
 </RCC>

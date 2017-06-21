@@ -178,6 +178,65 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_WidgetManipImage.setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+<<<<<<< HEAD
+=======
+}
+
+void SubWindow::CreatePalette(void)
+{
+   // Si l'image courante à déjà une palette ...
+   if(m_qImage.format() == QImage::Format_Indexed8)
+   {
+      // ... alors on sort de la fonction sans rien faire.
+      return;
+   }
+
+   // On crée une palette pour l'image.
+   m_qImage = m_qImage.convertToFormat(QImage::Format_Indexed8);
+
+   // On sauvegarde notre image
+   QString qstrSuffix = m_qFileInfo.suffix();
+   QString qstrFileName = m_qFileInfo.fileName();
+   qstrFileName.replace("." + qstrSuffix, "")
+               .append("_WithPalette.")
+               .append(qstrSuffix);
+   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+   setWindowTitle(m_qFileInfo.fileName());
+   m_WidgetManipImage.setImage(m_qImage);
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   emit UpdateWidgetManipColor();
+}
+
+void SubWindow::SupprPalette(void)
+{
+   // Si l'image courante n'a pas de palette ...
+   if(m_qImage.format() != QImage::Format_Indexed8)
+   {
+      // ... alors on sort de la fonction sans rien faire.
+      return;
+   }
+
+   // On crée une palette pour l'image.
+   m_qImage = m_qImage.convertToFormat(QImage::Format_ARGB32);
+
+   // On sauvegarde notre image
+   QString qstrSuffix = m_qFileInfo.suffix();
+   QString qstrFileName = m_qFileInfo.fileName();
+   qstrFileName.replace("." + qstrSuffix, "")
+               .append("_WithoutPalette.")
+               .append(qstrSuffix);
+   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+   setWindowTitle(m_qFileInfo.fileName());
+   m_WidgetManipImage.setImage(m_qImage);
+   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   emit UpdateWidgetManipColor();
+>>>>>>> aefd1f00c187e8849a671a61eae0cd71fc1406e0
 }
 
 void SubWindow::SelectSubWindow(void)

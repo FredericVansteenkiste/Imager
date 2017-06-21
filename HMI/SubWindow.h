@@ -29,10 +29,13 @@ signals:
    void closeWindow(SubWindow* pSubWindow);
    void RedrawAllImage(void);
    void CleanStatusBar(void);
+   void UpdateWidgetManipColor(void);
 
 public slots:
    void ResizeTransparency(void);
    void AppelMacro(void);
+   void CreatePalette(void);
+   void SupprPalette(void);
    void SelectSubWindow(void);
 
 protected:
