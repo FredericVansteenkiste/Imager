@@ -203,12 +203,16 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
                            .arg(qGreen(qPixel))
                            .arg(qBlue(qPixel));
       emit ColorPixel(qstrLabel);
+
+      setCursor(QCursor(QPixmap(":/HMI/Icones/Pen.png"), 0, 40)); // ??
    }
    else
    {
       qstrLabel = "";
       emit CoordMouse(qstrLabel);
       emit ColorPixel(qstrLabel);
+
+      unsetCursor();
    }
 
    // On appelle la fonction parente pour les déplacements de l'image

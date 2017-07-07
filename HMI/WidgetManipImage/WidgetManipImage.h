@@ -12,9 +12,6 @@ class WidgetManipImage : public QObject
 
 public:
    // Constructor, create the scene and set parameters
-   // When set to true, the contextual menu is initialize
-   // If you don't want contextual menu or need to create a
-   // custom one, set to false.
    WidgetManipImage(QWidget* pParent = nullptr);
    virtual ~WidgetManipImage();
 
