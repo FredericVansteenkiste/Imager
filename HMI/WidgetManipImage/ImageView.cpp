@@ -25,6 +25,11 @@ ImageView::ImageView(QWidget* pParent):
 #endif   // Q_OS_WIN
 
    setBackgroundBrush(QBrush(QPixmap(ADRESS_BACKGROUND_PICTURE)));
+
+   // J'installe le filtre sur les événements pour intercepter les événements
+   // arrivant sur les barres de défilement.
+   horizontalScrollBar()->installEventFilter(this);
+   verticalScrollBar()->installEventFilter(this);
 }
 
 ImageView::~ImageView()
@@ -217,6 +222,26 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
 
    // On appelle la fonction parente pour les déplacements de l'image
    QGraphicsView::mouseMoveEvent(pqEvent);
+}
+
+bool ImageView::eventFilter(QObject* pqObj, QEvent* pqEvent)
+{
+   if(  (pqObj == verticalScrollBar())
+      ||(pqObj == horizontalScrollBar())
+      ||(pqObj == cornerWidget()))
+   {
+      if(pqEvent->type() == QEvent::Enter)
+      {
+         unsetCursor();
+      }
+
+      return false;
+   }
+   else
+   {
+      // pass the event to the parent class
+      return QGraphicsView::eventFilter(pqObj, pqEvent);
+   }
 }
 
 QString ImageView::setToolTipText(QPoint qImageCoordinates)

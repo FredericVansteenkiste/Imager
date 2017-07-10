@@ -66,6 +66,9 @@ protected:
    // mouse move event
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
+   // Overload to intercept the event which are going to the scroll bar
+   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
+
 private slots:
    // Display the contextual menu (on right click)
    // Position of the mouse in the widget
