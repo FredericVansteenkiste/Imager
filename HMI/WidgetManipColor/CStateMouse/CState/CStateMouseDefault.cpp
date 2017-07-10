@@ -14,7 +14,7 @@ void CStateMouseDefault::Execute(void)
 {
 }
 
-CState::e_state_machine CStateMouseDefault::eCurrentState(void)
+CState::e_state_machine CStateMouseDefault::eCurrentState(void) const
 {
    return DEFAULT;
 }

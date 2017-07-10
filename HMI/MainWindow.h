@@ -16,6 +16,8 @@ public:
    MainWindow(QWidget* pqParent = nullptr);
    ~MainWindow();
 
+   WidgetManipColor* pWidgetManipColor(void) const;
+
 public slots:
    void OpenFiles(const QString& qstrFile);
 

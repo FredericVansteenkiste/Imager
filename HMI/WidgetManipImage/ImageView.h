@@ -4,6 +4,7 @@
 #include <QtWidgets>
 
 #include "ImageScene.h"
+#include "../WidgetManipColor/CStateMouse/CStateMouse.h"
 
 // Default zoom factors
 #define DEFAULT_ZOOM_FACTOR         (1.15)
@@ -82,6 +83,9 @@ private:
    double m_dZoomFactor;
    // Zoom factor when the CTRL key is pressed
    double m_dZoomCtrlFactor;
+
+   // La fonction suivante permet de retrouver l'état de la souris.
+   CState::e_state_machine eGetStateMouse(void);
 
    // J'interdis toute forme de recopie de ma classe:
    ImageView(const ImageView&);

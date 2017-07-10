@@ -44,11 +44,11 @@ protected:
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
 private:
-   WidgetManipImage m_WidgetManipImage;
-   QFileInfo        m_qFileInfo;
-   QImage           m_qImage;
-   QAction*         m_pqActionSelectImage;
-   QColor           m_qCurrentColor;
+   WidgetManipImage* m_pWidgetManipImage;
+   QFileInfo         m_qFileInfo;
+   QImage            m_qImage;
+   QAction*          m_pqActionSelectImage;
+   QColor            m_qCurrentColor;
 
    // J'interdis toute forme de recopie de ma classe:
    SubWindow(const SubWindow&);

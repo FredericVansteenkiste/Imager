@@ -15,7 +15,7 @@ void CStateMousePipette::Execute(void)
 {
 }
 
-CState::e_state_machine CStateMousePipette::eCurrentState(void)
+CState::e_state_machine CStateMousePipette::eCurrentState(void) const
 {
    return PIPETTE;
 }

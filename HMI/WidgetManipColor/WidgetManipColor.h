@@ -18,6 +18,7 @@ public:
    void SetDepth(const unsigned int& uiDepth);
    void SetBitsUsedPerPixel(const unsigned int& uiBitsUsedPerPixel);
    void SetSizeImage(const QSize& qSize);
+   CState::e_state_machine eCurrentState(void) const;
 
 private:
    CStateMouse  m_StateMachine;

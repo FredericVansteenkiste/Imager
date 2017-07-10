@@ -119,3 +119,9 @@ void WidgetManipColor::SetSizeImage(const QSize& qSize)
    qString = qString.arg(qSize.width()).arg(qSize.height());
    m_pqSizeImage->setText(qString);
 }
+
+CState::e_state_machine WidgetManipColor::eCurrentState(void) const
+{
+   return m_StateMachine.eCurrentState();
+}
+

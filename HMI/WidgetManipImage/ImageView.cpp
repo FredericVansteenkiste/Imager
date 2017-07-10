@@ -268,3 +268,10 @@ void ImageView::ResetZoom(void)
 {
    pqImageScene()->ScaleImage(1);
 }
+
+// La fonction suivante permet de retrouver l'état de la souris.
+CState::e_state_machine ImageView::eGetStateMouse(void)
+{
+//   MainWindow* pMainWindow = dynamic_cast<MainWindow*>(parentWidget()->parentWidget()->parentWidget());
+   return CState::DEFAULT;
+}

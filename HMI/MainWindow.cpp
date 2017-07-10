@@ -33,6 +33,11 @@ MainWindow::~MainWindow()
    WriteSettings();
 }
 
+WidgetManipColor* MainWindow::pWidgetManipColor(void) const
+{
+   return m_pWidgetManipColor;
+}
+
 void MainWindow::SetMenuAndToolbar(void)
 {
 #ifdef Q_OS_LINUX

@@ -18,7 +18,7 @@ public:
 
    virtual void Execute(void);
 
-   virtual e_state_machine eCurrentState(void);
+   virtual e_state_machine eCurrentState(void) const;
 
 public slots:
    virtual e_state_machine eButtonPenClicked(void);

@@ -3,12 +3,14 @@
 SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      const QImage& qImage,
                      QWidget* pParent):QMdiSubWindow(pParent),
-                                       m_WidgetManipImage(this),
+                                       m_pWidgetManipImage(nullptr),
                                        m_qFileInfo(qFileInfo),
                                        m_qImage(qImage),
                                        m_pqActionSelectImage(nullptr),
                                        m_qCurrentColor(Qt::black)
 {
+   m_pWidgetManipImage = new WidgetManipImage(this);
+
    // On choisi une couleur de travail
    if(m_qImage.colorTable().isEmpty() == false)
    {
@@ -20,8 +22,8 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
 
-   m_WidgetManipImage.setImage(m_qImage);
-   setWidget(m_WidgetManipImage);
+   m_pWidgetManipImage->setImage(m_qImage);
+   setWidget(*m_pWidgetManipImage);
 }
 
 SubWindow::~SubWindow()
@@ -152,7 +154,7 @@ void SubWindow::ResizeTransparency(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_WidgetManipImage.setImage(m_qImage);
+   m_pWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
@@ -176,7 +178,7 @@ void SubWindow::AppelMacro(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_WidgetManipImage.setImage(m_qImage);
+   m_pWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
@@ -202,7 +204,7 @@ void SubWindow::CreatePalette(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_WidgetManipImage.setImage(m_qImage);
+   m_pWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -230,7 +232,7 @@ void SubWindow::SupprPalette(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_WidgetManipImage.setImage(m_qImage);
+   m_pWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -264,12 +266,12 @@ void SubWindow::mouseMoveEvent(QMouseEvent* pqEvent)
 
 void SubWindow::Redraw(void)
 {
-   m_WidgetManipImage.pImageView()->resetCachedContent();
+   m_pWidgetManipImage->pImageView()->resetCachedContent();
 }
 
 WidgetManipImage& SubWindow::GetWidgetManipImage(void)
 {
-   return m_WidgetManipImage;
+   return *m_pWidgetManipImage;
 }
 
 bool SubWindow::bIsPalette(void) const
@@ -301,7 +303,7 @@ unsigned int SubWindow::uiNbColorDefined(void) const
 
 QPixmap SubWindow::qPixmap(void) const
 {
-   return m_WidgetManipImage.qPixmap();
+   return m_pWidgetManipImage->qPixmap();
 }
 
 QImage SubWindow::qImage(void) const

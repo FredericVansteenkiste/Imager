@@ -21,7 +21,7 @@ public:
       PIPETTE
    } e_state_machine;
 
-   virtual e_state_machine eCurrentState(void) = 0;
+   virtual e_state_machine eCurrentState(void) const = 0;
 
 signals:
    void ButtonPenChecked(bool bIsFlat);

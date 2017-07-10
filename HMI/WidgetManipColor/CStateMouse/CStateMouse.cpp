@@ -16,7 +16,7 @@ void CStateMouse::Execute(void)
 {
 }
 
-CState::e_state_machine CStateMouse::eCurrentState(void)
+CState::e_state_machine CStateMouse::eCurrentState(void) const
 {
    if(m_pCurrentState == nullptr)
    {

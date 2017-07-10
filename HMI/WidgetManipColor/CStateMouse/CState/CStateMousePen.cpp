@@ -15,7 +15,7 @@ void CStateMousePen::Execute(void)
 {
 }
 
-CState::e_state_machine CStateMousePen::eCurrentState(void)
+CState::e_state_machine CStateMousePen::eCurrentState(void) const
 {
    return PEN;
 }
