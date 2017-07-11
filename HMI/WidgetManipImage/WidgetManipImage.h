@@ -6,6 +6,9 @@
 #include "ImageScene.h"
 #include "ImageView.h"
 
+class ImageView;
+class ImageScene;
+
 class WidgetManipImage : public QObject
 {
    Q_OBJECT

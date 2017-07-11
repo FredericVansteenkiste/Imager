@@ -5,6 +5,8 @@
 
 #include "WidgetManipImage/WidgetManipImage.h"
 
+class WidgetManipImage;
+
 class SubWindow : public QMdiSubWindow
 {
    Q_OBJECT

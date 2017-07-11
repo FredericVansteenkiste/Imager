@@ -209,7 +209,19 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
                            .arg(qBlue(qPixel));
       emit ColorPixel(qstrLabel);
 
-      setCursor(QCursor(QPixmap(":/HMI/Icones/Pen.png"), 0, 40)); // ??
+      CState::e_state_machine eCurrentState = eGetStateMouse();
+      if(eCurrentState == CState::PEN)
+      {
+         setCursor(QCursor(QPixmap(":/HMI/Icones/Pen.png"), 0, 40));
+      }
+      else if(eCurrentState == CState::PIPETTE)
+      {
+         setCursor(QCursor(QPixmap(":/HMI/Icones/Pipette.png"), 0, 40));
+      }
+      else
+      {
+         unsetCursor();
+      }
    }
    else
    {
@@ -272,6 +284,10 @@ void ImageView::ResetZoom(void)
 // La fonction suivante permet de retrouver l'état de la souris.
 CState::e_state_machine ImageView::eGetStateMouse(void)
 {
-//   MainWindow* pMainWindow = dynamic_cast<MainWindow*>(parentWidget()->parentWidget()->parentWidget());
-   return CState::DEFAULT;
+   MainWindow* pMainWindow = dynamic_cast<MainWindow*>(parentWidget()
+                                                            ->parentWidget()
+                                                            ->parentWidget()
+                                                            ->parentWidget());
+
+   return pMainWindow->pWidgetManipColor()->eCurrentState();
 }

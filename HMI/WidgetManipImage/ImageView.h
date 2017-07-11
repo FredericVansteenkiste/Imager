@@ -5,6 +5,7 @@
 
 #include "ImageScene.h"
 #include "../WidgetManipColor/CStateMouse/CStateMouse.h"
+#include "../MainWindow.h"
 
 // Default zoom factors
 #define DEFAULT_ZOOM_FACTOR         (1.15)

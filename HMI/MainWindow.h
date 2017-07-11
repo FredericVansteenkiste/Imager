@@ -8,6 +8,8 @@
 #include "SubWindow.h"
 #include "WidgetManipColor/WidgetManipColor.h"
 
+class SubWindow;
+
 class MainWindow : public QMainWindow
 {
    Q_OBJECT
