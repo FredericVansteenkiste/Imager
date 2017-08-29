@@ -86,7 +86,7 @@ private:
    double m_dZoomCtrlFactor;
 
    // La fonction suivante permet de retrouver l'état de la souris.
-   CState::e_state_machine eGetStateMouse(void);
+   CSubStateMouse::e_state_machine eGetStateMouse(void);
 
    // J'interdis toute forme de recopie de ma classe:
    ImageView(const ImageView&);

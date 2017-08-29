@@ -71,7 +71,8 @@ QPoint ImageView::mapFromPixmapItem(const QPointF& qCoordPixmap)
 void ImageView::mousePressEvent(QMouseEvent* pqEvent)
 {
    // Drag mode : change the cursor's shape
-   if(pqEvent->button() == Qt::LeftButton)
+   if(  (pqEvent->button() == Qt::LeftButton)
+      &&(eGetStateMouse() == CSubStateMouse::DEFAULT))
    {
       setDragMode(QGraphicsView::ScrollHandDrag);
    }
@@ -193,14 +194,19 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
    // correspondant
    QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(qMousePointScene);
    QRectF qRectImageF(QPoint(0, 0), pqImageScene()->qPixmap().size());
+   // Si mon pointeur est sur l'image ...
    if(qRectImageF.contains(qMousePointItemF) == true)
    {
+      // ... j'indique quelles sont les coordonnées de la souris (dans le repère
+      // de l'image) ...
       qstrLabel = "Coord = (%1, %2)";
       QPoint qMousePointItem(qMousePointItemF.x(), qMousePointItemF.y());
       qstrLabel = qstrLabel.arg(qMousePointItem.x())
                            .arg(qMousePointItem.y());
       emit CoordMouse(qstrLabel);
 
+      // ... j'indique quelles sont les composantes de la couleur du pixel
+      // pointé par la souris ...
       qstrLabel = "A = %1 R = %2 G = %3 B = %4";
       QRgb qPixel = pqImageScene()->qPixmap().toImage().pixel(qMousePointItem);
       qstrLabel = qstrLabel.arg(qAlpha(qPixel))
@@ -209,12 +215,14 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
                            .arg(qBlue(qPixel));
       emit ColorPixel(qstrLabel);
 
-      CState::e_state_machine eCurrentState = eGetStateMouse();
-      if(eCurrentState == CState::PEN)
+      // ... et je sélectionne le pointeur de souris correspondant à l'état de
+      // la machine d'état de WidgetManipColor
+      CSubStateMouse::e_state_machine eCurrentState = eGetStateMouse();
+      if(eCurrentState == CSubStateMouse::PEN)
       {
          setCursor(QCursor(QPixmap(":/HMI/Icones/Pen.png"), 0, 40));
       }
-      else if(eCurrentState == CState::PIPETTE)
+      else if(eCurrentState == CSubStateMouse::PIPETTE)
       {
          setCursor(QCursor(QPixmap(":/HMI/Icones/Pipette.png"), 0, 40));
       }
@@ -282,7 +290,7 @@ void ImageView::ResetZoom(void)
 }
 
 // La fonction suivante permet de retrouver l'état de la souris.
-CState::e_state_machine ImageView::eGetStateMouse(void)
+CSubStateMouse::e_state_machine ImageView::eGetStateMouse(void)
 {
    MainWindow* pMainWindow = dynamic_cast<MainWindow*>(parentWidget()
                                                             ->parentWidget()

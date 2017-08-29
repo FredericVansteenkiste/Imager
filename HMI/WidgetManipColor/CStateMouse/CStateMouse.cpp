@@ -1,6 +1,6 @@
 #include "CStateMouse.h"
 
-CStateMouse::CStateMouse():CState(),
+CStateMouse::CStateMouse():CStateMachine(),
                            m_pCurrentState(nullptr)
 {
    m_pCurrentState = new CStateMouseDefault();
@@ -16,11 +16,11 @@ void CStateMouse::Execute(void)
 {
 }
 
-CState::e_state_machine CStateMouse::eCurrentState(void) const
+CSubStateMouse::e_state_machine CStateMouse::eCurrentState(void) const
 {
    if(m_pCurrentState == nullptr)
    {
-      return NONE;
+      return CSubStateMouse::NONE;
    }
    else
    {
@@ -28,19 +28,20 @@ CState::e_state_machine CStateMouse::eCurrentState(void) const
    }
 }
 
-CState::e_state_machine CStateMouse::eButtonPenClicked(void)
+CSubStateMouse::e_state_machine CStateMouse::eButtonPenClicked(void)
 {
-   e_state_machine eChangeState = m_pCurrentState->eButtonPenClicked();
+   CSubStateMouse::e_state_machine eChangeState =
+                                          m_pCurrentState->eButtonPenClicked();
 
-   if(eChangeState != NONE)
+   if(eChangeState != CSubStateMouse::NONE)
    {
       delete m_pCurrentState;
 
-      if(eChangeState == DEFAULT)
+      if(eChangeState == CSubStateMouse::DEFAULT)
       {
          m_pCurrentState = new CStateMouseDefault();
       }
-      else if(eChangeState == PEN)
+      else if(eChangeState == CSubStateMouse::PEN)
       {
          m_pCurrentState = new CStateMousePen();
       }
@@ -54,19 +55,20 @@ CState::e_state_machine CStateMouse::eButtonPenClicked(void)
    return eCurrentState();
 }
 
-CState::e_state_machine CStateMouse::eButtonPipetteClicked(void)
+CSubStateMouse::e_state_machine CStateMouse::eButtonPipetteClicked(void)
 {
-   e_state_machine eChangeState = m_pCurrentState->eButtonPipetteClicked();
+   CSubStateMouse::e_state_machine eChangeState =
+                                       m_pCurrentState->eButtonPipetteClicked();
 
-   if(eChangeState != NONE)
+   if(eChangeState != CSubStateMouse::NONE)
    {
       delete m_pCurrentState;
 
-      if(eChangeState == DEFAULT)
+      if(eChangeState == CSubStateMouse::DEFAULT)
       {
          m_pCurrentState = new CStateMouseDefault();
       }
-      else if(eChangeState == PEN)
+      else if(eChangeState == CSubStateMouse::PEN)
       {
          m_pCurrentState = new CStateMousePen();
       }
@@ -82,8 +84,8 @@ CState::e_state_machine CStateMouse::eButtonPipetteClicked(void)
 
 void CStateMouse::Connect(void) const
 {
-   connect(m_pCurrentState, &CState::ButtonPenChecked,
+   connect(m_pCurrentState, &CSubStateMouse::ButtonPenChecked,
            this,            &CStateMouse::ButtonPenChecked);
-   connect(m_pCurrentState, &CState::ButtonPipetteChecked,
+   connect(m_pCurrentState, &CSubStateMouse::ButtonPipetteChecked,
            this,            &CStateMouse::ButtonPipetteChecked);
 }

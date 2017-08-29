@@ -25,25 +25,25 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    qCurrentColor.fill(Qt::black);
    m_pqCurrentColor->setPixmap(qCurrentColor);
 
-   m_pqPen       = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
-                                         "",
-                                         this);
+   m_pqPen = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
+                                   "",
+                                   this);
    m_pqPen->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
    m_pqPen->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
    m_pqPen->setCheckable(true);
    m_pqPen->setChecked(false);
    connect(m_pqPen,         &QPushButton::clicked,
-           &m_StateMachine, &CState::eButtonPenClicked);
+           &m_StateMachine, &CStateMouse::eButtonPenClicked);
 
-   m_pqPipette       = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
-                                         "",
-                                         this);
+   m_pqPipette = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
+                                 "",
+                                 this);
    m_pqPipette->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
    m_pqPipette->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
    m_pqPipette->setCheckable(true);
    m_pqPipette->setChecked(false);
    connect(m_pqPipette,     &QPushButton::clicked,
-           &m_StateMachine, &CState::eButtonPipetteClicked);
+           &m_StateMachine, &CStateMouse::eButtonPipetteClicked);
 
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
    pqHBoxLayout1->addStretch();
@@ -66,9 +66,9 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqVBoxLayout->addWidget(m_pqSizeImage);
    setLayout(pqVBoxLayout);
 
-   connect(&m_StateMachine, &CState::ButtonPenChecked,
+   connect(&m_StateMachine, &CStateMouse::ButtonPenChecked,
            m_pqPen,         &QPushButton::setChecked);
-   connect(&m_StateMachine, &CState::ButtonPipetteChecked,
+   connect(&m_StateMachine, &CStateMouse::ButtonPipetteChecked,
            m_pqPipette,     &QPushButton::setChecked);
 }
 
@@ -120,8 +120,7 @@ void WidgetManipColor::SetSizeImage(const QSize& qSize)
    m_pqSizeImage->setText(qString);
 }
 
-CState::e_state_machine WidgetManipColor::eCurrentState(void) const
+CSubStateMouse::e_state_machine WidgetManipColor::eCurrentState(void) const
 {
    return m_StateMachine.eCurrentState();
 }
-

@@ -3,12 +3,13 @@
 
 #include <QObject>
 
-#include "CState.h"
-#include "CState/CStateMouseDefault.h"
-#include "CState/CStateMousePen.h"
-#include "CState/CStateMousePipette.h"
+#include "../../CStateMachine/CStateMachine.h"
+#include "CStateMouse/CSubStateMouse.h"
+#include "CStateMouse/CStateMouseDefault.h"
+#include "CStateMouse/CStateMousePen.h"
+#include "CStateMouse/CStateMousePipette.h"
 
-class CStateMouse : public CState
+class CStateMouse : public CStateMachine
 {
    Q_OBJECT
 
@@ -18,14 +19,18 @@ public:
 
    virtual void Execute(void);
 
-   virtual e_state_machine eCurrentState(void) const;
+   CSubStateMouse::e_state_machine eCurrentState(void) const;
 
 public slots:
-   virtual e_state_machine eButtonPenClicked(void);
-   virtual e_state_machine eButtonPipetteClicked(void);
+   virtual CSubStateMouse::e_state_machine eButtonPenClicked(void);
+   virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void);
+
+signals:
+   void ButtonPenChecked(bool bIsFlat);
+   void ButtonPipetteChecked(bool bIsFlat);
 
 private:
-   CState* m_pCurrentState;
+   CSubStateMouse* m_pCurrentState;
 
    void Connect(void) const;
 };

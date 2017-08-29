@@ -1,17 +1,17 @@
-#ifndef CSTATE_H
-#define CSTATE_H
+#ifndef CSUBSTATEMOUSE_H
+#define CSUBSTATEMOUSE_H
 
 #include <QObject>
 
-#include "../../CStateMachine/CStateMachine.h"
+#include "../../../CStateMachine/CStateMachine.h"
 
-class CState : public CStateMachine
+class CSubStateMouse : public CStateMachine
 {
    Q_OBJECT
 
 public:
-   CState();
-   virtual ~CState();
+   CSubStateMouse();
+   virtual ~CSubStateMouse();
 
    typedef enum
    {
@@ -20,6 +20,8 @@ public:
       PEN,
       PIPETTE
    } e_state_machine;
+
+   virtual void Execute(void) = 0;
 
    virtual e_state_machine eCurrentState(void) const = 0;
 
@@ -32,4 +34,4 @@ public slots:
    virtual e_state_machine eButtonPipetteClicked(void) = 0;
 };
 
-#endif // CSTATE_H
+#endif // CSUBSTATEMOUSE_H

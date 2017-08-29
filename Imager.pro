@@ -23,11 +23,11 @@ SOURCES += main.cpp \
     HMI/MdiArea.cpp \
     CStateMachine/CStateMachine.cpp \
     HMI/WidgetManipColor/CStateMouse/CStateMouse.cpp \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMouseDefault.cpp \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMousePen.cpp \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMousePipette.cpp \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMouseDefault.cpp \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMousePen.cpp \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMousePipette.cpp \
     HMI/WidgetManipColor/WidgetManipColor.cpp \
-    HMI/WidgetManipColor/CStateMouse/CState.cpp
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CSubStateMouse.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -39,11 +39,11 @@ HEADERS += \
     HMI/MdiArea.h \
     CStateMachine/CStateMachine.h \
     HMI/WidgetManipColor/CStateMouse/CStateMouse.h \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMouseDefault.h \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMousePen.h \
-    HMI/WidgetManipColor/CStateMouse/CState/CStateMousePipette.h \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMouseDefault.h \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMousePen.h \
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CStateMousePipette.h \
     HMI/WidgetManipColor/WidgetManipColor.h \
-    HMI/WidgetManipColor/CStateMouse/CState.h
+    HMI/WidgetManipColor/CStateMouse/CStateMouse/CSubStateMouse.h
 
 RESOURCES += \
     Imager.qrc
@@ -54,4 +54,4 @@ CONFIG += c++11
 
 RC_ICONS = HMI/Icones/application.ico
 
-QMAKE_CXXFLAGS += -Wall #-Weffc++
+QMAKE_CXXFLAGS += -Wall

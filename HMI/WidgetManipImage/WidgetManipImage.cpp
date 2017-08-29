@@ -1,8 +1,8 @@
 #include "WidgetManipImage.h"
 
-WidgetManipImage::WidgetManipImage(QWidget* pParent):
-                                    m_pqGraphicsScene(nullptr),
-                                    m_pqGraphicsView(nullptr)
+WidgetManipImage::WidgetManipImage(QWidget* pParent):QObject(),
+                                                     m_pqGraphicsScene(nullptr),
+                                                     m_pqGraphicsView(nullptr)
 {
    // Create the scene
    m_pqGraphicsScene = new ImageScene(pParent);
