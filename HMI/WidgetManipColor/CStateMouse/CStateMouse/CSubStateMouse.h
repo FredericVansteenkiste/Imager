@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../../../CStateMachine/CStateMachine.h"
+#include "../../../../CStateMachine/CStateMachine.h"
 
 class CSubStateMouse : public CStateMachine
 {
