@@ -4,7 +4,7 @@
 #include <QtWidgets>
 
 #include "ImageScene.h"
-#include "../WidgetManipColor/CStateMouse/CStateMouse.h"
+#include "../WidgetManipColor/CStateMouse.h"
 #include "../MainWindow.h"
 
 // Default zoom factors

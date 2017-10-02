@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../../../../CStateMachine/CStateMachine.h"
+#include "../../../CStateMachine/CStateMachine.h"
 
 class CSubStateMouse : public CStateMachine
 {
@@ -20,8 +20,6 @@ public:
       PEN,
       PIPETTE
    } e_state_machine;
-
-   virtual void Execute(void) = 0;
 
    virtual e_state_machine eCurrentState(void) const = 0;
 

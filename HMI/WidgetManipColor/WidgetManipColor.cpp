@@ -6,18 +6,14 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    m_pqCurrentColor(nullptr),
                                                    m_pqPen(nullptr),
                                                    m_pqPipette(nullptr),
+                                                   m_pEditColor(nullptr),
                                                    m_pqSizePalette(nullptr),
                                                    m_pqColorNumber(nullptr),
                                                    m_pqDepth(nullptr),
                                                    m_pqBitUsedPerPixel(nullptr),
                                                    m_pqSizeImage(nullptr)
 {
-   m_pqSizePalette     = new QLabel(this);
-   m_pqColorNumber     = new QLabel(this);
-   m_pqDepth           = new QLabel(this);
-   m_pqBitUsedPerPixel = new QLabel(this);
-   m_pqSizeImage       = new QLabel(this);
-
+   // Je dessine un label montrant quelle est la couleur courante
    m_pqCurrentColor = new QLabel();
    m_pqCurrentColor->setFixedSize(1.5 * QSize(SIZE_BUTTON, SIZE_BUTTON));
    m_pqCurrentColor->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -25,6 +21,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    qCurrentColor.fill(Qt::black);
    m_pqCurrentColor->setPixmap(qCurrentColor);
 
+   // Je dessine un bouton permettant de sélectionner un crayon
    m_pqPen = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
                                    "",
                                    this);
@@ -34,7 +31,10 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqPen->setChecked(false);
    connect(m_pqPen,         &QPushButton::clicked,
            &m_StateMachine, &CStateMouse::eButtonPenClicked);
+   connect(&m_StateMachine, &CStateMouse::ButtonPenChecked,
+           m_pqPen,         &QPushButton::setChecked);
 
+   // Je dessine une bouton permettant de sélectionner une pipette
    m_pqPipette = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
                                  "",
                                  this);
@@ -44,13 +44,27 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqPipette->setChecked(false);
    connect(m_pqPipette,     &QPushButton::clicked,
            &m_StateMachine, &CStateMouse::eButtonPipetteClicked);
+   connect(&m_StateMachine, &CStateMouse::ButtonPipetteChecked,
+           m_pqPipette,     &QPushButton::setChecked);
 
+   // Je dessine le widget permettant de spécifier la couleur
+   m_pEditColor = new WidgetEditColor(this);
+
+   // Je dessine les labels donnant les propriétés de l'image courante
+   m_pqSizePalette     = new QLabel(this);
+   m_pqColorNumber     = new QLabel(this);
+   m_pqDepth           = new QLabel(this);
+   m_pqBitUsedPerPixel = new QLabel(this);
+   m_pqSizeImage       = new QLabel(this);
+
+   // Je range tous ces objets dans un layout
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
    pqHBoxLayout1->addStretch();
    pqHBoxLayout1->addWidget(m_pqCurrentColor);
    pqHBoxLayout1->addStretch();
 
    QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
+   pqHBoxLayout2->addStretch();
    pqHBoxLayout2->addWidget(m_pqPen);
    pqHBoxLayout2->addWidget(m_pqPipette);
    pqHBoxLayout2->addStretch();
@@ -58,6 +72,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
    pqVBoxLayout->addLayout(pqHBoxLayout1);
    pqVBoxLayout->addLayout(pqHBoxLayout2);
+   pqVBoxLayout->addWidget(m_pEditColor);
    pqVBoxLayout->addStretch();
    pqVBoxLayout->addWidget(m_pqSizePalette);
    pqVBoxLayout->addWidget(m_pqColorNumber);
@@ -65,11 +80,6 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
    pqVBoxLayout->addWidget(m_pqSizeImage);
    setLayout(pqVBoxLayout);
-
-   connect(&m_StateMachine, &CStateMouse::ButtonPenChecked,
-           m_pqPen,         &QPushButton::setChecked);
-   connect(&m_StateMachine, &CStateMouse::ButtonPipetteChecked,
-           m_pqPipette,     &QPushButton::setChecked);
 }
 
 WidgetManipColor::~WidgetManipColor()

@@ -17,7 +17,7 @@ public:
    CStateMouse();
    virtual ~CStateMouse();
 
-   virtual void Execute(void);
+   virtual void Execute(void) final;
 
    CSubStateMouse::e_state_machine eCurrentState(void) const;
 

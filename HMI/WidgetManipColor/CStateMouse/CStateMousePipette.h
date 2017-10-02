@@ -13,13 +13,13 @@ public:
    CStateMousePipette();
    virtual ~CStateMousePipette();
 
-   virtual void Execute(void);
+   virtual void Execute(void) final;
 
-   virtual CSubStateMouse::e_state_machine eCurrentState(void) const;
+   virtual CSubStateMouse::e_state_machine eCurrentState(void) const final;
 
 public slots:
-   virtual CSubStateMouse::e_state_machine eButtonPenClicked(void);
-   virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void);
+   virtual CSubStateMouse::e_state_machine eButtonPenClicked(void) final;
+   virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void) final;
 };
 
 #endif // CSTATEMOUSEPIPETTE_H
