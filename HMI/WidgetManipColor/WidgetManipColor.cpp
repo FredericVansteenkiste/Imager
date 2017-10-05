@@ -59,9 +59,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
 
    // Je range tous ces objets dans un layout
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
-   pqHBoxLayout1->addStretch();
    pqHBoxLayout1->addWidget(m_pqCurrentColor);
-   pqHBoxLayout1->addStretch();
 
    QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
    pqHBoxLayout2->addStretch();
@@ -70,6 +68,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqHBoxLayout2->addStretch();
 
    QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
+   pqVBoxLayout->setMargin(4);
    pqVBoxLayout->addLayout(pqHBoxLayout1);
    pqVBoxLayout->addLayout(pqHBoxLayout2);
    pqVBoxLayout->addWidget(m_pEditColor);

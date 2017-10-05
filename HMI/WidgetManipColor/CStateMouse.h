@@ -5,9 +5,9 @@
 
 #include "../../CStateMachine/CStateMachine.h"
 #include "CStateMouse/CSubStateMouse.h"
-#include "CStateMouse/CStateMouseDefault.h"
-#include "CStateMouse/CStateMousePen.h"
-#include "CStateMouse/CStateMousePipette.h"
+#include "CStateMouse/CSubStateMouseDefault.h"
+#include "CStateMouse/CSubStateMousePen.h"
+#include "CStateMouse/CSubStateMousePipette.h"
 
 class CStateMouse : public CStateMachine
 {

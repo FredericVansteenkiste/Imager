@@ -3,7 +3,7 @@
 CStateMouse::CStateMouse():CStateMachine(),
                            m_pCurrentState(nullptr)
 {
-   m_pCurrentState = new CStateMouseDefault();
+   m_pCurrentState = new CSubStateMouseDefault();
    Connect();
 }
 
@@ -39,15 +39,15 @@ CSubStateMouse::e_state_machine CStateMouse::eButtonPenClicked(void)
 
       if(eChangeState == CSubStateMouse::DEFAULT)
       {
-         m_pCurrentState = new CStateMouseDefault();
+         m_pCurrentState = new CSubStateMouseDefault();
       }
       else if(eChangeState == CSubStateMouse::PEN)
       {
-         m_pCurrentState = new CStateMousePen();
+         m_pCurrentState = new CSubStateMousePen();
       }
       else
       {
-         m_pCurrentState = new CStateMousePipette();
+         m_pCurrentState = new CSubStateMousePipette();
       }
       Connect();
    }
@@ -66,15 +66,15 @@ CSubStateMouse::e_state_machine CStateMouse::eButtonPipetteClicked(void)
 
       if(eChangeState == CSubStateMouse::DEFAULT)
       {
-         m_pCurrentState = new CStateMouseDefault();
+         m_pCurrentState = new CSubStateMouseDefault();
       }
       else if(eChangeState == CSubStateMouse::PEN)
       {
-         m_pCurrentState = new CStateMousePen();
+         m_pCurrentState = new CSubStateMousePen();
       }
       else
       {
-         m_pCurrentState = new CStateMousePipette();
+         m_pCurrentState = new CSubStateMousePipette();
       }
       Connect();
    }

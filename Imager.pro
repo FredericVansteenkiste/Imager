@@ -23,9 +23,9 @@ SOURCES += main.cpp \
     HMI/MdiArea.cpp \
     CStateMachine/CStateMachine.cpp \
     HMI/WidgetManipColor/CStateMouse.cpp \
-    HMI/WidgetManipColor/CStateMouse/CStateMouseDefault.cpp \
-    HMI/WidgetManipColor/CStateMouse/CStateMousePen.cpp \
-    HMI/WidgetManipColor/CStateMouse/CStateMousePipette.cpp \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMouseDefault.cpp \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMousePen.cpp \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMousePipette.cpp \
     HMI/WidgetManipColor/WidgetManipColor.cpp \
     HMI/WidgetManipColor/CStateMouse/CSubStateMouse.cpp \
     HMI/WidgetManipColor/WidgetEditColor.cpp \
@@ -41,9 +41,9 @@ HEADERS += \
     HMI/MdiArea.h \
     CStateMachine/CStateMachine.h \
     HMI/WidgetManipColor/CStateMouse.h \
-    HMI/WidgetManipColor/CStateMouse/CStateMouseDefault.h \
-    HMI/WidgetManipColor/CStateMouse/CStateMousePen.h \
-    HMI/WidgetManipColor/CStateMouse/CStateMousePipette.h \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMouseDefault.h \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMousePen.h \
+    HMI/WidgetManipColor/CStateMouse/CSubStateMousePipette.h \
     HMI/WidgetManipColor/WidgetManipColor.h \
     HMI/WidgetManipColor/CStateMouse/CSubStateMouse.h \
     HMI/WidgetManipColor/WidgetEditColor.h \

@@ -1,17 +1,17 @@
-#ifndef CSTATEMOUSEDEFAULT_H
-#define CSTATEMOUSEDEFAULT_H
+#ifndef CSubStateMousePen_H
+#define CSubStateMousePen_H
 
 #include <QObject>
 
 #include "CSubStateMouse.h"
 
-class CStateMouseDefault : public CSubStateMouse
+class CSubStateMousePen : public CSubStateMouse
 {
    Q_OBJECT
 
 public:
-   CStateMouseDefault();
-   virtual ~CStateMouseDefault();
+   CSubStateMousePen();
+   virtual ~CSubStateMousePen();
 
    virtual void Execute(void) final;
 
@@ -22,4 +22,4 @@ public slots:
    virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void) final;
 };
 
-#endif // CSTATEMOUSEDEFAULT_H
+#endif // CSubStateMousePen_H
