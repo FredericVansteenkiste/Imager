@@ -17,15 +17,15 @@ void CSubStateMousePipette::Execute(void)
 
 CSubStateMouse::e_state_machine CSubStateMousePipette::eCurrentState(void) const
 {
-   return CSubStateMouse::PIPETTE;
+   return PIPETTE;
 }
 
 CSubStateMouse::e_state_machine CSubStateMousePipette::eButtonPenClicked(void)
 {
-   return CSubStateMouse::PEN;
+   return PEN;
 }
 
 CSubStateMouse::e_state_machine CSubStateMousePipette::eButtonPipetteClicked(void)
 {
-   return CSubStateMouse::DEFAULT;
+   return DEFAULT;
 }

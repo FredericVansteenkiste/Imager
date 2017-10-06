@@ -23,6 +23,8 @@ public:
 
    virtual e_state_machine eCurrentState(void) const = 0;
 
+   void Execute(void) override = 0;
+
 signals:
    void ButtonPenChecked(bool bIsFlat);
    void ButtonPipetteChecked(bool bIsFlat);

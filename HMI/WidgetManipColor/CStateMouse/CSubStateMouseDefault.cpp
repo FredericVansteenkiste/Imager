@@ -16,15 +16,16 @@ void CSubStateMouseDefault::Execute(void)
 
 CSubStateMouse::e_state_machine CSubStateMouseDefault::eCurrentState(void) const
 {
-   return CSubStateMouse::DEFAULT;
+   return DEFAULT;
 }
 
 CSubStateMouse::e_state_machine CSubStateMouseDefault::eButtonPenClicked(void)
 {
-   return CSubStateMouse::PEN;
+   return PEN;
 }
 
-CSubStateMouse::e_state_machine CSubStateMouseDefault::eButtonPipetteClicked(void)
+CSubStateMouse::e_state_machine CSubStateMouseDefault::eButtonPipetteClicked(
+                                                                           void)
 {
-   return CSubStateMouse::PIPETTE;
+   return PIPETTE;
 }

@@ -9,7 +9,7 @@
 #include "CStateMouse/CSubStateMousePen.h"
 #include "CStateMouse/CSubStateMousePipette.h"
 
-class CStateMouse : public CStateMachine
+class CStateMouse final : public CStateMachine
 {
    Q_OBJECT
 
@@ -17,7 +17,7 @@ public:
    CStateMouse();
    virtual ~CStateMouse();
 
-   virtual void Execute(void) final;
+   void Execute(void) final;
 
    CSubStateMouse::e_state_machine eCurrentState(void) const;
 

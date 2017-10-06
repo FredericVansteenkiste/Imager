@@ -5,7 +5,7 @@
 
 #include "CSubStateMouse.h"
 
-class CSubStateMousePen : public CSubStateMouse
+class CSubStateMousePen final : public CSubStateMouse
 {
    Q_OBJECT
 
@@ -13,13 +13,13 @@ public:
    CSubStateMousePen();
    virtual ~CSubStateMousePen();
 
-   virtual void Execute(void) final;
+   void Execute(void) final;
 
-   virtual CSubStateMouse::e_state_machine eCurrentState(void) const final;
+   e_state_machine eCurrentState(void) const final;
 
 public slots:
-   virtual CSubStateMouse::e_state_machine eButtonPenClicked(void) final;
-   virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void) final;
+   e_state_machine eButtonPenClicked(void) final;
+   e_state_machine eButtonPipetteClicked(void) final;
 };
 
 #endif // CSubStateMousePen_H
