@@ -25,7 +25,8 @@ CSubStateMouse::e_state_machine CSubStateMousePipette::eButtonPenClicked(void)
    return PEN;
 }
 
-CSubStateMouse::e_state_machine CSubStateMousePipette::eButtonPipetteClicked(void)
+CSubStateMouse::e_state_machine CSubStateMousePipette::eButtonPipetteClicked(
+                                                                           void)
 {
    return DEFAULT;
 }

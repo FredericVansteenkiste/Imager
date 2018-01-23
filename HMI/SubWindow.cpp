@@ -156,6 +156,8 @@ void SubWindow::ResizeTransparency(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_pWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   emit UpdateWidgetManipColor();
 }
 
 void SubWindow::AppelMacro(void)

@@ -31,7 +31,7 @@ void MdiArea::dragEnterEvent(QDragEnterEvent* pqEvent)
 void MdiArea::dropEvent(QDropEvent* pqEvent)
 {
    // On récupére toutes les adresses de fichiers sélectionnées par
-   // l'utilisateur pour le gisser-déposer.
+   // l'utilisateur pour le glisser-déposer.
    QStringList qlstrListFiles;
    foreach(QUrl qUrl, pqEvent->mimeData()->urls())
    {
