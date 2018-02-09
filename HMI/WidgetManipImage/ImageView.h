@@ -8,16 +8,17 @@
 #include "../MainWindow.h"
 
 // Default zoom factors
-#define DEFAULT_ZOOM_FACTOR         (1.15)
-#define DEFAULT_ZOOM_CTRL_FACTOR    (1.01)
-#define SCALE_MAX                   (15)
-#define ADRESS_BACKGROUND_PICTURE   (":/HMI/Icones/ArrierePlan.png")
+#define DEFAULT_ZOOM_FACTOR               (1.15)
+#define DEFAULT_ZOOM_CTRL_FACTOR          (1.01)
+#define SCALE_MAX                         (15)
+#define ADRESS_CHECKED_BACKGROUND_PICTURE (":/HMI/Icones/ArrierePlan.png")
 
 class ImageView : public QGraphicsView
 {
    Q_OBJECT
 public:
-   ImageView(QWidget* pParent = nullptr);
+   ImageView(QWidget* pParent = nullptr,
+             QBrush   qBckgrndBrush = QBrush());
    virtual ~ImageView();
 
    void setContextMenu(void);

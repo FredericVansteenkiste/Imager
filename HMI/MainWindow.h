@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QMainWindow>
 
+#include "global.h"
 #include "MdiArea.h"
 #include "SubWindow.h"
 #include "WidgetManipColor/WidgetManipColor.h"
@@ -40,6 +41,8 @@ private:
    QAction*          m_pActionAppelMacro;
    QAction*          m_pActionCreatePalette;
    QAction*          m_pActionSupprPalette;
+   QAction*          m_pActionCheckedBckgr;
+   QAction*          m_pActionColoredBckgr;
    QMenu*            m_pWindowMenu;
    QLabel*           m_pLabelCoordMouse;
    QLabel*           m_pLabelColorPixel;

@@ -47,7 +47,8 @@ HEADERS += \
     HMI/WidgetManipColor/WidgetManipColor.h \
     HMI/WidgetManipColor/CStateMouse/CSubStateMouse.h \
     HMI/WidgetManipColor/WidgetEditColor.h \
-    HMI/WidgetManipColor/WidgetEditComponentColor.h
+    HMI/WidgetManipColor/WidgetEditComponentColor.h \
+    global.h
 
 RESOURCES += \
     Imager.qrc

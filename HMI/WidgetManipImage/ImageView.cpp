@@ -1,6 +1,7 @@
 #include "ImageView.h"
 
-ImageView::ImageView(QWidget* pParent):
+ImageView::ImageView(QWidget* pParent,
+                     QBrush   qBckgrndBrush):
                                     QGraphicsView(pParent),
                                     m_dZoomFactor(DEFAULT_ZOOM_FACTOR),
                                     m_dZoomCtrlFactor(DEFAULT_ZOOM_CTRL_FACTOR)
@@ -24,7 +25,14 @@ ImageView::ImageView(QWidget* pParent):
    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 #endif   // Q_OS_WIN
 
-   setBackgroundBrush(QBrush(QPixmap(ADRESS_BACKGROUND_PICTURE)));
+   if(qBckgrndBrush == QBrush())
+   {
+      setBackgroundBrush(QBrush(QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
+   }
+   else
+   {
+      setBackgroundBrush(qBckgrndBrush);
+   }
 
    // J'installe le filtre sur les événements pour intercepter les événements
    // arrivant sur les barres de défilement.

@@ -24,6 +24,20 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
 
    m_pWidgetManipImage->setImage(m_qImage);
    setWidget(*m_pWidgetManipImage);
+
+   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
+   QVariant qVarBckgrndBrush = qSettings.value(  m_qFileInfo.absoluteFilePath()
+                                               + "/QBrush");
+   if(qVarBckgrndBrush == QVariant())
+   {
+      qSettings.setValue(  m_qFileInfo.absoluteFilePath()
+                           + "/QBrush",
+                           m_pWidgetManipImage->backgroundBrush());
+   }
+   else
+   {
+      m_pWidgetManipImage->setBackgroundBrush(qVarBckgrndBrush.value<QBrush>());
+   }
 }
 
 SubWindow::~SubWindow()
@@ -162,10 +176,10 @@ void SubWindow::ResizeTransparency(void)
 
 void SubWindow::AppelMacro(void)
 {
-   int x(316);
-   int y(291);
-   int iWidth(164);
-   int iHeight(220);
+   int x(9);
+   int y(308);
+   int iWidth(76);
+   int iHeight(55);
    m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
@@ -194,7 +208,12 @@ void SubWindow::CreatePalette(void)
    }
 
    // On crée une palette pour l'image.
-   m_qImage = m_qImage.convertToFormat(QImage::Format_Indexed8);
+   m_qImage = m_qImage.convertToFormat(QImage::Format_Indexed8,
+                                         Qt::ColorOnly
+                                       | Qt::ThresholdDither
+                                       | Qt::DiffuseAlphaDither
+                                       | Qt::PreferDither
+                                       | Qt::NoOpaqueDetection);
 
    // On sauvegarde notre image
    QString qstrSuffix = m_qFileInfo.suffix();
@@ -243,6 +262,25 @@ void SubWindow::SupprPalette(void)
 void SubWindow::SelectSubWindow(void)
 {
    mdiArea()->setActiveSubWindow(this);
+}
+
+void SubWindow::setCheckedBackground(void)
+{
+   m_pWidgetManipImage->setBackgroundBrush(QBrush(
+                                 QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
+   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
+   qSettings.setValue(  m_qFileInfo.absoluteFilePath()
+                      + "/QBrush",
+                      m_pWidgetManipImage->backgroundBrush());
+}
+
+void SubWindow::setBackgroundColor(void)
+{
+   m_pWidgetManipImage->setBackgroundBrush(QBrush(Qt::black));
+   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
+   qSettings.setValue(  m_qFileInfo.absoluteFilePath()
+                      + "/QBrush",
+                      m_pWidgetManipImage->backgroundBrush());
 }
 
 void SubWindow::moveEvent(QMoveEvent* pqEvent)

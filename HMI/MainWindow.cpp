@@ -1,13 +1,12 @@
 #include "MainWindow.h"
 
-#define ORGANISATION     ("FredericVansteenkiste")
-#define NAME_APPLICATION ("Imager")
-
 MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pActionReduceImage(nullptr),
                                           m_pActionAppelMacro(nullptr),
                                           m_pActionCreatePalette(nullptr),
                                           m_pActionSupprPalette(nullptr),
+                                          m_pActionCheckedBckgr(nullptr),
+                                          m_pActionColoredBckgr(nullptr),
                                           m_pWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
@@ -78,6 +77,19 @@ void MainWindow::SetMenuAndToolbar(void)
                               this);
    m_pActionSupprPalette->setDisabled(true);
 
+   m_pActionCheckedBckgr = new QAction(
+                                       QIcon(ADRESS_CHECKED_BACKGROUND_PICTURE),
+                                       tr("Checked background"),
+                                       this);
+   m_pActionCheckedBckgr->setDisabled(true);
+
+   QPixmap qPixmapColoredIcon(25, 25);
+   qPixmapColoredIcon.fill(QColor(0, 0, 0));
+   m_pActionColoredBckgr = new QAction(QIcon(qPixmapColoredIcon),
+                                              tr("Colored background"),
+                                              this);
+   m_pActionColoredBckgr->setDisabled(true);
+
 #ifdef Q_OS_LINUX
    QAction* pActionAbout = new QAction(QIcon::fromTheme("help-about"),
                                        tr("&About"),
@@ -88,11 +100,9 @@ void MainWindow::SetMenuAndToolbar(void)
 #endif
    connect(pActionAbout, &QAction::triggered, this, &MainWindow::About);
 
-
    QAction* pActionExit = new QAction(tr("E&xit"), this);
    pActionExit->setShortcut(QKeySequence::Close);
    connect(pActionExit, &QAction::triggered, this, &MainWindow::close);
-
 
    QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
    fileMenu->addAction(pActionOpen);
@@ -104,6 +114,10 @@ void MainWindow::SetMenuAndToolbar(void)
    macroMenu->addAction(m_pActionAppelMacro);
    macroMenu->addAction(m_pActionCreatePalette);
    macroMenu->addAction(m_pActionSupprPalette);
+
+   QMenu* bckgrMenu = menuBar()->addMenu(tr("&Background"));
+   bckgrMenu->addAction(m_pActionCheckedBckgr);
+   bckgrMenu->addAction(m_pActionColoredBckgr);
 
    m_pWindowMenu = menuBar()->addMenu(tr("&Window"));
 
@@ -199,6 +213,8 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       m_pActionAppelMacro->setEnabled(true);
       m_pActionCreatePalette->setEnabled(true);
       m_pActionSupprPalette->setEnabled(true);
+      m_pActionCheckedBckgr->setEnabled(true);
+      m_pActionColoredBckgr->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
               pSubWindow, &SubWindow::ResizeTransparency);
       connect(m_pActionAppelMacro, &QAction::triggered,
@@ -207,6 +223,10 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
               pSubWindow, &SubWindow::CreatePalette);
       connect(m_pActionSupprPalette, &QAction::triggered,
               pSubWindow, &SubWindow::SupprPalette);
+      connect(m_pActionCheckedBckgr, &QAction::triggered,
+              pSubWindow, &SubWindow::setCheckedBackground);
+      connect(m_pActionColoredBckgr, &QAction::triggered,
+              pSubWindow, &SubWindow::setBackgroundColor);
       pSubWindow->show();
 
       // Si les scrollbars sont actives, il faut prendre en compte leurs
@@ -271,6 +291,8 @@ void MainWindow::CheckEnabledActionReduceImage(void)
       m_pActionAppelMacro->setEnabled(false);
       m_pActionCreatePalette->setEnabled(false);
       m_pActionSupprPalette->setEnabled(false);
+      m_pActionCheckedBckgr->setEnabled(false);
+      m_pActionColoredBckgr->setEnabled(false);
 
       return;
    }
@@ -283,6 +305,8 @@ void MainWindow::CheckEnabledActionReduceImage(void)
       m_pActionAppelMacro->setEnabled(false);
       m_pActionCreatePalette->setEnabled(false);
       m_pActionSupprPalette->setEnabled(false);
+      m_pActionCheckedBckgr->setEnabled(false);
+      m_pActionColoredBckgr->setEnabled(false);
    }
    else
    {
@@ -290,6 +314,8 @@ void MainWindow::CheckEnabledActionReduceImage(void)
       m_pActionAppelMacro->setEnabled(true);
       m_pActionCreatePalette->setEnabled(true);
       m_pActionSupprPalette->setEnabled(true);
+      m_pActionCheckedBckgr->setEnabled(true);
+      m_pActionColoredBckgr->setEnabled(true);
    }
 }
 

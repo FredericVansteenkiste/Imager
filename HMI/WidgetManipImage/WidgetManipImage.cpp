@@ -32,6 +32,16 @@ void WidgetManipImage::setImage(const QImage& qImage)
    m_pqGraphicsScene->setPixmap(qPixmap);
 }
 
+void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
+{
+   m_pqGraphicsView->setBackgroundBrush(qBckgrndBrush);
+}
+
+QBrush WidgetManipImage::backgroundBrush() const
+{
+   return m_pqGraphicsView->backgroundBrush();
+}
+
 QPixmap WidgetManipImage::qPixmap(void) const
 {
    return m_pqGraphicsScene->qPixmap();

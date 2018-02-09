@@ -39,6 +39,8 @@ public slots:
    void CreatePalette(void);
    void SupprPalette(void);
    void SelectSubWindow(void);
+   void setCheckedBackground(void);
+   void setBackgroundColor(void);
 
 protected:
    virtual void moveEvent(QMoveEvent* pqEvent);
