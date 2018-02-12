@@ -4,3 +4,4 @@ build/
 Imager.pro.*
 # On ne cherche pas à faire le suivi du répertoire Temp
 Temp/
+temp/
