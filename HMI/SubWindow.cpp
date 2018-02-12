@@ -8,6 +8,7 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                                        m_qImage(qImage),
                                        m_pqActionSelectImage(nullptr),
                                        m_qCurrentColor(Qt::black)
+
 {
    m_pWidgetManipImage = new WidgetManipImage(this);
 
@@ -266,6 +267,7 @@ void SubWindow::SelectSubWindow(void)
 
 void SubWindow::setCheckedBackground(void)
 {
+   // On applique le damier à l'arrière plan.
    m_pWidgetManipImage->setBackgroundBrush(QBrush(
                                  QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
@@ -274,13 +276,35 @@ void SubWindow::setCheckedBackground(void)
                       m_pWidgetManipImage->backgroundBrush());
 }
 
-void SubWindow::setBackgroundColor(void)
+void SubWindow::askBackgroundColor(void)
 {
-   m_pWidgetManipImage->setBackgroundBrush(QBrush(Qt::black));
+   // On demande à l'utilisateur de sélectionner une couleur
+   QColor qColor = m_pWidgetManipImage->backgroundBrush().color();
+   QColorDialog* pqColorDialog = new QColorDialog(qColor, this);
+   pqColorDialog->setOptions(  QColorDialog::NoButtons
+                             | QColorDialog::DontUseNativeDialog);
+
+   connect(pqColorDialog, &QColorDialog::currentColorChanged,
+           this,          &SubWindow::setBackgroundColor);
+   connect(pqColorDialog, &QColorDialog::colorSelected,
+           this,          &SubWindow::setBackgroundColor);
+
+   pqColorDialog->open();
+}
+
+void SubWindow::setBackgroundColor(const QColor& qColor)
+{
+   m_pWidgetManipImage->setBackgroundBrush(QBrush(qColor));
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
                       m_pWidgetManipImage->backgroundBrush());
+
+   MdiArea* pMdiArea = dynamic_cast<MdiArea*>(mdiArea());
+   if(pMdiArea != nullptr)
+   {
+      emit pMdiArea->subWindowActivated(this);
+   }
 }
 
 void SubWindow::moveEvent(QMoveEvent* pqEvent)

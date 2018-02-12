@@ -50,8 +50,8 @@ void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
    }
    else
    {
-      // Si l'arrière plan est une couleur image, je mets l'inverse de la
-      // couleur en pointillé
+      // Si l'arrière plan est une couleur, je mets l'inverse de la couleur en
+      // pointillé
       QColor qBckGrndColor = qBckgrndBrush.color();
       qBckGrndColor.setRed(  255 - qBckGrndColor.red());
       qBckGrndColor.setBlue( 255 - qBckGrndColor.blue());

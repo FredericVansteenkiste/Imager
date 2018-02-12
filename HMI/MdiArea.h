@@ -3,12 +3,18 @@
 
 #include <QtWidgets>
 
+#include "SubWindow.h"
+
 class MdiArea : public QMdiArea
 {
    Q_OBJECT
 public:
    MdiArea(QWidget* pParent = nullptr);
    virtual ~MdiArea();
+
+public slots:
+   void setCheckedBackground(void);
+   void askBackgroundColor(void);
 
 signals:
    void CleanStatusBar(void);

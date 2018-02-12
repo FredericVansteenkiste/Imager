@@ -26,6 +26,9 @@ public:
    WidgetManipImage& GetWidgetManipImage(void);
    bool bIsPalette(void) const;
    unsigned int uiNbColorDefined(void) const;
+   void askBackgroundColor(void);
+   void setBackgroundColor(const QColor& qColor);
+   void setCheckedBackground(void);
 
 signals:
    void closeWindow(SubWindow* pSubWindow);
@@ -39,8 +42,6 @@ public slots:
    void CreatePalette(void);
    void SupprPalette(void);
    void SelectSubWindow(void);
-   void setCheckedBackground(void);
-   void setBackgroundColor(void);
 
 protected:
    virtual void moveEvent(QMoveEvent* pqEvent);

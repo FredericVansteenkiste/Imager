@@ -77,8 +77,7 @@ void MainWindow::SetMenuAndToolbar(void)
                               this);
    m_pActionSupprPalette->setDisabled(true);
 
-   m_pActionCheckedBckgr = new QAction(
-                                       QIcon(ADRESS_CHECKED_BACKGROUND_PICTURE),
+   m_pActionCheckedBckgr = new QAction(QIcon(ADRESS_CHECKED_BACKGROUND_PICTURE),
                                        tr("Checked background"),
                                        this);
    m_pActionCheckedBckgr->setDisabled(true);
@@ -86,8 +85,8 @@ void MainWindow::SetMenuAndToolbar(void)
    QPixmap qPixmapColoredIcon(25, 25);
    qPixmapColoredIcon.fill(QColor(0, 0, 0));
    m_pActionColoredBckgr = new QAction(QIcon(qPixmapColoredIcon),
-                                              tr("Colored background"),
-                                              this);
+                                       tr("Colored background"),
+                                       this);
    m_pActionColoredBckgr->setDisabled(true);
 
 #ifdef Q_OS_LINUX
@@ -223,10 +222,6 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
               pSubWindow, &SubWindow::CreatePalette);
       connect(m_pActionSupprPalette, &QAction::triggered,
               pSubWindow, &SubWindow::SupprPalette);
-      connect(m_pActionCheckedBckgr, &QAction::triggered,
-              pSubWindow, &SubWindow::setCheckedBackground);
-      connect(m_pActionColoredBckgr, &QAction::triggered,
-              pSubWindow, &SubWindow::setBackgroundColor);
       pSubWindow->show();
 
       // Si les scrollbars sont actives, il faut prendre en compte leurs
@@ -389,6 +384,13 @@ void MainWindow::SubWindowActivated(QMdiSubWindow* pMdiSubWindow)
                                        pSubWindow->qImage().bitPlaneCount());
       m_pWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
       m_pWidgetManipColor->show();
+
+      QColor qColorBckGrnd = pSubWindow->GetWidgetManipImage()
+                                        .backgroundBrush()
+                                        .color();
+      QPixmap qPixmapColoredIcon(25, 25);
+      qPixmapColoredIcon.fill(qColorBckGrnd);
+      m_pActionColoredBckgr->setIcon(QIcon(qPixmapColoredIcon));
    }
 }
 
@@ -462,4 +464,9 @@ void MainWindow::CreateCentralWidget(void)
            this, &MainWindow::SubWindowActivated);
    connect(pqMdiArea, &MdiArea::NewFileReceived,
            this, &MainWindow::OpenListFile);
+
+   connect(m_pActionCheckedBckgr, &QAction::triggered,
+           pqMdiArea, &MdiArea::setCheckedBackground);
+   connect(m_pActionColoredBckgr, &QAction::triggered,
+           pqMdiArea, &MdiArea::askBackgroundColor);
 }

@@ -10,6 +10,26 @@ MdiArea::~MdiArea()
 {
 }
 
+void MdiArea::setCheckedBackground(void)
+{
+   SubWindow* pCurrentSubWindow = dynamic_cast<SubWindow*>(currentSubWindow());
+
+   if(pCurrentSubWindow != nullptr)
+   {
+      pCurrentSubWindow->setCheckedBackground();
+   }
+}
+
+void MdiArea::askBackgroundColor(void)
+{
+   SubWindow* pCurrentSubWindow = dynamic_cast<SubWindow*>(currentSubWindow());
+
+   if(pCurrentSubWindow != nullptr)
+   {
+      pCurrentSubWindow->askBackgroundColor();
+   }
+}
+
 void MdiArea::mouseMoveEvent(QMouseEvent* pqEvent)
 {
    emit CleanStatusBar();
