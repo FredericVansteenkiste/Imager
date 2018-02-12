@@ -16,7 +16,8 @@ public:
    void ScaleImage(const qreal& dScale);
    qreal dScale(void) const;
 
-   GraphicsPixmapItem* pqItem(void) const;
+   GraphicsPixmapItem* pqPixmapItem(void) const;
+   QGraphicsRectItem*  pqCadreItem(void) const;
 
    // La méthode suivante permet de convertir les coordonnées de la scéne en
    // coordonnées de l'image

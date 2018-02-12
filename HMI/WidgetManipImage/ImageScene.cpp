@@ -49,9 +49,14 @@ qreal ImageScene::dScale(void) const
    return m_pqGraphicsPixmapItem->scale();
 }
 
-GraphicsPixmapItem* ImageScene::pqItem(void) const
+GraphicsPixmapItem* ImageScene::pqPixmapItem(void) const
 {
    return m_pqGraphicsPixmapItem;
+}
+
+QGraphicsRectItem* ImageScene::pqCadreItem(void) const
+{
+   return m_pqCadreItem;
 }
 
 QPointF ImageScene::mapToPixmapItem(const QPointF& qCoordScene)
