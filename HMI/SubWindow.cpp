@@ -177,10 +177,10 @@ void SubWindow::ResizeTransparency(void)
 
 void SubWindow::AppelMacro(void)
 {
-   int x(9);
-   int y(308);
-   int iWidth(76);
-   int iHeight(55);
+   int x(89);
+   int y(312);
+   int iWidth(306);
+   int iHeight(236);
    m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
@@ -241,7 +241,7 @@ void SubWindow::SupprPalette(void)
       return;
    }
 
-   // On crée une palette pour l'image.
+   // On convertit l'image à un format sans palette.
    m_qImage = m_qImage.convertToFormat(QImage::Format_ARGB32);
 
    // On sauvegarde notre image
