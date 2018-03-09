@@ -8,8 +8,8 @@ CExceptionMessagerie::CExceptionMessagerie(const QIcon& qIcone,
                                                 m_qstrExceptionMessage(qstrMsg),
                                                 m_strWhatMsg()
 {
-   m_strWhatMsg =   std::string("Exception not catch from CExceptionMessagerie")
-                  + " : " + pcNameFile + " at line " + std::to_string(iLine);
+   m_strWhatMsg =   qstrMsg.toStdString() + " : " + pcNameFile + " at line "
+                  + std::to_string(iLine);
 }
 
 CExceptionMessagerie::~CExceptionMessagerie()
