@@ -8,8 +8,10 @@
 #include "MdiArea.h"
 #include "SubWindow.h"
 #include "WidgetManipColor/WidgetManipColor.h"
+#include "../CExceptionMessagerie/CExceptionMessagerie.h"
 
 class SubWindow;
+class WidgetManipColor;
 
 class MainWindow : public QMainWindow
 {
@@ -17,7 +19,7 @@ class MainWindow : public QMainWindow
 
 public:
    MainWindow(QWidget* pqParent = nullptr);
-   ~MainWindow();
+   virtual ~MainWindow();
 
    WidgetManipColor* pWidgetManipColor(void) const;
 
@@ -55,6 +57,7 @@ private:
    void RedrawAllImage(void);
    void CreateDockWindow(void);
    void CreateCentralWidget(void);
+   void CreateConnection(void);
 
    bool bImageExist(const QString& qstrAbsoluteFilePath) const;
 

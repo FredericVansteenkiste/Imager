@@ -3,6 +3,7 @@
 WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    QWidget(pParent),
                                                    m_StateMachine(),
+                                                   m_pqVBoxLayout(nullptr),
                                                    m_pqCurrentColor(nullptr),
                                                    m_pqPen(nullptr),
                                                    m_pqPipette(nullptr),
@@ -22,7 +23,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqCurrentColor->setPixmap(qCurrentColor);
 
    // Je dessine un bouton permettant de sélectionner un crayon
-   m_pqPen = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
+   m_pqPen = new QPushButton(QIcon(":/Icones/Pen.png"),
                                    "",
                                    this);
    m_pqPen->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
@@ -35,7 +36,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
            m_pqPen,         &QPushButton::setChecked);
 
    // Je dessine une bouton permettant de sélectionner une pipette
-   m_pqPipette = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
+   m_pqPipette = new QPushButton(QIcon(":/Icones/Pipette.png"),
                                  "",
                                  this);
    m_pqPipette->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
@@ -67,18 +68,18 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqHBoxLayout2->addWidget(m_pqPipette);
    pqHBoxLayout2->addStretch();
 
-   QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
-   pqVBoxLayout->setMargin(4);
-   pqVBoxLayout->addLayout(pqHBoxLayout1);
-   pqVBoxLayout->addLayout(pqHBoxLayout2);
-   pqVBoxLayout->addWidget(m_pEditColor);
-   pqVBoxLayout->addStretch();
-   pqVBoxLayout->addWidget(m_pqSizePalette);
-   pqVBoxLayout->addWidget(m_pqColorNumber);
-   pqVBoxLayout->addWidget(m_pqDepth);
-   pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
-   pqVBoxLayout->addWidget(m_pqSizeImage);
-   setLayout(pqVBoxLayout);
+   m_pqVBoxLayout = new QVBoxLayout;
+   m_pqVBoxLayout->setMargin(4);
+   m_pqVBoxLayout->addLayout(pqHBoxLayout1);
+   m_pqVBoxLayout->addLayout(pqHBoxLayout2);
+   m_pqVBoxLayout->addWidget(m_pEditColor);
+   m_pqVBoxLayout->addStretch();
+   m_pqVBoxLayout->addWidget(m_pqSizePalette);
+   m_pqVBoxLayout->addWidget(m_pqColorNumber);
+   m_pqVBoxLayout->addWidget(m_pqDepth);
+   m_pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
+   m_pqVBoxLayout->addWidget(m_pqSizeImage);
+   setLayout(m_pqVBoxLayout);
 }
 
 WidgetManipColor::~WidgetManipColor()
@@ -132,4 +133,40 @@ void WidgetManipColor::SetSizeImage(const QSize& qSize)
 CSubStateMouse::e_state_machine WidgetManipColor::eCurrentState(void) const
 {
    return m_StateMachine.eCurrentState();
+}
+
+QVBoxLayout* WidgetManipColor::pVBoxLayout(void)
+{
+   return m_pqVBoxLayout;
+}
+
+void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
+{
+   SubWindow* pqActivatedSubWindow = dynamic_cast<SubWindow*>(pqMdiSubWindow);
+   MainWindow* pqMainWindow = dynamic_cast<MainWindow*>(parent()->parent());
+   QList<QMdiSubWindow*> qlqMdiSubWindow
+                        = dynamic_cast<MdiArea*>(pqMainWindow->centralWidget())
+                                                             ->subWindowList();
+
+   foreach(QMdiSubWindow* pMdiSubWindow, qlqMdiSubWindow)
+   {
+      SubWindow* pqSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
+
+      if(pqSubWindow != pqActivatedSubWindow)
+      {
+         pqSubWindow->pqWidgetPalette()->hide();
+      }
+      else
+      {
+         if(  (pqActivatedSubWindow == nullptr)
+            ||(pqActivatedSubWindow->bIsPalette() == false))
+         {
+            pqSubWindow->pqWidgetPalette()->hide();
+         }
+         else
+         {
+            pqSubWindow->pqWidgetPalette()->show();
+         }
+      }
+   }
 }

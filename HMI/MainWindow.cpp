@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
    SetMenuAndToolbar();
    CreateDockWindow();
    CreateCentralWidget();
+   CreateConnection();
 
    ReadSettings();
 
@@ -54,25 +55,25 @@ void MainWindow::SetMenuAndToolbar(void)
    connect(pActionOpen, &QAction::triggered, this, &MainWindow::OpenFile);
 
 
-   m_pActionReduceImage = new QAction(QIcon(":/HMI/Icones/resize.png"),
+   m_pActionReduceImage = new QAction(QIcon(":/Icones/resize.png"),
                                       tr("Resize"),
                                       this);
    m_pActionReduceImage->setDisabled(true);
 
 
-   m_pActionAppelMacro = new QAction(QIcon(":/HMI/Icones/Engrenages.png"),
+   m_pActionAppelMacro = new QAction(QIcon(":/Icones/Engrenages.png"),
                                      tr("Macro"),
                                      this);
    m_pActionAppelMacro->setDisabled(true);
 
    m_pActionCreatePalette = new QAction(
-                                    QIcon(":/HMI/Icones/CreatePalette.png"),
+                                    QIcon(":/Icones/CreatePalette.png"),
                                     tr("Creating a palette for the picture(s)"),
                                     this);
    m_pActionCreatePalette->setDisabled(true);
 
    m_pActionSupprPalette = new QAction(
-                              QIcon(":/HMI/Icones/DeletePalette.png"),
+                              QIcon(":/Icones/DeletePalette.png"),
                               tr("Deleting a palette for the picture(s)"),
                               this);
    m_pActionSupprPalette->setDisabled(true);
@@ -458,15 +459,49 @@ void MainWindow::CreateCentralWidget(void)
 {
    MdiArea* pqMdiArea = new MdiArea(this);
    setCentralWidget(pqMdiArea);
-   connect(pqMdiArea, &MdiArea::CleanStatusBar,
-           this, &MainWindow::CleanStatusBar);
-   connect(pqMdiArea, &QMdiArea::subWindowActivated,
-           this, &MainWindow::SubWindowActivated);
-   connect(pqMdiArea, &MdiArea::NewFileReceived,
-           this, &MainWindow::OpenListFile);
+}
 
-   connect(m_pActionCheckedBckgr, &QAction::triggered,
-           pqMdiArea, &MdiArea::setCheckedBackground);
-   connect(m_pActionColoredBckgr, &QAction::triggered,
-           pqMdiArea, &MdiArea::askBackgroundColor);
+void MainWindow::CreateConnection(void)
+{
+   MdiArea* pqMdiArea = dynamic_cast<MdiArea*>(centralWidget());
+
+   if(pqMdiArea == nullptr)
+   {
+      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
+                               "The central widget has not been created, "
+                               "impossible to do the connection",
+                               __FILE__,
+                               __LINE__);
+      throw Msg;
+   }
+   else
+   {
+      connect(pqMdiArea, &MdiArea::CleanStatusBar,
+              this, &MainWindow::CleanStatusBar);
+      connect(pqMdiArea, &QMdiArea::subWindowActivated,
+              this, &MainWindow::SubWindowActivated);
+      connect(pqMdiArea, &QMdiArea::subWindowActivated,
+              m_pWidgetManipColor, &WidgetManipColor::subWindowActivated);
+      connect(pqMdiArea, &MdiArea::NewFileReceived,
+              this, &MainWindow::OpenListFile);
+   }
+
+   if(  (m_pActionCheckedBckgr == nullptr)
+      ||(m_pActionColoredBckgr == nullptr))
+   {
+      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
+                               "The action to colorized the background has not "
+                               "yet been defined, impossible to do the "
+                               "connection",
+                               __FILE__,
+                               __LINE__);
+      throw Msg;
+   }
+   else
+   {
+      connect(m_pActionCheckedBckgr, &QAction::triggered,
+              pqMdiArea, &MdiArea::setCheckedBackground);
+      connect(m_pActionColoredBckgr, &QAction::triggered,
+              pqMdiArea, &MdiArea::askBackgroundColor);
+   }
 }

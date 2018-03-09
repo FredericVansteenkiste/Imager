@@ -4,6 +4,7 @@
 #include <QtWidgets>
 
 #include "WidgetManipImage/WidgetManipImage.h"
+#include "WidgetPalette/WidgetPalette.h"
 
 class WidgetManipImage;
 
@@ -25,6 +26,7 @@ public:
    QImage  qImage(void) const;
    WidgetManipImage& GetWidgetManipImage(void);
    bool bIsPalette(void) const;
+   WidgetPalette* pqWidgetPalette(void) const;
    unsigned int uiNbColorDefined(void) const;
    void askBackgroundColor(void);
    void setBackgroundColor(const QColor& qColor);
@@ -47,9 +49,11 @@ protected:
    virtual void moveEvent(QMoveEvent* pqEvent);
    virtual void resizeEvent(QResizeEvent* pqEvent);
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
+   virtual void closeEvent(QCloseEvent *event);
 
 private:
-   WidgetManipImage* m_pWidgetManipImage;
+   WidgetManipImage* m_pqWidgetManipImage;
+   WidgetPalette*    m_pqWidgetPalette;
    QFileInfo         m_qFileInfo;
    QImage            m_qImage;
    QAction*          m_pqActionSelectImage;

@@ -228,11 +228,11 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
       CSubStateMouse::e_state_machine eCurrentState = eGetStateMouse();
       if(eCurrentState == CSubStateMouse::PEN)
       {
-         setCursor(QCursor(QPixmap(":/HMI/Icones/Pen.png"), 0, 40));
+         setCursor(QCursor(QPixmap(":/Icones/Pen.png"), 0, 40));
       }
       else if(eCurrentState == CSubStateMouse::PIPETTE)
       {
-         setCursor(QCursor(QPixmap(":/HMI/Icones/Pipette.png"), 0, 40));
+         setCursor(QCursor(QPixmap(":/Icones/Pipette.png"), 0, 40));
       }
       else
       {

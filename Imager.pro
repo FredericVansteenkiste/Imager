@@ -29,7 +29,10 @@ SOURCES += main.cpp \
     HMI/WidgetManipColor/WidgetManipColor.cpp \
     HMI/WidgetManipColor/CStateMouse/CSubStateMouse.cpp \
     HMI/WidgetManipColor/WidgetEditColor.cpp \
-    HMI/WidgetManipColor/WidgetEditComponentColor.cpp
+    HMI/WidgetManipColor/WidgetEditComponentColor.cpp \
+    HMI/WidgetPalette/WidgetPaletteElement.cpp \
+    HMI/WidgetPalette/WidgetPalette.cpp \
+    CExceptionMessagerie/CExceptionMessagerie.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -48,7 +51,10 @@ HEADERS += \
     HMI/WidgetManipColor/CStateMouse/CSubStateMouse.h \
     HMI/WidgetManipColor/WidgetEditColor.h \
     HMI/WidgetManipColor/WidgetEditComponentColor.h \
-    global.h
+    global.h \
+    HMI/WidgetPalette/WidgetPaletteElement.h \
+    HMI/WidgetPalette/WidgetPalette.h \
+    CExceptionMessagerie/CExceptionMessagerie.h
 
 RESOURCES += \
     Imager.qrc
@@ -57,6 +63,8 @@ OTHER_FILES +=
 
 CONFIG += c++11
 
-RC_ICONS = HMI/Icones/application.ico
+RC_ICONS = Icones/application.ico
 
 QMAKE_CXXFLAGS += -Wall
+
+DISTFILES +=

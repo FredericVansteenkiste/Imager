@@ -11,7 +11,7 @@
 #define DEFAULT_ZOOM_FACTOR               (1.15)
 #define DEFAULT_ZOOM_CTRL_FACTOR          (1.01)
 #define SCALE_MAX                         (15)
-#define ADRESS_CHECKED_BACKGROUND_PICTURE (":/HMI/Icones/ArrierePlan.png")
+#define ADRESS_CHECKED_BACKGROUND_PICTURE (":/Icones/ArrierePlan.png")
 
 class ImageView : public QGraphicsView
 {

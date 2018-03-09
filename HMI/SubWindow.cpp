@@ -3,16 +3,17 @@
 SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      const QImage& qImage,
                      QWidget* pParent):QMdiSubWindow(pParent),
-                                       m_pWidgetManipImage(nullptr),
+                                       m_pqWidgetManipImage(nullptr),
+                                       m_pqWidgetPalette(nullptr),
                                        m_qFileInfo(qFileInfo),
                                        m_qImage(qImage),
                                        m_pqActionSelectImage(nullptr),
                                        m_qCurrentColor(Qt::black)
 
 {
-   m_pWidgetManipImage = new WidgetManipImage(this);
+   m_pqWidgetManipImage = new WidgetManipImage(this);
 
-   // On choisi une couleur de travail
+   // On choisit une couleur de travail
    if(m_qImage.colorTable().isEmpty() == false)
    {
       m_qCurrentColor = m_qImage.colorTable()[0];
@@ -23,9 +24,16 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    setWindowTitle(m_qFileInfo.fileName());
    setWindowIcon(QIcon(":HMI/Icones/image.png"));
 
-   m_pWidgetManipImage->setImage(m_qImage);
-   setWidget(*m_pWidgetManipImage);
+   m_pqWidgetManipImage->setImage(m_qImage);
+   setWidget(*m_pqWidgetManipImage);
 
+   // On crée la palette correspondante à notre image
+   m_pqWidgetPalette = new WidgetPalette(qImage.colorCount());
+   dynamic_cast<MainWindow*>(parent())->pWidgetManipColor()
+                                      ->pVBoxLayout()
+                                      ->insertWidget(3, m_pqWidgetPalette);
+
+   // On met à jour la variable QSettings
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    QVariant qVarBckgrndBrush = qSettings.value(  m_qFileInfo.absoluteFilePath()
                                                + "/QBrush");
@@ -33,11 +41,12 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    {
       qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                            + "/QBrush",
-                           m_pWidgetManipImage->backgroundBrush());
+                           m_pqWidgetManipImage->backgroundBrush());
    }
    else
    {
-      m_pWidgetManipImage->setBackgroundBrush(qVarBckgrndBrush.value<QBrush>());
+      m_pqWidgetManipImage->setBackgroundBrush(
+                                             qVarBckgrndBrush.value<QBrush>());
    }
 }
 
@@ -169,7 +178,7 @@ void SubWindow::ResizeTransparency(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -195,7 +204,7 @@ void SubWindow::AppelMacro(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
@@ -226,7 +235,7 @@ void SubWindow::CreatePalette(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -254,7 +263,7 @@ void SubWindow::SupprPalette(void)
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -268,18 +277,18 @@ void SubWindow::SelectSubWindow(void)
 void SubWindow::setCheckedBackground(void)
 {
    // On applique le damier à l'arrière plan.
-   m_pWidgetManipImage->setBackgroundBrush(QBrush(
+   m_pqWidgetManipImage->setBackgroundBrush(QBrush(
                                  QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
-                      m_pWidgetManipImage->backgroundBrush());
+                      m_pqWidgetManipImage->backgroundBrush());
 }
 
 void SubWindow::askBackgroundColor(void)
 {
    // On demande à l'utilisateur de sélectionner une couleur
-   QColor qColor = m_pWidgetManipImage->backgroundBrush().color();
+   QColor qColor = m_pqWidgetManipImage->backgroundBrush().color();
    QColorDialog* pqColorDialog = new QColorDialog(qColor, this);
    pqColorDialog->setOptions(  QColorDialog::NoButtons
                              | QColorDialog::DontUseNativeDialog);
@@ -294,11 +303,11 @@ void SubWindow::askBackgroundColor(void)
 
 void SubWindow::setBackgroundColor(const QColor& qColor)
 {
-   m_pWidgetManipImage->setBackgroundBrush(QBrush(qColor));
+   m_pqWidgetManipImage->setBackgroundBrush(QBrush(qColor));
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
-                      m_pWidgetManipImage->backgroundBrush());
+                      m_pqWidgetManipImage->backgroundBrush());
 
    MdiArea* pMdiArea = dynamic_cast<MdiArea*>(mdiArea());
    if(pMdiArea != nullptr)
@@ -328,14 +337,26 @@ void SubWindow::mouseMoveEvent(QMouseEvent* pqEvent)
    QMdiSubWindow::mouseMoveEvent(pqEvent);
 }
 
+void SubWindow::closeEvent(QCloseEvent* event)
+{
+   dynamic_cast<MainWindow*>(parent()->parent()
+                                     ->parent())
+                                             ->pWidgetManipColor()
+                                             ->pVBoxLayout()
+                                             ->removeWidget(m_pqWidgetPalette);
+   m_pqWidgetPalette->setParent(this);
+
+   event->accept();
+}
+
 void SubWindow::Redraw(void)
 {
-   m_pWidgetManipImage->pImageView()->resetCachedContent();
+   m_pqWidgetManipImage->pImageView()->resetCachedContent();
 }
 
 WidgetManipImage& SubWindow::GetWidgetManipImage(void)
 {
-   return *m_pWidgetManipImage;
+   return *m_pqWidgetManipImage;
 }
 
 bool SubWindow::bIsPalette(void) const
@@ -348,6 +369,11 @@ bool SubWindow::bIsPalette(void) const
    {
       return true;
    }
+}
+
+WidgetPalette* SubWindow::pqWidgetPalette(void) const
+{
+   return m_pqWidgetPalette;
 }
 
 unsigned int SubWindow::uiNbColorDefined(void) const
@@ -367,7 +393,7 @@ unsigned int SubWindow::uiNbColorDefined(void) const
 
 QPixmap SubWindow::qPixmap(void) const
 {
-   return m_pWidgetManipImage->qPixmap();
+   return m_pqWidgetManipImage->qPixmap();
 }
 
 QImage SubWindow::qImage(void) const
