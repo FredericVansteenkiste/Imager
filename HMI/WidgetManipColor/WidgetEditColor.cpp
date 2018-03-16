@@ -17,7 +17,7 @@ WidgetEditColor::WidgetEditColor(QWidget* pqParent):QWidget(pqParent),
                                                 pqValidator,
                                                 this);
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
-   pqHBoxLayout1->setMargin(0);
+   pqHBoxLayout1->setContentsMargins(0, 0, 0, 0);
    pqHBoxLayout1->addStretch();
    pqHBoxLayout1->addWidget(m_pqEditRed);
    pqHBoxLayout1->addWidget(m_pqEditGreen);
@@ -32,14 +32,14 @@ WidgetEditColor::WidgetEditColor(QWidget* pqParent):QWidget(pqParent),
                                                 pqValidator,
                                                 this);
    QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
-   pqHBoxLayout2->setMargin(0);
+   pqHBoxLayout2->setContentsMargins(0, 0, 0, 0);
    pqHBoxLayout2->addStretch();
    pqHBoxLayout2->addWidget(m_pqEditBlue);
    pqHBoxLayout2->addWidget(m_pqEditAlpha);
    pqHBoxLayout2->addStretch();
 
    QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
-   pqVBoxLayout->setMargin(0);
+   pqVBoxLayout->setContentsMargins(0, 0, 0, 0);
    pqVBoxLayout->addLayout(pqHBoxLayout1);
    pqVBoxLayout->addLayout(pqHBoxLayout2);
 

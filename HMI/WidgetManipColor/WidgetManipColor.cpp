@@ -23,7 +23,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqCurrentColor->setPixmap(qCurrentColor);
 
    // Je dessine un bouton permettant de sélectionner un crayon
-   m_pqPen = new QPushButton(QIcon(":/Icones/Pen.png"),
+   m_pqPen = new QPushButton(QIcon(":/HMI/Icones/Pen.png"),
                                    "",
                                    this);
    m_pqPen->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
@@ -36,7 +36,7 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
            m_pqPen,         &QPushButton::setChecked);
 
    // Je dessine une bouton permettant de sélectionner une pipette
-   m_pqPipette = new QPushButton(QIcon(":/Icones/Pipette.png"),
+   m_pqPipette = new QPushButton(QIcon(":/HMI/Icones/Pipette.png"),
                                  "",
                                  this);
    m_pqPipette->setIconSize(QSize(SIZE_BUTTON, SIZE_BUTTON));
@@ -68,11 +68,16 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqHBoxLayout2->addWidget(m_pqPipette);
    pqHBoxLayout2->addStretch();
 
+   QHBoxLayout* pqHBoxLayout3 = new QHBoxLayout;
+   pqHBoxLayout3->addStretch();
+   pqHBoxLayout3->addWidget(m_pEditColor);
+   pqHBoxLayout3->addStretch();
+
    m_pqVBoxLayout = new QVBoxLayout;
-   m_pqVBoxLayout->setMargin(4);
+   m_pqVBoxLayout->setContentsMargins(0, 0, 0, 0);
    m_pqVBoxLayout->addLayout(pqHBoxLayout1);
    m_pqVBoxLayout->addLayout(pqHBoxLayout2);
-   m_pqVBoxLayout->addWidget(m_pEditColor);
+   m_pqVBoxLayout->addLayout(pqHBoxLayout3);
    m_pqVBoxLayout->addStretch();
    m_pqVBoxLayout->addWidget(m_pqSizePalette);
    m_pqVBoxLayout->addWidget(m_pqColorNumber);
@@ -151,6 +156,12 @@ void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
    foreach(QMdiSubWindow* pMdiSubWindow, qlqMdiSubWindow)
    {
       SubWindow* pqSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
+
+      if(  (pqSubWindow == nullptr)
+         ||(pqSubWindow->pqWidgetPalette() == nullptr))
+      {
+         continue;
+      }
 
       if(pqSubWindow != pqActivatedSubWindow)
       {

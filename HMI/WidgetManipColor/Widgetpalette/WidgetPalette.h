@@ -12,6 +12,13 @@ class WidgetPalette : public QScrollArea
 public:
    WidgetPalette(const unsigned int& uiNbrColor, QWidget* pParent = nullptr);
    virtual ~WidgetPalette();
+
+protected:
+   virtual void resizeEvent(QResizeEvent* pqEvent);
+
+private:
+   QList<WidgetPaletteElement*> m_qlstPaletteElement;
+   QGridLayout*                 m_pqPaletteLayout;
 };
 
 #endif // WIDGETPALETTE_H

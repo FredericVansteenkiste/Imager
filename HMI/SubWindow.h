@@ -4,7 +4,7 @@
 #include <QtWidgets>
 
 #include "WidgetManipImage/WidgetManipImage.h"
-#include "WidgetPalette/WidgetPalette.h"
+#include "WidgetManipColor/WidgetPalette/WidgetPalette.h"
 
 class WidgetManipImage;
 

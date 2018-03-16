@@ -1,17 +1,17 @@
 <RCC>
     <qresource prefix="/">
-        <file>Icones/application.ico</file>
-        <file>Icones/image.png</file>
-        <file>Icones/resize.png</file>
-        <file>Icones/ArrierePlan.png</file>
-        <file>Icones/Pen.png</file>
-        <file>Icones/MagnifyingGlass.png</file>
-        <file>Icones/Engrenages.png</file>
-        <file>Icones/Pipette.png</file>
-        <file>Icones/CreatePalette.png</file>
-        <file>Icones/DeletePalette.png</file>
-        <file>Icones/IconeErreur.png</file>
-        <file>Icones/IconeOK.png</file>
-        <file>Icones/IconeWarning.png</file>
+        <file>HMI/Icones/application.ico</file>
+        <file>HMI/Icones/image.png</file>
+        <file>HMI/Icones/resize.png</file>
+        <file>HMI/Icones/ArrierePlan.png</file>
+        <file>HMI/Icones/Pen.png</file>
+        <file>HMI/Icones/MagnifyingGlass.png</file>
+        <file>HMI/Icones/Engrenages.png</file>
+        <file>HMI/Icones/Pipette.png</file>
+        <file>HMI/Icones/CreatePalette.png</file>
+        <file>HMI/Icones/DeletePalette.png</file>
+        <file>CExceptionMessagerie/Icones/IconeErreur.png</file>
+        <file>CExceptionMessagerie/Icones/IconeOK.png</file>
+        <file>CExceptionMessagerie/Icones/IconeWarning.png</file>
     </qresource>
 </RCC>

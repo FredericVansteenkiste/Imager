@@ -5,7 +5,7 @@
 
 #include "CStateMouse.h"
 #include "WidgetEditColor.h"
-#include "../WidgetPalette/WidgetPalette.h"
+#include "WidgetPalette/WidgetPalette.h"
 #include "../SubWindow.h"
 
 #define SIZE_BUTTON (25)

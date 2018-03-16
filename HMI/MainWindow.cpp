@@ -55,25 +55,25 @@ void MainWindow::SetMenuAndToolbar(void)
    connect(pActionOpen, &QAction::triggered, this, &MainWindow::OpenFile);
 
 
-   m_pActionReduceImage = new QAction(QIcon(":/Icones/resize.png"),
+   m_pActionReduceImage = new QAction(QIcon(":/HMI/Icones/resize.png"),
                                       tr("Resize"),
                                       this);
    m_pActionReduceImage->setDisabled(true);
 
 
-   m_pActionAppelMacro = new QAction(QIcon(":/Icones/Engrenages.png"),
+   m_pActionAppelMacro = new QAction(QIcon(":/HMI/Icones/Engrenages.png"),
                                      tr("Macro"),
                                      this);
    m_pActionAppelMacro->setDisabled(true);
 
    m_pActionCreatePalette = new QAction(
-                                    QIcon(":/Icones/CreatePalette.png"),
+                                    QIcon(":/HMI/Icones/CreatePalette.png"),
                                     tr("Creating a palette for the picture(s)"),
                                     this);
    m_pActionCreatePalette->setDisabled(true);
 
    m_pActionSupprPalette = new QAction(
-                              QIcon(":/Icones/DeletePalette.png"),
+                              QIcon(":/HMI/Icones/DeletePalette.png"),
                               tr("Deleting a palette for the picture(s)"),
                               this);
    m_pActionSupprPalette->setDisabled(true);
@@ -467,7 +467,8 @@ void MainWindow::CreateConnection(void)
 
    if(pqMdiArea == nullptr)
    {
-      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
+      CExceptionMessagerie Msg(QIcon(":/CExceptionMessagerie/Icones/IconeErreur"
+                                     ".png"),
                                "The central widget has not been created, "
                                "impossible to do the connection",
                                __FILE__,
@@ -489,7 +490,8 @@ void MainWindow::CreateConnection(void)
    if(  (m_pActionCheckedBckgr == nullptr)
       ||(m_pActionColoredBckgr == nullptr))
    {
-      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
+      CExceptionMessagerie Msg(QIcon(":/CExceptionMessagerie/Icones/IconeErreur"
+                                     ".png"),
                                "The action to colorized the background has not "
                                "yet been defined, impossible to do the "
                                "connection",
