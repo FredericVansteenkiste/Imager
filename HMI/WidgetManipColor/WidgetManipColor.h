@@ -11,6 +11,7 @@
 #define SIZE_BUTTON (25)
 
 class SubWindow;
+class WidgetPalette;
 
 class WidgetManipColor : public QWidget
 {
@@ -24,11 +25,15 @@ public:
    void SetBitsUsedPerPixel(const unsigned int& uiBitsUsedPerPixel);
    void SetSizeImage(const QSize& qSize);
    CSubStateMouse::e_state_machine eCurrentState(void) const;
+   QSize qSizePalette(void) const;
 
    QVBoxLayout* pVBoxLayout(void);
 
 public slots:
    void subWindowActivated(QMdiSubWindow* pqMdiSubWindow);
+
+protected:
+   virtual void resizeEvent(QResizeEvent* pqEvent);
 
 private:
    CStateMouse      m_StateMachine;
@@ -39,7 +44,6 @@ private:
    QPushButton*     m_pqPipette;
 
    WidgetEditColor* m_pEditColor;
-   WidgetPalette*   m_pPalette;
 
    QLabel*          m_pqSizePalette;       // Size of the used palette if any.
    QLabel*          m_pqColorNumber;       // Number of color in the image.

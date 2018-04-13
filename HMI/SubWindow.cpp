@@ -5,6 +5,7 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      QWidget* pParent):QMdiSubWindow(pParent),
                                        m_pqWidgetManipImage(nullptr),
                                        m_pqWidgetPalette(nullptr),
+                                       m_pqPaletteLayout(nullptr),
                                        m_qFileInfo(qFileInfo),
                                        m_qImage(qImage),
                                        m_pqActionSelectImage(nullptr),
@@ -31,9 +32,13 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    if(qImage.colorCount() != 0)
    {
       m_pqWidgetPalette = new WidgetPalette(qImage.colorCount());
+      m_pqPaletteLayout = new QHBoxLayout();
+      m_pqPaletteLayout->addStretch();
+      m_pqPaletteLayout->addWidget(m_pqWidgetPalette);
+      m_pqPaletteLayout->addStretch();
       dynamic_cast<MainWindow*>(parent())->pWidgetManipColor()
                                          ->pVBoxLayout()
-                                         ->insertWidget(3, m_pqWidgetPalette);
+                                         ->insertLayout(3, m_pqPaletteLayout);
    }
 
    // On met à jour la variable QSettings

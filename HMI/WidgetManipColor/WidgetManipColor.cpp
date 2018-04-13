@@ -181,3 +181,39 @@ void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
       }
    }
 }
+
+QSize WidgetManipColor::qSizePalette(void) const
+{
+   QSize sizePalette;
+   sizePalette.setHeight(  size().height()
+                         - m_pqCurrentColor->size().height()
+                         - m_pqPen->size().height()
+                         - m_pEditColor->size().height()
+                         - m_pqSizePalette->size().height()
+                         - m_pqColorNumber->size().height()
+                         - m_pqDepth->size().height()
+                         - m_pqBitUsedPerPixel->size().height()
+                         - m_pqSizeImage->size().height()
+                         - 5);
+   sizePalette.setWidth(size().width() - 5);
+
+   return sizePalette;
+}
+int i1 = 0;
+void WidgetManipColor::resizeEvent(QResizeEvent* pqEvent)
+{
+   qDebug() << "WidgetManipColor : " << (i1++);
+   MainWindow* pqMainWindow = dynamic_cast<MainWindow*>(parent()->parent());
+   SubWindow* pqActiveSubWindow
+                     = dynamic_cast<SubWindow*>(
+                       dynamic_cast<MdiArea*>(pqMainWindow->centralWidget())
+                                                          ->activeSubWindow());
+
+   QResizeEvent* pqResizeEvent = new QResizeEvent(qSizePalette(), QSize());
+   qDebug() << "WidgetManipColor : " << pqActiveSubWindow->pqWidgetPalette() << "\n";
+   QCoreApplication::sendEvent(pqActiveSubWindow->pqWidgetPalette(),
+                               pqResizeEvent);
+//   pqActiveSubWindow->pqWidgetPalette()->resize(qSizePalette());
+
+   pqEvent->accept();
+}

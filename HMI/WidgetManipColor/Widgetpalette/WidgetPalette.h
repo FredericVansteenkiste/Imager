@@ -4,13 +4,17 @@
 #include <QtWidgets>
 
 #include "WidgetPaletteElement.h"
+#include "../WidgetManipColor.h"
+
+class WidgetManipColor;
 
 class WidgetPalette : public QScrollArea
 {
    Q_OBJECT
 
 public:
-   WidgetPalette(const unsigned int& uiNbrColor, QWidget* pParent = nullptr);
+   WidgetPalette(const unsigned int& uiNbrColor,
+                 QWidget* pParent = nullptr);
    virtual ~WidgetPalette();
 
 protected:

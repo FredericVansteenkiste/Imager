@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 
+#define SIZE_PALETTE_ELEMENT (13)
+
 class WidgetPaletteElement : public QCheckBox
 {
    Q_OBJECT

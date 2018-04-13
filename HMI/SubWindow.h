@@ -7,6 +7,7 @@
 #include "WidgetManipColor/WidgetPalette/WidgetPalette.h"
 
 class WidgetManipImage;
+class WidgetPalette;
 
 class SubWindow : public QMdiSubWindow
 {
@@ -54,6 +55,7 @@ protected:
 private:
    WidgetManipImage* m_pqWidgetManipImage;
    WidgetPalette*    m_pqWidgetPalette;
+   QHBoxLayout*      m_pqPaletteLayout;
    QFileInfo         m_qFileInfo;
    QImage            m_qImage;
    QAction*          m_pqActionSelectImage;
