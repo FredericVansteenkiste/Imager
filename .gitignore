@@ -5,3 +5,5 @@ Imager.pro.*
 # On ne cherche pas à faire le suivi du répertoire Temp
 Temp/
 temp/
+# Le fichier suivant où j'enregistre mon message de commit n'a pas besoint d'être suivi
+logFile

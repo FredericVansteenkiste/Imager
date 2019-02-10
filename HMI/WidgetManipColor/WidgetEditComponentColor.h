@@ -10,7 +10,7 @@ public:
    WidgetEditComponentColor(const QString& qLabel,
                             const unsigned char& ucValue,
                             QValidator* pqValidator,
-                            QWidget* pqParent = 0);
+                            QWidget* pqParent = nullptr);
    virtual ~WidgetEditComponentColor();
 
 signals:

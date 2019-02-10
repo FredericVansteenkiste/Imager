@@ -1,5 +1,7 @@
 #include "MainWindow.h"
 
+#define STR_CURRENT_DIRECTORY "currentDirectory"
+
 MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pActionReduceImage(nullptr),
                                           m_pActionAppelMacro(nullptr),
@@ -168,7 +170,7 @@ void MainWindow::OpenFile(void)
    QStringList qlstrListFiles = QFileDialog::getOpenFileNames(
                                  this,
                                  "Select one or more image files to open",
-                                 qSettings.value("currentDirectory").toString(),
+                                 qSettings.value(STR_CURRENT_DIRECTORY).toString(),
                                  "Images (*.png *.bmp *.jpg)");
 
    OpenListFile(qlstrListFiles);
@@ -185,7 +187,7 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
 
    // On enregistre le répertoire courant
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
-   qSettings.setValue("currentDirectory", qFileInfoTmp.absolutePath());
+   qSettings.setValue(STR_CURRENT_DIRECTORY, qFileInfoTmp.absolutePath());
 
    // On ajoute les images sélectionnés sur le widget central
    MdiArea* pqMdiArea = dynamic_cast<MdiArea*>(centralWidget());
@@ -362,7 +364,7 @@ void MainWindow::closeEvent(QCloseEvent* pqEvent)
       foreach(QMdiSubWindow* pMdiSubWindow, qlpSubWindow)
       {
          SubWindow* pSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
-         disconnect(pSubWindow, 0, 0, 0);
+         disconnect(pSubWindow, nullptr, nullptr, nullptr);
       }
    }
 
@@ -378,11 +380,13 @@ void MainWindow::SubWindowActivated(QMdiSubWindow* pMdiSubWindow)
    else
    {
       SubWindow* pSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
-      m_pWidgetManipColor->SetSizePalette(pSubWindow->qImage().colorCount());
+      m_pWidgetManipColor->SetSizePalette(static_cast<unsigned int>(
+                                            pSubWindow->qImage().colorCount()));
       m_pWidgetManipColor->SetColorNumber(pSubWindow->uiNbColorDefined());
-      m_pWidgetManipColor->SetDepth(pSubWindow->qImage().depth());
-      m_pWidgetManipColor->SetBitsUsedPerPixel(
-                                       pSubWindow->qImage().bitPlaneCount());
+      m_pWidgetManipColor->SetDepth(static_cast<unsigned int>(
+                                                pSubWindow->qImage().depth()));
+      m_pWidgetManipColor->SetBitsUsedPerPixel(static_cast<unsigned int>(
+                                        pSubWindow->qImage().bitPlaneCount()));
       m_pWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
       m_pWidgetManipColor->show();
 

@@ -9,7 +9,7 @@ class WidgetEditColor : public QWidget
 {
    Q_OBJECT
 public:
-   WidgetEditColor(QWidget* pqParent = 0);
+   WidgetEditColor(QWidget* pqParent = nullptr);
    virtual ~WidgetEditColor();
 
 private:

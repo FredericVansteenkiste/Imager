@@ -14,6 +14,8 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    m_pqWidgetManipImage = new WidgetManipImage(this);
 
    // On choisit une couleur de travail
+   // Si il existe une palette définit pour l'image, on sélectionne la première
+   // couleur de la palette
    if(m_qImage.colorTable().isEmpty() == false)
    {
       m_qCurrentColor = m_qImage.colorTable()[0];
@@ -28,7 +30,8 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    setWidget(*m_pqWidgetManipImage);
 
    // On crée la palette correspondante à notre image
-   m_pqWidgetPalette = new WidgetPalette(qImage.colorCount());
+   m_pqWidgetPalette = new WidgetPalette(static_cast<unsigned int>(
+                                                        qImage.colorCount()));
    dynamic_cast<MainWindow*>(parent())->pWidgetManipColor()
                                       ->pVBoxLayout()
                                       ->insertWidget(3, m_pqWidgetPalette);
@@ -72,6 +75,7 @@ QAction* SubWindow::pqActionSelectImage(void)
 
 void SubWindow::ResizeTransparency(void)
 {
+   // On recherche où se trouve les bords de l'image
    int  iFirstLineVisible(0);
    bool bIsFound = false;
    for(int y = 0; y < m_qImage.height(); y++)
@@ -161,10 +165,13 @@ void SubWindow::ResizeTransparency(void)
       return;
    }
 
+   // J'extrais la partie de l'image qui nous intéresse
    m_qImage = m_qImage.copy(iFirstColumnVisible,
                             iFirstLineVisible,
                             iLastColumnVisible - iFirstColumnVisible + 1,
                             iLastLineVisible - iFirstLineVisible + 1);
+   // Je copie le fichier dans un nouveau nom indiquant les coordonnées de la
+   // nouvelle image dans l'ancienne
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
    qstrFileName.replace("." + qstrSuffix, "")
@@ -177,6 +184,7 @@ void SubWindow::ResizeTransparency(void)
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
    m_qImage.save(m_qFileInfo.absoluteFilePath());
 
+   // Et l'image crée devient la nouvelle image de la fenêtre
    setWindowTitle(m_qFileInfo.fileName());
    m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
@@ -388,7 +396,7 @@ unsigned int SubWindow::uiNbColorDefined(void) const
       }
    }
 
-   return qmapColor.size();
+   return static_cast<unsigned int>(qmapColor.size());
 }
 
 QPixmap SubWindow::qPixmap(void) const

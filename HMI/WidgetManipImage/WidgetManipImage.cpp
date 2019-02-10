@@ -53,9 +53,9 @@ void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
       // Si l'arrière plan est une couleur, je mets l'inverse de la couleur en
       // pointillé
       QColor qBckGrndColor = qBckgrndBrush.color();
-      qBckGrndColor.setRed(  255 - qBckGrndColor.red());
-      qBckGrndColor.setBlue( 255 - qBckGrndColor.blue());
-      qBckGrndColor.setGreen(255 - qBckGrndColor.green());
+      qBckGrndColor.setRed(iRevertColor(qBckGrndColor.red()));
+      qBckGrndColor.setBlue(iRevertColor(qBckGrndColor.blue()));
+      qBckGrndColor.setGreen(iRevertColor(qBckGrndColor.green()));
       m_pqGraphicsScene->pqCadreItem()->setPen(QPen(QBrush(qBckGrndColor,
                                                            Qt::SolidPattern),
                                                     1,

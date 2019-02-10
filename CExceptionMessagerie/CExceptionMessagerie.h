@@ -13,10 +13,10 @@ public:
                         const int& iLine);
    virtual ~CExceptionMessagerie();
 
-   virtual const char* what(void) const throw();
+   virtual const char* what(void) const noexcept;
 
-   const QString& qstrExceptionMessage(void) const throw();
-   const QIcon&   qIcone(void) const throw();
+   const QString& qstrExceptionMessage(void) const noexcept;
+   const QIcon&   qIcone(void) const noexcept;
 
 private:
    QIcon       m_qIcone;

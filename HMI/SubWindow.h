@@ -1,5 +1,6 @@
 #ifndef SUBWINDOW_H
 #define SUBWINDOW_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -39,10 +40,17 @@ signals:
    void UpdateWidgetManipColor(void);
 
 public slots:
+   // La méthode suivante permet de retirer les parties superflues d'une image
+   // transparente en ressérant les bords de l'image
    void ResizeTransparency(void);
+   // Macro
    void AppelMacro(void);
+   // La méthode suivante crée une palette pour l'image courante
    void CreatePalette(void);
+   // La méthode suivante détruit la palette de l'image courante
    void SupprPalette(void);
+   // La méthode suivante répertorie les actions à effectuer lorsque l'image
+   // courante est sélectionnée
    void SelectSubWindow(void);
 
 protected:

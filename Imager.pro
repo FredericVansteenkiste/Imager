@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     HMI/WidgetManipColor/WidgetEditComponentColor.cpp \
     HMI/WidgetPalette/WidgetPaletteElement.cpp \
     HMI/WidgetPalette/WidgetPalette.cpp \
-    CExceptionMessagerie/CExceptionMessagerie.cpp
+    CExceptionMessagerie/CExceptionMessagerie.cpp \
+    global.cpp
 
 HEADERS += \
     HMI/MainWindow.h \

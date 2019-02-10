@@ -1,5 +1,6 @@
 #ifndef WIDGETMANIPCOLOR_H
 #define WIDGETMANIPCOLOR_H
+#pragma once
 
 #include <QtWidgets>
 

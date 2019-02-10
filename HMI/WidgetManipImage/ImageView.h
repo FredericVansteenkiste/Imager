@@ -1,5 +1,6 @@
 #ifndef IMAGEVIEW_H
 #define IMAGEVIEW_H
+#pragma once
 
 #include <QtWidgets>
 

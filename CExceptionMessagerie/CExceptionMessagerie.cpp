@@ -16,17 +16,17 @@ CExceptionMessagerie::~CExceptionMessagerie()
 {
 }
 
-const char* CExceptionMessagerie::what() const throw()
+const char* CExceptionMessagerie::what() const noexcept
 {
    return m_strWhatMsg.c_str();
 }
 
-const QString& CExceptionMessagerie::qstrExceptionMessage(void) const throw()
+const QString& CExceptionMessagerie::qstrExceptionMessage(void) const noexcept
 {
    return m_qstrExceptionMessage;
 }
 
-const QIcon& CExceptionMessagerie::qIcone(void) const throw()
+const QIcon& CExceptionMessagerie::qIcone(void) const noexcept
 {
    return m_qIcone;
 }

@@ -11,7 +11,7 @@ WidgetPalette::WidgetPalette(const unsigned int& uiNbrColor,
       WidgetPaletteElement* pqColorElement = new WidgetPaletteElement(
                                                                Qt::black,
                                                                this);
-      pqPaletteLayout->addWidget(pqColorElement, i, 0);
+      pqPaletteLayout->addWidget(pqColorElement, static_cast<int>(i), 0);
    }
    setLayout(pqPaletteLayout);
 }

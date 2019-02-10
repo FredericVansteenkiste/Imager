@@ -1,10 +1,12 @@
 #ifndef WidgetManipImage_H
 #define WidgetManipImage_H
+#pragma once
 
 #include <QtWidgets>
 
 #include "ImageScene.h"
 #include "ImageView.h"
+#include "../../global.h"
 
 class ImageView;
 class ImageScene;
