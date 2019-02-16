@@ -201,14 +201,16 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
    // On indique quelle est la position de la souris et le code couleur du pixel
    // correspondant
    QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(qMousePointScene);
-   QRectF qRectImageF(QPoint(0, 0), pqImageScene()->qPixmap().size());
+   QRectF qRectImageF(QPoint(0, 0),
+                      pqImageScene()->qPixmap().size() - QSize(1, 1));
    // Si mon pointeur est sur l'image ...
    if(qRectImageF.contains(qMousePointItemF) == true)
    {
       // ... j'indique quelles sont les coordonnées de la souris (dans le repère
       // de l'image) ...
       qstrLabel = "Coord = (%1, %2)";
-      QPoint qMousePointItem(qMousePointItemF.x(), qMousePointItemF.y());
+      QPoint qMousePointItem(qFloor(qMousePointItemF.x()),
+                             qFloor(qMousePointItemF.y()));
       qstrLabel = qstrLabel.arg(qMousePointItem.x())
                            .arg(qMousePointItem.y());
       emit CoordMouse(qstrLabel);

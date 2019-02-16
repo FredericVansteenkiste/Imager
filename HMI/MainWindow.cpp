@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
                                           m_pActionCheckedBckgr(nullptr),
                                           m_pActionColoredBckgr(nullptr),
                                           m_pWindowMenu(nullptr),
+                                          m_pActionsWindowMenu(nullptr),
                                           m_pLabelCoordMouse(nullptr),
                                           m_pLabelColorPixel(nullptr),
                                           m_pWidgetManipColor(nullptr)
@@ -122,6 +123,9 @@ void MainWindow::SetMenuAndToolbar(void)
    bckgrMenu->addAction(m_pActionColoredBckgr);
 
    m_pWindowMenu = menuBar()->addMenu(tr("&Window"));
+   // Je crée un groupe action pour marquer quelles est la fenêtre sélectionnée.
+   m_pActionsWindowMenu = new QActionGroup(this);
+   m_pActionsWindowMenu->setExclusive(true);
 
    QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
    helpMenu->addAction(pActionAbout);
@@ -218,13 +222,13 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       m_pActionCheckedBckgr->setEnabled(true);
       m_pActionColoredBckgr->setEnabled(true);
       connect(m_pActionReduceImage, &QAction::triggered,
-              pSubWindow, &SubWindow::ResizeTransparency);
+              pSubWindow,           &SubWindow::ResizeTransparency);
       connect(m_pActionAppelMacro, &QAction::triggered,
-              pSubWindow, &SubWindow::AppelMacro);
+              pSubWindow,          &SubWindow::AppelMacro);
       connect(m_pActionCreatePalette, &QAction::triggered,
-              pSubWindow, &SubWindow::CreatePalette);
+              pSubWindow,             &SubWindow::CreatePalette);
       connect(m_pActionSupprPalette, &QAction::triggered,
-              pSubWindow, &SubWindow::SupprPalette);
+              pSubWindow,            &SubWindow::SupprPalette);
       pSubWindow->show();
 
       // Si les scrollbars sont actives, il faut prendre en compte leurs
@@ -247,23 +251,26 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       pSubWindow->resize(qSizeSubWindow);
 
       QAction* pActionSelectImage = new QAction(qFileInfo.fileName(), this);
+      pActionSelectImage->setCheckable(true);
       connect(pActionSelectImage, &QAction::triggered,
-              pSubWindow, &SubWindow::SelectSubWindow);
+              pSubWindow,         &SubWindow::SelectSubWindow);
       pSubWindow->SetActionSelectImage(pActionSelectImage);
       m_pWindowMenu->addAction(pActionSelectImage);
+      m_pActionsWindowMenu->addAction(pActionSelectImage);
+      pActionSelectImage->setChecked(true);
 
       connect(pSubWindow, &SubWindow::closeWindow,
-              this, &MainWindow::UpdateMenuWindow);
+              this,       &MainWindow::UpdateMenuWindow);
       connect(pSubWindow, &SubWindow::closeWindow,
-              this, &MainWindow::CheckEnabledActionReduceImage,
+              this,       &MainWindow::CheckEnabledActionReduceImage,
               Qt::QueuedConnection);
       connect(pSubWindow, &SubWindow::RedrawAllImage,
-              this, &MainWindow::RedrawAllImage,
+              this,       &MainWindow::RedrawAllImage,
               Qt::QueuedConnection);
       connect(pSubWindow, &SubWindow::CleanStatusBar,
-              this, &MainWindow::CleanStatusBar);
+              this,       &MainWindow::CleanStatusBar);
       connect(pSubWindow, &SubWindow::UpdateWidgetManipColor,
-              this, &MainWindow::UpdateWidgetManipColor);
+              this,       &MainWindow::UpdateWidgetManipColor);
 
       ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
       connect(pImageView, &ImageView::CoordMouse,
@@ -320,6 +327,7 @@ void MainWindow::CheckEnabledActionReduceImage(void)
 void MainWindow::UpdateMenuWindow(SubWindow* pSubWindow)
 {
    m_pWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
+   m_pActionsWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
 }
 
 void MainWindow::UpdateLabelCoordMouse(const QString& qstrLabel)

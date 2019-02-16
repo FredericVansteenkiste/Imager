@@ -47,6 +47,7 @@ private:
    QAction*          m_pActionCheckedBckgr;
    QAction*          m_pActionColoredBckgr;
    QMenu*            m_pWindowMenu;
+   QActionGroup*     m_pActionsWindowMenu;
    QLabel*           m_pLabelCoordMouse;
    QLabel*           m_pLabelColorPixel;
    WidgetManipColor* m_pWidgetManipColor;

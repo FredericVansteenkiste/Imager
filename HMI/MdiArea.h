@@ -1,5 +1,6 @@
 #ifndef MDIAREA_H
 #define MDIAREA_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -24,6 +25,9 @@ protected:
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
    virtual void dragEnterEvent(QDragEnterEvent* pqEvent);
    virtual void dropEvent(QDropEvent* pqEvent);
+
+private slots:
+   void UpdateMenuWindow(QMdiSubWindow* pqWindow) const;
 };
 
 #endif // MDIAREA_H
