@@ -296,8 +296,7 @@ void SubWindow::setCheckedBackground(void)
 void SubWindow::askBackgroundColor(void)
 {
    // On demande à l'utilisateur de sélectionner une couleur
-   QColor qColor = m_pqWidgetManipImage->backgroundBrush().color();
-   QColorDialog* pqColorDialog = new QColorDialog(qColor, this);
+   QColorDialog* pqColorDialog = new QColorDialog(Qt::white, this);
    pqColorDialog->setOptions(  QColorDialog::NoButtons
                              | QColorDialog::DontUseNativeDialog);
 

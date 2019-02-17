@@ -1,6 +1,6 @@
 #include "WidgetPaletteElement.h"
 
-WidgetPaletteElement::WidgetPaletteElement(const QColor qColor,
+WidgetPaletteElement::WidgetPaletteElement(const QColor& qColor,
                                            QWidget* pParent):QCheckBox("",
                                                                        pParent)
 {

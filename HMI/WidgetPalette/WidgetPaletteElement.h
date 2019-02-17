@@ -8,7 +8,7 @@ class WidgetPaletteElement : public QCheckBox
    Q_OBJECT
 
 public:
-   WidgetPaletteElement(const QColor qColor, QWidget* pParent = nullptr);
+   WidgetPaletteElement(const QColor& qColor, QWidget* pParent = nullptr);
    virtual ~WidgetPaletteElement();
 };
 
