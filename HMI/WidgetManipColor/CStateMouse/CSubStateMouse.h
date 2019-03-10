@@ -10,8 +10,8 @@ class CSubStateMouse : public CStateMachine
    Q_OBJECT
 
 public:
-   CSubStateMouse();
-   virtual ~CSubStateMouse();
+   explicit CSubStateMouse();
+   virtual ~CSubStateMouse() override;
 
    typedef enum
    {

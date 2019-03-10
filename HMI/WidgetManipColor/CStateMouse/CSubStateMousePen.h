@@ -10,8 +10,8 @@ class CSubStateMousePen final : public CSubStateMouse
    Q_OBJECT
 
 public:
-   CSubStateMousePen();
-   virtual ~CSubStateMousePen();
+   explicit CSubStateMousePen();
+   virtual ~CSubStateMousePen() final;
 
    void Execute(void) final;
 

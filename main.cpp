@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
    qApplication.setActivationWindow(&qMainWindow);
 
    QObject::connect(&qApplication, &QtSingleApplication::messageReceived,
-                    &qMainWindow, &MainWindow::OpenFiles);
+                    &qMainWindow,  &MainWindow::OpenFiles);
 
    return qApplication.exec();
 }

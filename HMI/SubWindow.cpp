@@ -30,11 +30,10 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    setWidget(*m_pqWidgetManipImage);
 
    // On crée la palette correspondante à notre image
-   m_pqWidgetPalette = new WidgetPalette(static_cast<unsigned int>(
-                                                        qImage.colorCount()));
+   m_pqWidgetPalette = new WidgetPalette(m_qImage.colorTable(), this);
    dynamic_cast<MainWindow*>(parent())->pWidgetManipColor()
-                                      ->pVBoxLayout()
-                                      ->insertWidget(3, m_pqWidgetPalette);
+                                      ->pqPaletteLayout()
+                                      ->insertWidget(1, m_pqWidgetPalette);
 
    // On met à jour la variable QSettings
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
@@ -349,7 +348,7 @@ void SubWindow::closeEvent(QCloseEvent* event)
    dynamic_cast<MainWindow*>(parent()->parent()
                                      ->parent())
                                              ->pWidgetManipColor()
-                                             ->pVBoxLayout()
+                                             ->pqPaletteLayout()
                                              ->removeWidget(m_pqWidgetPalette);
    m_pqWidgetPalette->setParent(this);
 

@@ -7,7 +7,7 @@
 class ImageScene : public QGraphicsScene
 {
 public:
-   ImageScene(QWidget* pParent = nullptr);
+   explicit ImageScene(QWidget* pParent = nullptr);
    virtual ~ImageScene();
 
    void setPixmap(const QPixmap& qPixmap);

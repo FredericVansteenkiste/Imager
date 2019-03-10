@@ -18,8 +18,8 @@ class ImageView : public QGraphicsView
 {
    Q_OBJECT
 public:
-   ImageView(QWidget* pParent = nullptr,
-             QBrush   qBckgrndBrush = QBrush());
+   explicit ImageView(QWidget* pParent = nullptr,
+                      QBrush   qBckgrndBrush = QBrush());
    virtual ~ImageView();
 
    void setContextMenu(void);

@@ -3,13 +3,33 @@
 
 #include <QtWidgets>
 
-class WidgetPaletteElement : public QCheckBox
+// Cette constante indique la taille en pixel du widget sachant que le widget
+// est un carré
+#define WIDGET_PALETTE_ELEM_SIZE_PIXEL (10)
+
+class WidgetPaletteElement : public QWidget
 {
    Q_OBJECT
 
 public:
-   WidgetPaletteElement(const QColor& qColor, QWidget* pParent = nullptr);
-   virtual ~WidgetPaletteElement();
+   explicit WidgetPaletteElement(const QColor& qColor,
+                                 QWidget* pParent = nullptr);
+   virtual ~WidgetPaletteElement() override;
+
+   QColor qColor(void) const;
+   void SetColor(const QColor& qColor);
+
+   virtual QSize sizeHint(void) const override;
+
+protected:
+   virtual void mousePressEvent(QMouseEvent* pqEvent) override;
+   virtual void paintEvent(QPaintEvent* pqEvent) override;
+
+private:
+   QColor m_qColor;
+
+signals:
+   void ColorChanged(void) const;
 };
 
 #endif // WIDGETPALETTEELEMENT_H

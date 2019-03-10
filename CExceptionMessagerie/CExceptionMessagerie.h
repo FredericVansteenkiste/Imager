@@ -7,10 +7,10 @@
 class CExceptionMessagerie : public std::exception
 {
 public:
-   CExceptionMessagerie(const QIcon& qIcone,
-                        const QString& qstrMsg,
-                        const char* pcNameFile,
-                        const int& iLine);
+   explicit CExceptionMessagerie(const QIcon& qIcone,
+                                 const QString& qstrMsg,
+                                 const char* pcNameFile,
+                                 const int& iLine);
    virtual ~CExceptionMessagerie();
 
    virtual const char* what(void) const noexcept;

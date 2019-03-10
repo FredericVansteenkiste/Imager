@@ -8,14 +8,15 @@
 #include "WidgetPalette/WidgetPalette.h"
 
 class WidgetManipImage;
+class WidgetPalette;
 
 class SubWindow : public QMdiSubWindow
 {
    Q_OBJECT
 public:
-   SubWindow(const QFileInfo& qFileInfo,
-             const QImage& qImage,
-             QWidget* pParent = nullptr);
+   explicit SubWindow(const QFileInfo& qFileInfo,
+                      const QImage& qImage,
+                      QWidget* pParent = nullptr);
    virtual ~SubWindow();
 
    QString qstrAbsoluteFilePath(void) const;

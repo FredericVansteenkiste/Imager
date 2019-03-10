@@ -8,7 +8,7 @@ class CStateMachine : public QObject
    Q_OBJECT
 
 public:
-   CStateMachine();
+   explicit CStateMachine();
    virtual ~CStateMachine();
 
    virtual void Execute(void) = 0;

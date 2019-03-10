@@ -17,7 +17,7 @@ class WidgetManipImage : public QObject
 
 public:
    // Constructor, create the scene and set parameters
-   WidgetManipImage(QWidget* pParent = nullptr);
+   explicit WidgetManipImage(QWidget* pParent = nullptr);
    virtual ~WidgetManipImage();
 
    // Set the image in the widget

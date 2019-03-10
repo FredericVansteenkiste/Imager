@@ -3,11 +3,11 @@
 WidgetManipColor::WidgetManipColor(QWidget* pParent):
                                                    QWidget(pParent),
                                                    m_StateMachine(),
-                                                   m_pqVBoxLayout(nullptr),
                                                    m_pqCurrentColor(nullptr),
                                                    m_pqPen(nullptr),
                                                    m_pqPipette(nullptr),
                                                    m_pEditColor(nullptr),
+                                                   m_pqPaletteLayout(nullptr),
                                                    m_pqSizePalette(nullptr),
                                                    m_pqColorNumber(nullptr),
                                                    m_pqDepth(nullptr),
@@ -51,6 +51,9 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    // Je dessine le widget permettant de spécifier la couleur
    m_pEditColor = new WidgetEditColor(this);
 
+   // Je crée le layout qui contiendra les palettes des images
+   m_pqPaletteLayout = new QHBoxLayout;
+
    // Je dessine les labels donnant les propriétés de l'image courante
    m_pqSizePalette     = new QLabel(this);
    m_pqColorNumber     = new QLabel(this);
@@ -68,18 +71,19 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqHBoxLayout2->addWidget(m_pqPipette);
    pqHBoxLayout2->addStretch();
 
-   m_pqVBoxLayout = new QVBoxLayout;
-   m_pqVBoxLayout->setMargin(4);
-   m_pqVBoxLayout->addLayout(pqHBoxLayout1);
-   m_pqVBoxLayout->addLayout(pqHBoxLayout2);
-   m_pqVBoxLayout->addWidget(m_pEditColor);
-   m_pqVBoxLayout->addStretch();
-   m_pqVBoxLayout->addWidget(m_pqSizePalette);
-   m_pqVBoxLayout->addWidget(m_pqColorNumber);
-   m_pqVBoxLayout->addWidget(m_pqDepth);
-   m_pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
-   m_pqVBoxLayout->addWidget(m_pqSizeImage);
-   setLayout(m_pqVBoxLayout);
+   QVBoxLayout* pqVBoxLayout = new QVBoxLayout;
+   pqVBoxLayout->setMargin(4);
+   pqVBoxLayout->addLayout(pqHBoxLayout1);
+   pqVBoxLayout->addLayout(pqHBoxLayout2);
+   pqVBoxLayout->addWidget(m_pEditColor);
+   pqVBoxLayout->addLayout(m_pqPaletteLayout);
+   pqVBoxLayout->addStretch();
+   pqVBoxLayout->addWidget(m_pqSizePalette);
+   pqVBoxLayout->addWidget(m_pqColorNumber);
+   pqVBoxLayout->addWidget(m_pqDepth);
+   pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
+   pqVBoxLayout->addWidget(m_pqSizeImage);
+   setLayout(pqVBoxLayout);
 }
 
 WidgetManipColor::~WidgetManipColor()
@@ -135,24 +139,32 @@ CSubStateMouse::e_state_machine WidgetManipColor::eCurrentState(void) const
    return m_StateMachine.eCurrentState();
 }
 
-QVBoxLayout* WidgetManipColor::pVBoxLayout(void)
+QHBoxLayout* WidgetManipColor::pqPaletteLayout(void)
 {
-   return m_pqVBoxLayout;
+   return m_pqPaletteLayout;
 }
 
 void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
 {
    SubWindow* pqActivatedSubWindow = dynamic_cast<SubWindow*>(pqMdiSubWindow);
    MainWindow* pqMainWindow = dynamic_cast<MainWindow*>(parent()->parent());
-   QList<QMdiSubWindow*> qlqMdiSubWindow
+   QList<QMdiSubWindow*> qlpqMdiSubWindow
                         = dynamic_cast<MdiArea*>(pqMainWindow->centralWidget())
                                                              ->subWindowList();
 
-   foreach(QMdiSubWindow* pMdiSubWindow, qlqMdiSubWindow)
+   foreach(QMdiSubWindow* pMdiSubWindow, qlpqMdiSubWindow)
    {
       SubWindow* pqSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
 
-      if(pqSubWindow != pqActivatedSubWindow)
+      if(pqSubWindow == nullptr)
+      {
+         continue;
+      }
+      else if(pqSubWindow->pqWidgetPalette() == nullptr)
+      {
+         continue;
+      }
+      else if(pqSubWindow != pqActivatedSubWindow)
       {
          pqSubWindow->pqWidgetPalette()->hide();
       }

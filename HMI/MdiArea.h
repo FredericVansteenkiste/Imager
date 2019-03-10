@@ -10,7 +10,7 @@ class MdiArea : public QMdiArea
 {
    Q_OBJECT
 public:
-   MdiArea(QWidget* pParent = nullptr);
+   explicit MdiArea(QWidget* pParent = nullptr);
    virtual ~MdiArea();
 
 public slots:

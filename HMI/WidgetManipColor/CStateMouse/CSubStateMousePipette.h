@@ -10,8 +10,8 @@ class CSubStateMousePipette final : public CSubStateMouse
    Q_OBJECT
 
 public:
-   CSubStateMousePipette();
-   virtual ~CSubStateMousePipette();
+   explicit CSubStateMousePipette();
+   virtual ~CSubStateMousePipette() final;
 
    void Execute(void) final;
 

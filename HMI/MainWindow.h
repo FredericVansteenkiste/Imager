@@ -19,13 +19,16 @@ class MainWindow : public QMainWindow
    Q_OBJECT
 
 public:
-   MainWindow(QWidget* pqParent = nullptr);
+   explicit MainWindow(QWidget* pqParent = nullptr);
    virtual ~MainWindow();
 
    WidgetManipColor* pWidgetManipColor(void) const;
 
 public slots:
    void OpenFiles(const QString& qstrFile);
+
+protected:
+   virtual void closeEvent(QCloseEvent* pqEvent);
 
 private slots:
    void OpenFile(void);
@@ -35,7 +38,6 @@ private slots:
    void UpdateLabelCoordMouse(const QString& qstrLabel);
    void UpdateLabelColorPixel(const QString& qstrLabel);
    void CleanStatusBar(void);
-   virtual void closeEvent(QCloseEvent* pqEvent);
    void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
    void UpdateWidgetManipColor(void);
 

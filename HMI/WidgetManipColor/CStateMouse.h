@@ -14,8 +14,8 @@ class CStateMouse final : public CStateMachine
    Q_OBJECT
 
 public:
-   CStateMouse();
-   virtual ~CStateMouse();
+   explicit CStateMouse();
+   virtual ~CStateMouse() final;
 
    void Execute(void) final;
 

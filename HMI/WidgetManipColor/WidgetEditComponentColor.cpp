@@ -8,12 +8,12 @@ WidgetEditComponentColor::WidgetEditComponentColor(const QString& qLabel,
                                                          m_pqEdit(nullptr)
 {
    QLabel* pqLabel = new QLabel(qLabel, this);
-   pqLabel->setMaximumWidth(15);
+   pqLabel->setMaximumWidth(20);
 
    m_pqEdit = new QLineEdit(QString("%1").arg(ucValue), this);
    m_pqEdit->setValidator(pqValidator);
    m_pqEdit->setAlignment(Qt::AlignHCenter);
-   m_pqEdit->setMaximumWidth(30);
+   m_pqEdit->setMaximumWidth(40);
 
    QHBoxLayout* pqHBoxLayout = new QHBoxLayout;
    pqHBoxLayout->setMargin(0);

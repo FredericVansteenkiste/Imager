@@ -10,8 +10,8 @@ class CSubStateMouseDefault final : public CSubStateMouse
    Q_OBJECT
 
 public:
-   CSubStateMouseDefault();
-   virtual ~CSubStateMouseDefault();
+   explicit CSubStateMouseDefault();
+   virtual ~CSubStateMouseDefault() final;
 
    void Execute(void) final;
 

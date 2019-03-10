@@ -6,9 +6,9 @@
 class GraphicsPixmapItem : public QGraphicsPixmapItem
 {
 public:
-   GraphicsPixmapItem(QGraphicsItem* pParent = nullptr);
-   GraphicsPixmapItem(const QPixmap& qPixmap,
-                      QGraphicsItem* pParent = nullptr);
+   explicit GraphicsPixmapItem(QGraphicsItem* pParent = nullptr);
+   explicit GraphicsPixmapItem(const QPixmap& qPixmap,
+                               QGraphicsItem* pParent = nullptr);
    virtual ~GraphicsPixmapItem();
 
    virtual QRectF boundingRect() const;
