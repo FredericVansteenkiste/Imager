@@ -33,6 +33,7 @@ public:
    void askBackgroundColor(void);
    void setBackgroundColor(const QColor& qColor);
    void setCheckedBackground(void);
+   QBrush backgroundBrush(void) const;
 
 signals:
    void closeWindow(SubWindow* pSubWindow);

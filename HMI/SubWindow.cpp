@@ -286,6 +286,7 @@ void SubWindow::setCheckedBackground(void)
    // On applique le damier à l'arrière plan.
    m_pqWidgetManipImage->setBackgroundBrush(QBrush(
                                  QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
+   m_pqWidgetPalette->repaint();
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
@@ -310,6 +311,7 @@ void SubWindow::askBackgroundColor(void)
 void SubWindow::setBackgroundColor(const QColor& qColor)
 {
    m_pqWidgetManipImage->setBackgroundBrush(QBrush(qColor));
+   m_pqWidgetPalette->repaint();
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
@@ -320,6 +322,11 @@ void SubWindow::setBackgroundColor(const QColor& qColor)
    {
       emit pMdiArea->subWindowActivated(this);
    }
+}
+
+QBrush SubWindow::backgroundBrush(void) const
+{
+   return m_pqWidgetManipImage->backgroundBrush();
 }
 
 void SubWindow::moveEvent(QMoveEvent* pqEvent)

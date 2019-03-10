@@ -274,9 +274,9 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
 
       ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
       connect(pImageView, &ImageView::CoordMouse,
-              this, &MainWindow::UpdateLabelCoordMouse);
+              this,       &MainWindow::UpdateLabelCoordMouse);
       connect(pImageView, &ImageView::ColorPixel,
-              this, &MainWindow::UpdateLabelColorPixel);
+              this,       &MainWindow::UpdateLabelColorPixel);
    }
 }
 

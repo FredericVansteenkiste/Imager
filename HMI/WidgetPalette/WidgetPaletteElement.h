@@ -1,7 +1,10 @@
 #ifndef WIDGETPALETTEELEMENT_H
 #define WIDGETPALETTEELEMENT_H
+#pragma once
 
 #include <QtWidgets>
+
+#include "../SubWindow.h"
 
 // Cette constante indique la taille en pixel du widget sachant que le widget
 // est un carré

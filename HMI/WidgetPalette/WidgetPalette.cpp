@@ -6,7 +6,8 @@ WidgetPalette::WidgetPalette(const QVector<QRgb>& aqColorPalette,
                               m_apPaletteElement(),
                               m_pLayoutPalette(new QGridLayout(this)),
                               m_iNbrColumn(0),
-                              m_iNbrLine(0)
+                              m_iNbrLine(0),
+                              m_pqSubWindow(dynamic_cast<SubWindow*>(pParent))
 {
    setAttribute(Qt::WA_DeleteOnClose);
 
@@ -38,11 +39,20 @@ void WidgetPalette::SetPalette(const QVector<QRgb>& aqColorPalette)
    for(int i = 0; i < aqColorPalette.size(); i++)
    {
       m_apPaletteElement.append(
-                     new WidgetPaletteElement(QColor(aqColorPalette[i]), this));
+                     new WidgetPaletteElement(QColor(qRed(aqColorPalette[i]),
+                                                     qGreen(aqColorPalette[i]),
+                                                     qBlue(aqColorPalette[i]),
+                                                     qAlpha(aqColorPalette[i])),
+                                              this));
    }
 
    int iTemp(aqColorPalette.size() * WIDGET_PALETTE_ELEM_SIZE_PIXEL + 1);
    setMaximumSize(iTemp, iTemp);
+}
+
+SubWindow* WidgetPalette::pqSubWindow(void) const
+{
+   return m_pqSubWindow;
 }
 
 void WidgetPalette::resizeEvent(QResizeEvent* event)

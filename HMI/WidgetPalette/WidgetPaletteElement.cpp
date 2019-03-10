@@ -44,6 +44,17 @@ void WidgetPaletteElement::paintEvent(QPaintEvent* pqEvent)
    QRect qSquare(QPoint(0, 0),
                  QSize(WIDGET_PALETTE_ELEM_SIZE_PIXEL - 1,
                        WIDGET_PALETTE_ELEM_SIZE_PIXEL - 1));
+
+   SubWindow* pSubWindow = dynamic_cast<WidgetPalette*>(
+                                                      parent())->pqSubWindow();
+   if(pSubWindow->backgroundBrush().style() == Qt::TexturePattern)
+   {
+      qPainter.fillRect(qSquare, Qt::white);
+   }
+   else
+   {
+      qPainter.fillRect(qSquare, pSubWindow->backgroundBrush().color());
+   }
    qPainter.fillRect(qSquare, m_qColor);
    qPainter.setPen(Qt::black);
    QLine qHorizontalBas(0,

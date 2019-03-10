@@ -8,6 +8,7 @@
 #include "../SubWindow.h"
 
 class SubWindow;
+class WidgetPaletteElement;
 
 class WidgetPalette : public QWidget
 {
@@ -21,6 +22,9 @@ public:
    // Cette méthode passe toutes les couleurs utilisé par la palette pour
    // l'image courante
    void SetPalette(const QVector<QRgb>& aqColorPalette);
+   // Cette méthode permet de récupérer un pointeur sur la fenêtre correspondant
+   // à la palette
+   SubWindow* pqSubWindow(void) const;
 
 protected:
    virtual void resizeEvent(QResizeEvent* event) override;
@@ -34,6 +38,9 @@ private:
    QGridLayout*                   m_pLayoutPalette;
    int                            m_iNbrColumn;
    int                            m_iNbrLine;
+   // Le pointeur suivant permet de retrouver la fenêtre correspondante à la
+   // palette courante
+   SubWindow*                     m_pqSubWindow;
 
    void RearrangePalette(void);
 };
