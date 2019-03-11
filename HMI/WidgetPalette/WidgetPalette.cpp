@@ -18,7 +18,7 @@ WidgetPalette::WidgetPalette(const QVector<QRgb>& aqColorPalette,
 
    SetPalette(aqColorPalette);
 
-   RearrangePalette();
+   RearrangePalette(width());
 }
 
 WidgetPalette::~WidgetPalette()
@@ -55,11 +55,11 @@ SubWindow* WidgetPalette::pqSubWindow(void) const
    return m_pqSubWindow;
 }
 
-void WidgetPalette::resizeEvent(QResizeEvent* event)
+void WidgetPalette::resizeEvent(QResizeEvent* pqEvent)
 {
-   RearrangePalette();
+   RearrangePalette(width());
 
-   QWidget::resizeEvent(event);
+   QWidget::resizeEvent(pqEvent);
 }
 
 void WidgetPalette::paintEvent(QPaintEvent* pqEvent)
@@ -67,9 +67,9 @@ void WidgetPalette::paintEvent(QPaintEvent* pqEvent)
    QWidget::paintEvent(pqEvent);
 }
 
-void WidgetPalette::RearrangePalette(void)
+void WidgetPalette::RearrangePalette(const int& iWidth)
 {
-   m_iNbrColumn = (width() - 1) / WIDGET_PALETTE_ELEM_SIZE_PIXEL;
+   m_iNbrColumn = (iWidth - 1) / WIDGET_PALETTE_ELEM_SIZE_PIXEL;
    int iNbrColor = m_apPaletteElement.size();
    if(m_iNbrColumn > iNbrColor)
    {

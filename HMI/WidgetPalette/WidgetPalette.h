@@ -26,8 +26,10 @@ public:
    // à la palette
    SubWindow* pqSubWindow(void) const;
 
+   void RearrangePalette(const int& iWidth);
+
 protected:
-   virtual void resizeEvent(QResizeEvent* event) override;
+   virtual void resizeEvent(QResizeEvent* pqEvent) override;
    virtual void paintEvent(QPaintEvent* pqEvent) override;
 
 private:
@@ -41,8 +43,6 @@ private:
    // Le pointeur suivant permet de retrouver la fenêtre correspondante à la
    // palette courante
    SubWindow*                     m_pqSubWindow;
-
-   void RearrangePalette(void);
 };
 
 #endif // WIDGETPALETTE_H

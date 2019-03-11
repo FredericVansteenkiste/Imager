@@ -152,6 +152,7 @@ void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
                         = dynamic_cast<MdiArea*>(pqMainWindow->centralWidget())
                                                              ->subWindowList();
 
+   hide();
    foreach(QMdiSubWindow* pMdiSubWindow, qlpqMdiSubWindow)
    {
       SubWindow* pqSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
@@ -177,8 +178,10 @@ void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
          }
          else
          {
+            pqSubWindow->pqWidgetPalette()->RearrangePalette(size().width());
             pqSubWindow->pqWidgetPalette()->show();
          }
       }
    }
+   show();
 }
