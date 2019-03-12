@@ -207,7 +207,7 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
    if(qRectImageF.contains(qMousePointItemF) == true)
    {
       // ... j'indique quelles sont les coordonnées de la souris (dans le repère
-      // de l'image) ...
+      // de l'image)
       qstrLabel = "Coord = (%1, %2)";
       QPoint qMousePointItem(qFloor(qMousePointItemF.x()),
                              qFloor(qMousePointItemF.y()));
@@ -215,18 +215,37 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
                            .arg(qMousePointItem.y());
       emit CoordMouse(qstrLabel);
 
-      // ... j'indique quelles sont les composantes de la couleur du pixel
-      // pointé par la souris ...
-      qstrLabel = "A = %1 R = %2 G = %3 B = %4";
-      QRgb qPixel = pqImageScene()->qPixmap().toImage().pixel(qMousePointItem);
-      qstrLabel = qstrLabel.arg(qAlpha(qPixel))
-                           .arg(qRed(qPixel))
-                           .arg(qGreen(qPixel))
-                           .arg(qBlue(qPixel));
+      // J'indique quelles sont les composantes de la couleur du pixel pointé
+      // par la souris
+      // Je récupére l'image source courante :
+      QImage qImage = dynamic_cast<SubWindow*>(parent())->qImage();
+      // Si mon image est palettisé ...
+      if(qImage.colorCount() != 0)
+      {
+         // ... je précise l'index dans la palette et je donne les composants de
+         // la couleur ...
+         QRgb qPixel = qImage.pixel(qMousePointItem);
+         qstrLabel = "\t[%1] => (A = %2 R = %3 G = %4 B = %5)";
+         qstrLabel = qstrLabel.arg(qImage.pixelIndex(qMousePointItem))
+                              .arg(qAlpha(qPixel))
+                              .arg(qRed(qPixel))
+                              .arg(qGreen(qPixel))
+                              .arg(qBlue(qPixel));
+      }
+      else
+      {
+         // ... sinon je précise simplement les composants du pixel
+         QRgb qPixel = qImage.pixel(qMousePointItem);
+         qstrLabel = "A = %1 R = %2 G = %3 B = %4";
+         qstrLabel = qstrLabel.arg(qAlpha(qPixel))
+                              .arg(qRed(qPixel))
+                              .arg(qGreen(qPixel))
+                              .arg(qBlue(qPixel));
+      }
       emit ColorPixel(qstrLabel);
 
-      // ... et je sélectionne le pointeur de souris correspondant à l'état de
-      // la machine d'état de WidgetManipColor
+      // Je sélectionne le pointeur de souris correspondant à l'état de la
+      // machine d'état de WidgetManipColor
       CSubStateMouse::e_state_machine eCurrentState = eGetStateMouse();
       if(eCurrentState == CSubStateMouse::PEN)
       {

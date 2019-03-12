@@ -26,6 +26,7 @@ public:
 
 public slots:
    void OpenFiles(const QString& qstrFile);
+   void UpdateLabelColorPixel(const QString& qstrLabel);
 
 protected:
    virtual void closeEvent(QCloseEvent* pqEvent);
@@ -36,7 +37,6 @@ private slots:
    void CheckEnabledActionReduceImage(void);
    void UpdateMenuWindow(SubWindow* pSubWindow);
    void UpdateLabelCoordMouse(const QString& qstrLabel);
-   void UpdateLabelColorPixel(const QString& qstrLabel);
    void CleanStatusBar(void);
    void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
    void UpdateWidgetManipColor(void);

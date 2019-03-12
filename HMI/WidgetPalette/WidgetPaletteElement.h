@@ -16,6 +16,7 @@ class WidgetPaletteElement : public QWidget
 
 public:
    explicit WidgetPaletteElement(const QColor& qColor,
+                                 const int&    iIndPalette,
                                  QWidget* pParent = nullptr);
    virtual ~WidgetPaletteElement() override;
 
@@ -25,14 +26,19 @@ public:
    virtual QSize sizeHint(void) const override;
 
 protected:
-   virtual void mousePressEvent(QMouseEvent* pqEvent) override;
+   virtual void enterEvent(QEvent* pqEvent) override;
+   virtual void leaveEvent(QEvent* pqEvent) override;
    virtual void paintEvent(QPaintEvent* pqEvent) override;
 
 private:
    QColor m_qColor;
+   // Le membre suivant permet de retrouver l'indice de la couleur dans la
+   // palette
+   int m_iIndPalette;
 
 signals:
    void ColorChanged(void) const;
+   void LabelColorPixel(const QString& qstrLabel);
 };
 
 #endif // WIDGETPALETTEELEMENT_H

@@ -43,6 +43,7 @@ void WidgetPalette::SetPalette(const QVector<QRgb>& aqColorPalette)
                                                      qGreen(aqColorPalette[i]),
                                                      qBlue(aqColorPalette[i]),
                                                      qAlpha(aqColorPalette[i])),
+                                              i,
                                               this));
    }
 

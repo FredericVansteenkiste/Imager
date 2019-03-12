@@ -1,11 +1,20 @@
 #include "WidgetPaletteElement.h"
 
 WidgetPaletteElement::WidgetPaletteElement(const QColor& qColor,
-                                           QWidget* pParent):QWidget(pParent),
-                                                             m_qColor(qColor)
+                                           const int& iIndPalette,
+                                           QWidget* pParent):
+                                                      QWidget(pParent),
+                                                      m_qColor(qColor),
+                                                      m_iIndPalette(iIndPalette)
 {
    setAttribute(Qt::WA_StaticContents);
+   // Ce widget a une taille fixe définie par WIDGET_PALETTE_ELEM_SIZE_PIXEL
    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+   MainWindow* pqMainWindow =
+                        dynamic_cast<MainWindow*>(parent()->parent()->parent());
+   connect(this,         &WidgetPaletteElement::LabelColorPixel,
+           pqMainWindow, &MainWindow::UpdateLabelColorPixel);
 }
 
 WidgetPaletteElement::~WidgetPaletteElement()
@@ -31,11 +40,25 @@ QSize WidgetPaletteElement::sizeHint(void) const
    return QSize(WIDGET_PALETTE_ELEM_SIZE_PIXEL, WIDGET_PALETTE_ELEM_SIZE_PIXEL);
 }
 
-void WidgetPaletteElement::mousePressEvent(QMouseEvent* pqEvent)
+void WidgetPaletteElement::enterEvent(QEvent* pqEvent)
 {
-   Q_UNUSED(pqEvent)
+   QString qstrLabel("[%1] => (A = %2 R = %3 G = %4 B = %5)");
+   qstrLabel = qstrLabel.arg(m_iIndPalette)
+                        .arg(m_qColor.alpha())
+                        .arg(m_qColor.red())
+                        .arg(m_qColor.green())
+                        .arg(m_qColor.blue());
+   emit LabelColorPixel(qstrLabel);
+
+   QWidget::enterEvent(pqEvent);
 }
 
+void WidgetPaletteElement::leaveEvent(QEvent* pqEvent)
+{
+   emit LabelColorPixel("");
+
+   QWidget::leaveEvent(pqEvent);
+}
 void WidgetPaletteElement::paintEvent(QPaintEvent* pqEvent)
 {
    Q_UNUSED(pqEvent)
