@@ -12,6 +12,8 @@ public:
    explicit WidgetEditColor(QWidget* pqParent = nullptr);
    virtual ~WidgetEditColor();
 
+   void SetColor(const QColor& qColor);
+
 private:
    WidgetEditComponentColor* m_pqEditRed;
    WidgetEditComponentColor* m_pqEditGreen;

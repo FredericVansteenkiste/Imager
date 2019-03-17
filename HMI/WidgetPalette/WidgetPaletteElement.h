@@ -29,6 +29,7 @@ protected:
    virtual void enterEvent(QEvent* pqEvent) override;
    virtual void leaveEvent(QEvent* pqEvent) override;
    virtual void paintEvent(QPaintEvent* pqEvent) override;
+   virtual void mousePressEvent(QMouseEvent* pqEvent) override;
 
 private:
    QColor m_qColor;
@@ -38,7 +39,8 @@ private:
 
 signals:
    void ColorChanged(void) const;
-   void LabelColorPixel(const QString& qstrLabel);
+   void LabelColorPixel(const QString& qstrLabel) const;
+   void clickOnElement(const int& iIndElement) const;
 };
 
 #endif // WIDGETPALETTEELEMENT_H

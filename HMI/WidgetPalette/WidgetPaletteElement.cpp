@@ -15,6 +15,10 @@ WidgetPaletteElement::WidgetPaletteElement(const QColor& qColor,
                         dynamic_cast<MainWindow*>(parent()->parent()->parent());
    connect(this,         &WidgetPaletteElement::LabelColorPixel,
            pqMainWindow, &MainWindow::UpdateLabelColorPixel);
+
+   WidgetPalette* pWidgetPalette = dynamic_cast<WidgetPalette*>(parent());
+   connect(this,           &WidgetPaletteElement::clickOnElement,
+           pWidgetPalette, &WidgetPalette::SetIndElementSelectionne);
 }
 
 WidgetPaletteElement::~WidgetPaletteElement()
@@ -90,4 +94,11 @@ void WidgetPaletteElement::paintEvent(QPaintEvent* pqEvent)
                          WIDGET_PALETTE_ELEM_SIZE_PIXEL - 1);
    qPainter.drawLine(qHorizontalBas);
    qPainter.drawLine(qVerticalDroite);
+}
+
+void WidgetPaletteElement::mousePressEvent(QMouseEvent* pqEvent)
+{
+   Q_UNUSED(pqEvent)
+
+   emit clickOnElement(m_iIndPalette);
 }

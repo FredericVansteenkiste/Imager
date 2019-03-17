@@ -30,7 +30,9 @@ public:
    QHBoxLayout* pqPaletteLayout(void);
 
 public slots:
-   void subWindowActivated(QMdiSubWindow* pqMdiSubWindow);
+   void SubWindowActivated(QMdiSubWindow* pqMdiSubWindow);
+   void SetCurrentColor(const QColor& qColor,
+                        const QColor& qBckGrndColor);
 
 private:
    CStateMouse      m_StateMachine;

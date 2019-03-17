@@ -7,7 +7,8 @@ WidgetPalette::WidgetPalette(const QVector<QRgb>& aqColorPalette,
                               m_pLayoutPalette(new QGridLayout(this)),
                               m_iNbrColumn(0),
                               m_iNbrLine(0),
-                              m_pqSubWindow(dynamic_cast<SubWindow*>(pParent))
+                              m_pqSubWindow(dynamic_cast<SubWindow*>(pParent)),
+                              m_iIndElementSelectionne()
 {
    setAttribute(Qt::WA_DeleteOnClose);
 
@@ -17,8 +18,14 @@ WidgetPalette::WidgetPalette(const QVector<QRgb>& aqColorPalette,
    setLayout(m_pLayoutPalette);
 
    SetPalette(aqColorPalette);
+   SetIndElementSelectionne(0);
 
    RearrangePalette(width());
+
+   WidgetManipColor* pWidgetManipColor =
+            dynamic_cast<MainWindow*>(parent()->parent())->pWidgetManipColor();
+   connect(this,              &WidgetPalette::IndElementSelectionnedChanged,
+           pWidgetManipColor, &WidgetManipColor::SetCurrentColor);
 }
 
 WidgetPalette::~WidgetPalette()
@@ -63,11 +70,6 @@ void WidgetPalette::resizeEvent(QResizeEvent* pqEvent)
    QWidget::resizeEvent(pqEvent);
 }
 
-void WidgetPalette::paintEvent(QPaintEvent* pqEvent)
-{
-   QWidget::paintEvent(pqEvent);
-}
-
 void WidgetPalette::RearrangePalette(const int& iWidth)
 {
    m_iNbrColumn = (iWidth - 1) / WIDGET_PALETTE_ELEM_SIZE_PIXEL;
@@ -100,6 +102,31 @@ void WidgetPalette::RearrangePalette(const int& iWidth)
       {
          iIndColumn = 0;
          iIndLine++;
+      }
+   }
+}
+
+int WidgetPalette::iIndElementSelectionne(void) const
+{
+   return m_iIndElementSelectionne;
+}
+
+void WidgetPalette::SetIndElementSelectionne(const int& iIndElement)
+{
+   m_iIndElementSelectionne = iIndElement;
+   if(m_apPaletteElement.isEmpty() == false)
+   {
+      if(m_pqSubWindow->backgroundBrush().style() == Qt::TexturePattern)
+      {
+         emit IndElementSelectionnedChanged(
+                                    m_apPaletteElement[iIndElement]->qColor(),
+                                    Qt::white);
+      }
+      else
+      {
+         emit IndElementSelectionnedChanged(
+                                    m_apPaletteElement[iIndElement]->qColor(),
+                                    m_pqSubWindow->backgroundBrush().color());
       }
    }
 }

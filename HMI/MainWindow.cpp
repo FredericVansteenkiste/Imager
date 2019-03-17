@@ -489,13 +489,13 @@ void MainWindow::CreateConnection(void)
    else
    {
       connect(pqMdiArea, &MdiArea::CleanStatusBar,
-              this, &MainWindow::CleanStatusBar);
+              this,      &MainWindow::CleanStatusBar);
       connect(pqMdiArea, &QMdiArea::subWindowActivated,
-              this, &MainWindow::SubWindowActivated);
-      connect(pqMdiArea, &QMdiArea::subWindowActivated,
-              m_pWidgetManipColor, &WidgetManipColor::subWindowActivated);
+              this,      &MainWindow::SubWindowActivated);
+      connect(pqMdiArea,           &QMdiArea::subWindowActivated,
+              m_pWidgetManipColor, &WidgetManipColor::SubWindowActivated);
       connect(pqMdiArea, &MdiArea::NewFileReceived,
-              this, &MainWindow::OpenListFile);
+              this,      &MainWindow::OpenListFile);
    }
 
    if(  (m_pActionCheckedBckgr == nullptr)

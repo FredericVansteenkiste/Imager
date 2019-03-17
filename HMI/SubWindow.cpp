@@ -7,19 +7,10 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                                        m_pqWidgetPalette(nullptr),
                                        m_qFileInfo(qFileInfo),
                                        m_qImage(qImage),
-                                       m_pqActionSelectImage(nullptr),
-                                       m_qCurrentColor(Qt::black)
+                                       m_pqActionSelectImage(nullptr)
 
 {
    m_pqWidgetManipImage = new WidgetManipImage(this);
-
-   // On choisit une couleur de travail
-   // Si il existe une palette définit pour l'image, on sélectionne la première
-   // couleur de la palette
-   if(m_qImage.colorTable().isEmpty() == false)
-   {
-      m_qCurrentColor = m_qImage.colorTable()[0];
-   }
 
    setMouseTracking(true);
    setAttribute(Qt::WA_DeleteOnClose);
@@ -310,7 +301,9 @@ void SubWindow::askBackgroundColor(void)
 
 void SubWindow::setBackgroundColor(const QColor& qColor)
 {
-   m_pqWidgetManipImage->setBackgroundBrush(QBrush(qColor));
+   QColor qTempColor = qColor;
+   qTempColor.setAlpha(255);
+   m_pqWidgetManipImage->setBackgroundBrush(QBrush(qTempColor));
    m_pqWidgetPalette->repaint();
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()

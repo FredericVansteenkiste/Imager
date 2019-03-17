@@ -6,9 +6,11 @@
 
 #include "WidgetPaletteElement.h"
 #include "../SubWindow.h"
+#include "../WidgetManipColor/WidgetManipColor.h"
 
 class SubWindow;
 class WidgetPaletteElement;
+class WidgetManipColor;
 
 class WidgetPalette : public QWidget
 {
@@ -28,21 +30,31 @@ public:
 
    void RearrangePalette(const int& iWidth);
 
+   int iIndElementSelectionne(void) const;
+
+public slots:
+   void SetIndElementSelectionne(const int& iIndElement);
+
 protected:
    virtual void resizeEvent(QResizeEvent* pqEvent) override;
-   virtual void paintEvent(QPaintEvent* pqEvent) override;
 
 private:
    // Le vecteur suivant contient les éléments de la palette utilisé pour
    // l'image courante
    QVector<WidgetPaletteElement*> m_apPaletteElement;
    // Les membres suivants détermine la forme de la palette dans le layout
-   QGridLayout*                   m_pLayoutPalette;
-   int                            m_iNbrColumn;
-   int                            m_iNbrLine;
+   QGridLayout* m_pLayoutPalette;
+   int          m_iNbrColumn;
+   int          m_iNbrLine;
    // Le pointeur suivant permet de retrouver la fenêtre correspondante à la
    // palette courante
-   SubWindow*                     m_pqSubWindow;
+   SubWindow* m_pqSubWindow;
+   // L'indice suivant indique l'élément de la palette qui est sélectionné
+   int m_iIndElementSelectionne;
+
+signals:
+   void IndElementSelectionnedChanged(const QColor& qColor,
+                                      const QColor& qBckGrndColor);
 };
 
 #endif // WIDGETPALETTE_H

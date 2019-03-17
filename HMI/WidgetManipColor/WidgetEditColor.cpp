@@ -6,15 +6,11 @@ WidgetEditColor::WidgetEditColor(QWidget* pqParent):QWidget(pqParent),
                                                     m_pqEditBlue(nullptr),
                                                     m_pqEditAlpha(nullptr)
 {
-   QValidator* pqValidator = new QIntValidator(0, 255, this);
-
    m_pqEditRed = new WidgetEditComponentColor(tr("r="),
                                               255,
-                                              pqValidator,
                                               this);
    m_pqEditGreen = new WidgetEditComponentColor(tr("g="),
                                                 255,
-                                                pqValidator,
                                                 this);
    QHBoxLayout* pqHBoxLayout1 = new QHBoxLayout;
    pqHBoxLayout1->setMargin(0);
@@ -25,11 +21,9 @@ WidgetEditColor::WidgetEditColor(QWidget* pqParent):QWidget(pqParent),
 
    m_pqEditBlue = new WidgetEditComponentColor(tr("b="),
                                                255,
-                                               pqValidator,
                                                this);
    m_pqEditAlpha = new WidgetEditComponentColor(tr("a="),
                                                 255,
-                                                pqValidator,
                                                 this);
    QHBoxLayout* pqHBoxLayout2 = new QHBoxLayout;
    pqHBoxLayout2->setMargin(0);
@@ -48,4 +42,12 @@ WidgetEditColor::WidgetEditColor(QWidget* pqParent):QWidget(pqParent),
 
 WidgetEditColor::~WidgetEditColor()
 {
+}
+
+void WidgetEditColor::SetColor(const QColor& qColor)
+{
+   m_pqEditRed->SetValue(qColor.red());
+   m_pqEditGreen->SetValue(qColor.green());
+   m_pqEditBlue->SetValue(qColor.blue());
+   m_pqEditAlpha->SetValue(qColor.alpha());
 }

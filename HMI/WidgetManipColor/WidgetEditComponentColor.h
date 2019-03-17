@@ -8,10 +8,11 @@ class WidgetEditComponentColor : public QWidget
    Q_OBJECT
 public:
    explicit WidgetEditComponentColor(const QString& qLabel,
-                                     const unsigned char& ucValue,
-                                     QValidator* pqValidator,
+                                     const int& iValue,
                                      QWidget* pqParent = nullptr);
    virtual ~WidgetEditComponentColor();
+
+   void SetValue(const int& iValue);
 
 signals:
 

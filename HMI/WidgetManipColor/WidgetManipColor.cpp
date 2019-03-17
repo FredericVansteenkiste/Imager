@@ -18,9 +18,6 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    m_pqCurrentColor = new QLabel();
    m_pqCurrentColor->setFixedSize(1.5 * QSize(SIZE_BUTTON, SIZE_BUTTON));
    m_pqCurrentColor->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-   QPixmap qCurrentColor(1.5 * QSize(SIZE_BUTTON, SIZE_BUTTON));
-   qCurrentColor.fill(Qt::black);
-   m_pqCurrentColor->setPixmap(qCurrentColor);
 
    // Je dessine un bouton permettant de sélectionner un crayon
    m_pqPen = new QPushButton(QIcon(":/Icones/Pen.png"),
@@ -84,6 +81,9 @@ WidgetManipColor::WidgetManipColor(QWidget* pParent):
    pqVBoxLayout->addWidget(m_pqBitUsedPerPixel);
    pqVBoxLayout->addWidget(m_pqSizeImage);
    setLayout(pqVBoxLayout);
+
+   // J'indique qu'elle est la couleur courante
+   SetCurrentColor(Qt::black, Qt::black);
 }
 
 WidgetManipColor::~WidgetManipColor()
@@ -144,7 +144,7 @@ QHBoxLayout* WidgetManipColor::pqPaletteLayout(void)
    return m_pqPaletteLayout;
 }
 
-void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
+void WidgetManipColor::SubWindowActivated(QMdiSubWindow* pqMdiSubWindow)
 {
    SubWindow* pqActivatedSubWindow = dynamic_cast<SubWindow*>(pqMdiSubWindow);
    MainWindow* pqMainWindow = dynamic_cast<MainWindow*>(parent()->parent());
@@ -184,4 +184,37 @@ void WidgetManipColor::subWindowActivated(QMdiSubWindow* pqMdiSubWindow)
       }
    }
    show();
+
+   if(  (pqActivatedSubWindow != nullptr)
+      &&(pqActivatedSubWindow->qImage().colorTable().isEmpty() == false))
+   {
+      QColor qBckgrndColor = pqActivatedSubWindow->backgroundBrush().color();
+      if(pqActivatedSubWindow->backgroundBrush().style() == Qt::TexturePattern)
+      {
+         qBckgrndColor = Qt::white;
+      }
+      QVector<QRgb> aqColorPalette = pqActivatedSubWindow->qImage()
+                                                          .colorTable();
+      int iIndColor = pqActivatedSubWindow->pqWidgetPalette()
+                                          ->iIndElementSelectionne();
+      QColor qCurrentColor = QColor(qRed(aqColorPalette[iIndColor]),
+                                    qGreen(aqColorPalette[iIndColor]),
+                                    qBlue(aqColorPalette[iIndColor]),
+                                    qAlpha(aqColorPalette[iIndColor]));
+      pqMainWindow->pWidgetManipColor()->SetCurrentColor(qCurrentColor,
+                                                         qBckgrndColor);
+   }
+}
+
+void WidgetManipColor::SetCurrentColor(const QColor& qColor,
+                                       const QColor& qBckGrndColor)
+{
+   QPixmap qCurrentColor(m_pqCurrentColor->size());
+   qCurrentColor.fill(qBckGrndColor);
+   QPainter qPainter(&qCurrentColor);
+   QRect qRect(QPoint(0, 0), m_pqCurrentColor->size());
+   qPainter.fillRect(qRect, qColor);
+   m_pqCurrentColor->setPixmap(qCurrentColor);
+
+   m_pEditColor->SetColor(qColor);
 }
