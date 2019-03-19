@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     HMI/WidgetPalette/WidgetPaletteElement.cpp \
     HMI/WidgetPalette/WidgetPalette.cpp \
     CExceptionMessagerie/CExceptionMessagerie.cpp \
-    global.cpp
+    global.cpp \
+    HMI/WidgetManipColor/ComponentColorValidator.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -55,7 +56,8 @@ HEADERS += \
     global.h \
     HMI/WidgetPalette/WidgetPaletteElement.h \
     HMI/WidgetPalette/WidgetPalette.h \
-    CExceptionMessagerie/CExceptionMessagerie.h
+    CExceptionMessagerie/CExceptionMessagerie.h \
+    HMI/WidgetManipColor/ComponentColorValidator.h
 
 RESOURCES += \
     Imager.qrc

@@ -84,6 +84,42 @@ void ImageView::mousePressEvent(QMouseEvent* pqEvent)
    {
       setDragMode(QGraphicsView::ScrollHandDrag);
    }
+   else if(  (pqEvent->button() == Qt::LeftButton)
+           &&(eGetStateMouse() == CSubStateMouse::PIPETTE))
+   {
+      // On récupére les coordonnées de la souris dans la scéne
+      QPointF qMousePointScene = mapToScene(QPoint(pqEvent->x(), pqEvent->y()));
+
+      // On détermine la position de la souris sur l'image
+      QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(
+                                                            qMousePointScene);
+      QRectF qRectImageF(QPoint(0, 0),
+                         pqImageScene()->qPixmap().size());
+      // Si mon pointeur est sur l'image ...
+      if(qRectImageF.contains(qMousePointItemF) == true)
+      {
+         QPoint qMousePointImage(qFloor(qMousePointItemF.x()),
+                                 qFloor(qMousePointItemF.y()));
+         QImage qImage = pSubWindow()->qImage();
+         if(qImage.colorTable().isEmpty())
+         {
+            QColor qBckgrndColor = pSubWindow()->backgroundBrush().color();
+            if(pSubWindow()->backgroundBrush().style() == Qt::TexturePattern)
+            {
+               qBckgrndColor = Qt::white;
+            }
+            pMainWindow()->pWidgetManipColor()
+                         ->SetCurrentColor(qImage.pixelColor(qMousePointImage),
+                                           qBckgrndColor);
+         }
+         else
+         {
+            pSubWindow()->pqWidgetPalette()
+                        ->SetIndElementSelectionne(
+                                          qImage.pixelIndex(qMousePointImage));
+         }
+      }
+   }
 
    QGraphicsView::mousePressEvent(pqEvent);
 }
@@ -202,7 +238,7 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
    // correspondant
    QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(qMousePointScene);
    QRectF qRectImageF(QPoint(0, 0),
-                      pqImageScene()->qPixmap().size() - QSize(1, 1));
+                      pqImageScene()->qPixmap().size());
    // Si mon pointeur est sur l'image ...
    if(qRectImageF.contains(qMousePointItemF) == true)
    {
@@ -321,10 +357,17 @@ void ImageView::ResetZoom(void)
 // La fonction suivante permet de retrouver l'état de la souris.
 CSubStateMouse::e_state_machine ImageView::eGetStateMouse(void)
 {
-   MainWindow* pMainWindow = dynamic_cast<MainWindow*>(parentWidget()
-                                                            ->parentWidget()
-                                                            ->parentWidget()
-                                                            ->parentWidget());
+   return pMainWindow()->pWidgetManipColor()->eCurrentState();
+}
 
-   return pMainWindow->pWidgetManipColor()->eCurrentState();
+MainWindow* ImageView::pMainWindow(void) const
+{
+   return dynamic_cast<MainWindow*>(parentWidget()->parentWidget()
+                                                  ->parentWidget()
+                                                  ->parentWidget());
+}
+
+SubWindow* ImageView::pSubWindow(void) const
+{
+   return dynamic_cast<SubWindow*>(parentWidget());
 }

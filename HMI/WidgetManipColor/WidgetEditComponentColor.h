@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 
+#include "ComponentColorValidator.h"
+
 class WidgetEditComponentColor : public QWidget
 {
    Q_OBJECT

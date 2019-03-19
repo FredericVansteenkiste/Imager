@@ -8,6 +8,9 @@
 #include "../WidgetManipColor/CStateMouse.h"
 #include "../MainWindow.h"
 
+class MainWindow;
+class SubWindow;
+
 // Default zoom factors
 #define DEFAULT_ZOOM_FACTOR               (1.15)
 #define DEFAULT_ZOOM_CTRL_FACTOR          (1.01)
@@ -89,6 +92,11 @@ private:
 
    // La fonction suivante permet de retrouver l'état de la souris.
    CSubStateMouse::e_state_machine eGetStateMouse(void);
+
+   // Les méthodes suivantes permettent de retrouver des pointeurs sur
+   // MainWindow et SubWindow
+   MainWindow* pMainWindow(void) const;
+   SubWindow*  pSubWindow(void) const;
 
    // J'interdis toute forme de recopie de ma classe:
    ImageView(const ImageView&);

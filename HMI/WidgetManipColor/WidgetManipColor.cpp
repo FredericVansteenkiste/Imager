@@ -201,8 +201,8 @@ void WidgetManipColor::SubWindowActivated(QMdiSubWindow* pqMdiSubWindow)
                                     qGreen(aqColorPalette[iIndColor]),
                                     qBlue(aqColorPalette[iIndColor]),
                                     qAlpha(aqColorPalette[iIndColor]));
-      pqMainWindow->pWidgetManipColor()->SetCurrentColor(qCurrentColor,
-                                                         qBckgrndColor);
+      SetCurrentColor(qCurrentColor,
+                      qBckgrndColor);
    }
 }
 

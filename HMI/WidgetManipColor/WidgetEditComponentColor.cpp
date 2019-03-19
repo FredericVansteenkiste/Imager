@@ -6,7 +6,9 @@ WidgetEditComponentColor::WidgetEditComponentColor(const QString& qLabel,
                                                          QWidget(pqParent),
                                                          m_pqEdit(nullptr)
 {
-   QIntValidator* pqValidator = new QIntValidator(0, 255, this);
+   ComponentColorValidator* pqValidator = new ComponentColorValidator(0,
+                                                                      255,
+                                                                      this);
 
    QLabel* pqLabel = new QLabel(qLabel, this);
    pqLabel->setMaximumWidth(20);
