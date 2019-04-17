@@ -25,14 +25,14 @@ public slots:
    virtual CSubStateMouse::e_state_machine eButtonPenClicked(void);
    virtual CSubStateMouse::e_state_machine eButtonPipetteClicked(void);
 
-signals:
-   void ButtonPenChecked(bool bIsFlat);
-   void ButtonPipetteChecked(bool bIsFlat);
-
 private:
    CSubStateMouse* m_pCurrentState;
 
    void Connect(void) const;
+
+signals:
+   void ButtonPenChecked(bool bIsFlat);
+   void ButtonPipetteChecked(bool bIsFlat);
 };
 
 #endif // CSTATEMOUSE_H

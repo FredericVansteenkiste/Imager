@@ -31,16 +31,6 @@ public slots:
 protected:
    virtual void closeEvent(QCloseEvent* pqEvent);
 
-private slots:
-   void OpenFile(void);
-   void About(void);
-   void CheckEnabledActionReduceImage(void);
-   void UpdateMenuWindow(SubWindow* pSubWindow);
-   void UpdateLabelCoordMouse(const QString& qstrLabel);
-   void CleanStatusBar(void);
-   void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
-   void UpdateWidgetManipColor(void);
-
 private:
    QAction*          m_pActionReduceImage;
    QAction*          m_pActionAppelMacro;
@@ -68,6 +58,16 @@ private:
    // J'interdis toute forme de recopie de ma classe:
    MainWindow(const MainWindow&);
    MainWindow& operator=(const MainWindow&);
+
+private slots:
+   void OpenFile(void);
+   void About(void);
+   void CheckEnabledActionReduceImage(void);
+   void UpdateMenuWindow(SubWindow* pSubWindow);
+   void UpdateLabelCoordMouse(const QString& qstrLabel);
+   void CleanStatusBar(void);
+   void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
+   void UpdateWidgetManipColor(void);
 };
 
 #endif // MAINWINDOW_H

@@ -25,13 +25,13 @@ public:
 
    void Execute(void) override = 0;
 
-signals:
-   void ButtonPenChecked(bool bIsFlat);
-   void ButtonPipetteChecked(bool bIsFlat);
-
 public slots:
    virtual e_state_machine eButtonPenClicked(void) = 0;
    virtual e_state_machine eButtonPipetteClicked(void) = 0;
+
+signals:
+   void ButtonPenChecked(bool bIsFlat);
+   void ButtonPipetteChecked(bool bIsFlat);
 };
 
 #endif // CSUBSTATEMOUSE_H

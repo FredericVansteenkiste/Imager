@@ -9,6 +9,7 @@
 
 class WidgetManipImage;
 class WidgetPalette;
+class MainWindow;
 
 class SubWindow : public QMdiSubWindow
 {
@@ -35,12 +36,6 @@ public:
    void setCheckedBackground(void);
    QBrush backgroundBrush(void) const;
 
-signals:
-   void closeWindow(SubWindow* pSubWindow);
-   void RedrawAllImage(void);
-   void CleanStatusBar(void);
-   void UpdateWidgetManipColor(void);
-
 public slots:
    // La méthode suivante permet de retirer les parties superflues d'une image
    // transparente en ressérant les bords de l'image
@@ -62,6 +57,7 @@ protected:
    virtual void closeEvent(QCloseEvent *event);
 
 private:
+   MainWindow*       m_pqMainWindow;
    WidgetManipImage* m_pqWidgetManipImage;
    WidgetPalette*    m_pqWidgetPalette;
    QFileInfo         m_qFileInfo;
@@ -71,6 +67,12 @@ private:
    // J'interdis toute forme de recopie de ma classe:
    SubWindow(const SubWindow&);
    SubWindow& operator=(const SubWindow&);
+
+signals:
+   void closeWindow(SubWindow* pSubWindow);
+   void RedrawAllImage(void);
+   void CleanStatusBar(void);
+   void UpdateWidgetManipColor(void);
 };
 
 #endif // SUBWINDOW_H

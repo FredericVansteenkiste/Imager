@@ -2,13 +2,14 @@
 
 SubWindow::SubWindow(const QFileInfo& qFileInfo,
                      const QImage& qImage,
-                     QWidget* pParent):QMdiSubWindow(pParent),
-                                       m_pqWidgetManipImage(nullptr),
-                                       m_pqWidgetPalette(nullptr),
-                                       m_qFileInfo(qFileInfo),
-                                       m_qImage(qImage),
-                                       m_pqActionSelectImage(nullptr)
-
+                     QWidget* pParent):
+                           QMdiSubWindow(pParent),
+                           m_pqMainWindow(dynamic_cast<MainWindow*>(pParent)),
+                           m_pqWidgetManipImage(nullptr),
+                           m_pqWidgetPalette(nullptr),
+                           m_qFileInfo(qFileInfo),
+                           m_qImage(qImage),
+                           m_pqActionSelectImage(nullptr)
 {
    m_pqWidgetManipImage = new WidgetManipImage(this);
 
@@ -22,9 +23,9 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
 
    // On crée la palette correspondante à notre image
    m_pqWidgetPalette = new WidgetPalette(m_qImage.colorTable(), this);
-   dynamic_cast<MainWindow*>(parent())->pWidgetManipColor()
-                                      ->pqPaletteLayout()
-                                      ->insertWidget(1, m_pqWidgetPalette);
+   m_pqMainWindow->pWidgetManipColor()
+                 ->pqPaletteLayout()
+                 ->insertWidget(1, m_pqWidgetPalette);
 
    // On met à jour la variable QSettings
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
@@ -345,11 +346,9 @@ void SubWindow::mouseMoveEvent(QMouseEvent* pqEvent)
 
 void SubWindow::closeEvent(QCloseEvent* event)
 {
-   dynamic_cast<MainWindow*>(parent()->parent()
-                                     ->parent())
-                                             ->pWidgetManipColor()
-                                             ->pqPaletteLayout()
-                                             ->removeWidget(m_pqWidgetPalette);
+   m_pqMainWindow->pWidgetManipColor()
+                 ->pqPaletteLayout()
+                 ->removeWidget(m_pqWidgetPalette);
    m_pqWidgetPalette->setParent(this);
 
    event->accept();

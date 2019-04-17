@@ -172,10 +172,10 @@ void MainWindow::OpenFile(void)
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
 
    QStringList qlstrListFiles = QFileDialog::getOpenFileNames(
-                                 this,
-                                 "Select one or more image files to open",
-                                 qSettings.value(STR_CURRENT_DIRECTORY).toString(),
-                                 "Images (*.png *.bmp *.jpg)");
+                              this,
+                              "Select one or more image files to open",
+                              qSettings.value(STR_CURRENT_DIRECTORY).toString(),
+                              "Images (*.png *.bmp *.jpg)");
 
    OpenListFile(qlstrListFiles);
 }
