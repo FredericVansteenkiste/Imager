@@ -16,10 +16,6 @@ public:
 
    void SetValue(const int& iValue);
 
-signals:
-
-public slots:
-
 private:
    QLineEdit* m_pqEdit; // Line editor to set the value of color component
 };

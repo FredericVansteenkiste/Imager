@@ -17,7 +17,7 @@ class WidgetPaletteElement : public QWidget
 public:
    explicit WidgetPaletteElement(const QColor& qColor,
                                  const int&    iIndPalette,
-                                 QWidget* pParent = nullptr);
+                                 QWidget*      pParent = nullptr);
    virtual ~WidgetPaletteElement() override;
 
    QColor qColor(void) const;

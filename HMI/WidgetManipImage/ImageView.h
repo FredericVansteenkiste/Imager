@@ -20,6 +20,7 @@ class SubWindow;
 class ImageView : public QGraphicsView
 {
    Q_OBJECT
+
 public:
    explicit ImageView(QWidget* pParent = nullptr,
                       QBrush   qBckgrndBrush = QBrush());
@@ -46,11 +47,6 @@ public:
    // coordonnées de la vue
    QPoint mapFromPixmapItem(const QPointF& qCoordPixmap);
 
-signals:
-   void SizeImage(const QString& qstrLabel);
-   void CoordMouse(const QString& qstrLabel);
-   void ColorPixel(const QString& qstrlabel);
-
 protected:
    // Display the tool tip over the mouse
    // Coordinates of the mouse in the image's frame
@@ -76,14 +72,6 @@ protected:
    // Overload to intercept the event which are going to the scroll bar
    virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
 
-private slots:
-   // Display the contextual menu (on right click)
-   // Position of the mouse in the widget
-   virtual void showContextMenu(const QPoint& qPos);
-
-   // This function set the zoom to 1
-   void ResetZoom(void);
-
 private:
    // Zoom factor
    double m_dZoomFactor;
@@ -101,6 +89,19 @@ private:
    // J'interdis toute forme de recopie de ma classe:
    ImageView(const ImageView&);
    ImageView& operator=(const ImageView&);
+
+private slots:
+   // Display the contextual menu (on right click)
+   // Position of the mouse in the widget
+   virtual void showContextMenu(const QPoint& qPos);
+
+   // This function set the zoom to 1
+   void ResetZoom(void);
+
+signals:
+   void SizeImage(const QString& qstrLabel);
+   void CoordMouse(const QString& qstrLabel);
+   void ColorPixel(const QString& qstrlabel);
 };
 
 #endif // IMAGEVIEW_H
