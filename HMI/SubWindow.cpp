@@ -33,9 +33,11 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                                                + "/QBrush");
    if(qVarBckgrndBrush == QVariant())
    {
+      // Si l'arrière plan n'a pas été définis, par défaut on le met en noir
+      m_pqWidgetManipImage->setBackgroundBrush(Qt::black);
       qSettings.setValue(  m_qFileInfo.absoluteFilePath()
-                           + "/QBrush",
-                           m_pqWidgetManipImage->backgroundBrush());
+                         + "/QBrush",
+                         m_pqWidgetManipImage->backgroundBrush());
    }
    else
    {
@@ -185,18 +187,48 @@ void SubWindow::ResizeTransparency(void)
 
 void SubWindow::AppelMacro(void)
 {
-   int x(89);
-   int y(312);
-   int iWidth(306);
-   int iHeight(236);
-   m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
+   // Changement de taille
+//   int x(20);
+//   int y(364);
+//   int iWidth(149);
+//   int iHeight(70);
+//   m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
+//   QString qstrSuffix = m_qFileInfo.suffix();
+//   QString qstrFileName = m_qFileInfo.fileName();
+//   qstrFileName.replace("." + qstrSuffix, "")
+//               .append("_")
+//               .append(QString::number(x))
+//               .append("x")
+//               .append(QString::number(y))
+//               .append(".")
+//               .append(qstrSuffix);
+//   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+//   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+//   setWindowTitle(m_qFileInfo.fileName());
+//   m_pqWidgetManipImage->setImage(m_qImage);
+//   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   // Changement de couleur
+   for(int i = 0; i < m_qImage.width(); i++)
+   {
+      for(int j = 0; j < m_qImage.height(); j++)
+      {
+         if(m_qImage.pixelColor(i, j).alpha() == 0)
+         {
+            continue;
+         }
+         QColor qColorPixel(m_qImage.pixelColor(i, j));
+         qColorPixel.setRed(223);
+         qColorPixel.setGreen(65);
+         qColorPixel.setBlue(19);
+         m_qImage.setPixelColor(i, j, qColorPixel);
+      }
+   }
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
    qstrFileName.replace("." + qstrSuffix, "")
-               .append("_")
-               .append(QString::number(x))
-               .append("x")
-               .append(QString::number(y))
+               .append("EnRouge")
                .append(".")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
