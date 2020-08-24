@@ -36,33 +36,6 @@ void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
 {
    // J'indique quel arrière plan l'on désire
    m_pqGraphicsView->setBackgroundBrush(qBckgrndBrush);
-
-   // J'indique comment dessiner le cadre autour de l'image
-   if(m_pqGraphicsView->backgroundBrush().style() == Qt::TexturePattern)
-   {
-      // Si l'arrière plan est une image, je mets un cadre en pointillé noir
-      m_pqGraphicsScene->pqCadreItem()->setPen(QPen(QBrush(Qt::black,
-                                                           Qt::SolidPattern),
-                                                    1,
-                                                    Qt::DashLine,
-                                                    Qt::SquareCap,
-                                                    Qt::BevelJoin));
-   }
-   else
-   {
-      // Si l'arrière plan est une couleur, je mets l'inverse de la couleur en
-      // pointillé
-      QColor qBckGrndColor = qBckgrndBrush.color();
-      qBckGrndColor.setRed(iRevertColor(qBckGrndColor.red()));
-      qBckGrndColor.setBlue(iRevertColor(qBckGrndColor.blue()));
-      qBckGrndColor.setGreen(iRevertColor(qBckGrndColor.green()));
-      m_pqGraphicsScene->pqCadreItem()->setPen(QPen(QBrush(qBckGrndColor,
-                                                           Qt::SolidPattern),
-                                                    1,
-                                                    Qt::DashLine,
-                                                    Qt::SquareCap,
-                                                    Qt::BevelJoin));
-   }
 }
 
 QBrush WidgetManipImage::backgroundBrush() const

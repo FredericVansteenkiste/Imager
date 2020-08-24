@@ -17,7 +17,6 @@ public:
    qreal dScale(void) const;
 
    GraphicsPixmapItem* pqPixmapItem(void) const;
-   QGraphicsRectItem*  pqCadreItem(void) const;
 
    // La méthode suivante permet de convertir les coordonnées de la scéne en
    // coordonnées de l'image
@@ -29,7 +28,6 @@ public:
 private:
    // Pixmap item containing the image
    GraphicsPixmapItem* m_pqGraphicsPixmapItem;
-   QGraphicsRectItem*  m_pqCadreItem;
 
    // J'interdis toute forme de recopie de ma classe:
    ImageScene(const ImageScene&);

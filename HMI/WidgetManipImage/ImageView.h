@@ -5,7 +5,6 @@
 #include <QtWidgets>
 
 #include "ImageScene.h"
-#include "../WidgetManipColor/CStateMouse.h"
 #include "../MainWindow.h"
 
 class MainWindow;
@@ -22,8 +21,7 @@ class ImageView : public QGraphicsView
    Q_OBJECT
 
 public:
-   explicit ImageView(QWidget* pParent = nullptr,
-                      QBrush   qBckgrndBrush = QBrush());
+   explicit ImageView(QWidget* pParent = nullptr);
    virtual ~ImageView();
 
    void setContextMenu(void);
@@ -69,17 +67,13 @@ protected:
    // mouse move event
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
-   // Overload to intercept the event which are going to the scroll bar
-   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
+   virtual void paintEvent(QPaintEvent* pqEvent);  // ??
 
 private:
    // Zoom factor
    double m_dZoomFactor;
    // Zoom factor when the CTRL key is pressed
    double m_dZoomCtrlFactor;
-
-   // La fonction suivante permet de retrouver l'état de la souris.
-   CSubStateMouse::e_state_machine eGetStateMouse(void);
 
    // Les méthodes suivantes permettent de retrouver des pointeurs sur
    // MainWindow et SubWindow

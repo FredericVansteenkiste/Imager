@@ -11,7 +11,9 @@ public:
                                QGraphicsItem* pParent = nullptr);
    virtual ~GraphicsPixmapItem();
 
-   virtual QRectF boundingRect() const;
+   virtual QRectF boundingRect() const override;
+
+   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;   // ??
 
 private:
    // J'interdis toute forme de recopie de ma classe:

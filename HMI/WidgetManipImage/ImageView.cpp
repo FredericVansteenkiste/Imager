@@ -1,7 +1,6 @@
 #include "ImageView.h"
 
-ImageView::ImageView(QWidget* pParent,
-                     QBrush   qBckgrndBrush):
+ImageView::ImageView(QWidget* pParent):
                                     QGraphicsView(pParent),
                                     m_dZoomFactor(DEFAULT_ZOOM_FACTOR),
                                     m_dZoomCtrlFactor(DEFAULT_ZOOM_CTRL_FACTOR)
@@ -12,6 +11,7 @@ ImageView::ImageView(QWidget* pParent,
    // Update all the view port when needed, otherwise, the drawInViewPort may
    // experience trouble
    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+   setOptimizationFlags(DontAdjustForAntialiasing);
 
    setCacheMode(QGraphicsView::CacheBackground);
 
@@ -25,19 +25,7 @@ ImageView::ImageView(QWidget* pParent,
    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 #endif   // Q_OS_WIN
 
-   if(qBckgrndBrush == QBrush())
-   {
-      setBackgroundBrush(QBrush(QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
-   }
-   else
-   {
-      setBackgroundBrush(qBckgrndBrush);
-   }
-
-   // J'installe le filtre sur les événements pour intercepter les événements
-   // arrivant sur les barres de défilement.
-   horizontalScrollBar()->installEventFilter(this);
-   verticalScrollBar()->installEventFilter(this);
+   setBackgroundBrush(QBrush(QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
 }
 
 ImageView::~ImageView()
@@ -79,46 +67,9 @@ QPoint ImageView::mapFromPixmapItem(const QPointF& qCoordPixmap)
 void ImageView::mousePressEvent(QMouseEvent* pqEvent)
 {
    // Drag mode : change the cursor's shape
-   if(  (pqEvent->button() == Qt::LeftButton)
-      &&(eGetStateMouse() == CSubStateMouse::DEFAULT))
+   if(pqEvent->button() == Qt::LeftButton)
    {
       setDragMode(QGraphicsView::ScrollHandDrag);
-   }
-   else if(  (pqEvent->button() == Qt::LeftButton)
-           &&(eGetStateMouse() == CSubStateMouse::PIPETTE))
-   {
-      // On récupére les coordonnées de la souris dans la scéne
-      QPointF qMousePointScene = mapToScene(QPoint(pqEvent->x(), pqEvent->y()));
-
-      // On détermine la position de la souris sur l'image
-      QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(
-                                                            qMousePointScene);
-      QRectF qRectImageF(QPoint(0, 0),
-                         pqImageScene()->qPixmap().size());
-      // Si mon pointeur est sur l'image ...
-      if(qRectImageF.contains(qMousePointItemF) == true)
-      {
-         QPoint qMousePointImage(qFloor(qMousePointItemF.x()),
-                                 qFloor(qMousePointItemF.y()));
-         QImage qImage = pSubWindow()->qImage();
-         if(qImage.colorTable().isEmpty())
-         {
-            QColor qBckgrndColor = pSubWindow()->backgroundBrush().color();
-            if(pSubWindow()->backgroundBrush().style() == Qt::TexturePattern)
-            {
-               qBckgrndColor = Qt::white;
-            }
-            pMainWindow()->pWidgetManipColor()
-                         ->SetCurrentColor(qImage.pixelColor(qMousePointImage),
-                                           qBckgrndColor);
-         }
-         else
-         {
-            pSubWindow()->pqWidgetPalette()
-                        ->SetIndElementSelectionne(
-                                          qImage.pixelIndex(qMousePointImage));
-         }
-      }
    }
 
    QGraphicsView::mousePressEvent(pqEvent);
@@ -212,7 +163,10 @@ void ImageView::wheelEvent(QWheelEvent* pqEvent)
                                                       qCoordPixelUnderMouseF);
    centerOn(qNewCoordPixelUnderMouseF - qDecalageCentre);
 
-   // The event is processed
+   // J'indique que l'événement est terminé
+   // Ici, je n'appelle pas QGraphicsView::wheelEvent(pqEvent) car si je vais
+   // dans QGraphicsView::wheelEvent(pqEvent) cela déplacerait la position de
+   // l'image sous la souris (comme si les scrollbar avaient bougé).
    pqEvent->accept();
 }
 
@@ -220,113 +174,17 @@ void ImageView::wheelEvent(QWheelEvent* pqEvent)
 
 void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
 {
-   // On indique dans la barre d'état la taille de l'image courante.
-   QString qstrLabel("Size = (%1x%2)");
-   ImageScene* pScene = pqImageScene();
-   qstrLabel = qstrLabel.arg(pScene->qPixmap().size().width())
-                        .arg(pScene->qPixmap().size().height());
-   emit SizeImage(qstrLabel);
-
-   // On récupére les coordonnées de la souris dans la scéne
-   QPointF qMousePointScene = mapToScene(QPoint(pqEvent->x(), pqEvent->y()));
-
-   // On appelle la fonction qui met à jour le tooltip
-   setToolTip(setToolTipText(QPoint(static_cast<int>(qMousePointScene.x()),
-                                    static_cast<int>(qMousePointScene.y()))));
-
-   // On indique quelle est la position de la souris et le code couleur du pixel
-   // correspondant
-   QPointF qMousePointItemF = pqImageScene()->mapToPixmapItem(qMousePointScene);
-   QRectF qRectImageF(QPoint(0, 0),
-                      pqImageScene()->qPixmap().size());
-   // Si mon pointeur est sur l'image ...
-   if(qRectImageF.contains(qMousePointItemF) == true)
-   {
-      // ... j'indique quelles sont les coordonnées de la souris (dans le repère
-      // de l'image)
-      qstrLabel = "Coord = (%1, %2)";
-      QPoint qMousePointItem(qFloor(qMousePointItemF.x()),
-                             qFloor(qMousePointItemF.y()));
-      qstrLabel = qstrLabel.arg(qMousePointItem.x())
-                           .arg(qMousePointItem.y());
-      emit CoordMouse(qstrLabel);
-
-      // J'indique quelles sont les composantes de la couleur du pixel pointé
-      // par la souris
-      // Je récupére l'image source courante :
-      QImage qImage = dynamic_cast<SubWindow*>(parent())->qImage();
-      // Si mon image est palettisé ...
-      if(qImage.colorCount() != 0)
-      {
-         // ... je précise l'index dans la palette et je donne les composants de
-         // la couleur ...
-         QRgb qPixel = qImage.pixel(qMousePointItem);
-         qstrLabel = "\t[%1] => (A = %2 R = %3 G = %4 B = %5)";
-         qstrLabel = qstrLabel.arg(qImage.pixelIndex(qMousePointItem))
-                              .arg(qAlpha(qPixel))
-                              .arg(qRed(qPixel))
-                              .arg(qGreen(qPixel))
-                              .arg(qBlue(qPixel));
-      }
-      else
-      {
-         // ... sinon je précise simplement les composants du pixel
-         QRgb qPixel = qImage.pixel(qMousePointItem);
-         qstrLabel = "A = %1 R = %2 G = %3 B = %4";
-         qstrLabel = qstrLabel.arg(qAlpha(qPixel))
-                              .arg(qRed(qPixel))
-                              .arg(qGreen(qPixel))
-                              .arg(qBlue(qPixel));
-      }
-      emit ColorPixel(qstrLabel);
-
-      // Je sélectionne le pointeur de souris correspondant à l'état de la
-      // machine d'état de WidgetManipColor
-      CSubStateMouse::e_state_machine eCurrentState = eGetStateMouse();
-      if(eCurrentState == CSubStateMouse::PEN)
-      {
-         setCursor(QCursor(QPixmap(":/Icones/Pen.png"), 0, 40));
-      }
-      else if(eCurrentState == CSubStateMouse::PIPETTE)
-      {
-         setCursor(QCursor(QPixmap(":/Icones/Pipette.png"), 0, 40));
-      }
-      else
-      {
-         unsetCursor();
-      }
-   }
-   else
-   {
-      qstrLabel = "";
-      emit CoordMouse(qstrLabel);
-      emit ColorPixel(qstrLabel);
-
-      unsetCursor();
-   }
+   unsetCursor();
 
    // On appelle la fonction parente pour les déplacements de l'image
    QGraphicsView::mouseMoveEvent(pqEvent);
 }
 
-bool ImageView::eventFilter(QObject* pqObj, QEvent* pqEvent)
+void ImageView::paintEvent(QPaintEvent* pqEvent)
 {
-   if(  (pqObj == verticalScrollBar())
-      ||(pqObj == horizontalScrollBar())
-      ||(pqObj == cornerWidget()))
-   {
-      if(pqEvent->type() == QEvent::Enter)
-      {
-         unsetCursor();
-      }
+   qDebug() << "Call to the event QGraphicsView::paint()";
 
-      return false;
-   }
-   else
-   {
-      // pass the event to the parent class
-      return QGraphicsView::eventFilter(pqObj, pqEvent);
-   }
+   QGraphicsView::paintEvent(pqEvent);
 }
 
 QString ImageView::setToolTipText(QPoint qImageCoordinates)
@@ -352,12 +210,6 @@ void ImageView::showContextMenu(const QPoint& qPos)
 void ImageView::ResetZoom(void)
 {
    pqImageScene()->ScaleImage(1);
-}
-
-// La fonction suivante permet de retrouver l'état de la souris.
-CSubStateMouse::e_state_machine ImageView::eGetStateMouse(void)
-{
-   return pMainWindow()->pWidgetManipColor()->eCurrentState();
 }
 
 MainWindow* ImageView::pMainWindow(void) const
