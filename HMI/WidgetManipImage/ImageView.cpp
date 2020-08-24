@@ -182,7 +182,7 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
 
 void ImageView::paintEvent(QPaintEvent* pqEvent)
 {
-   qDebug() << "Call to the event QGraphicsView::paint()";
+   qDebug() << "Call to the event QGraphicsView::paintEvent()";
 
    QGraphicsView::paintEvent(pqEvent);
 }
