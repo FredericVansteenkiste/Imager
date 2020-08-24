@@ -65,7 +65,6 @@ void SubWindow::closeEvent(QCloseEvent* pqEvent)
 
 void SubWindow::Redraw(void)
 {
-   qDebug() << "Call to the function QGraphicsView::resetCachedContent()";
    m_pqWidgetManipImage->pImageView()->resetCachedContent();
 }
 
