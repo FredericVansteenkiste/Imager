@@ -5,7 +5,6 @@
 #include <QtWidgets>
 #include <QMainWindow>
 
-#include "global.h"
 #include "MdiArea.h"
 #include "SubWindow.h"
 
@@ -30,8 +29,6 @@ private:
    QActionGroup*     m_pActionsWindowMenu;
 
    void SetMenuAndToolbar(void);
-   void ReadSettings(void);
-   void WriteSettings(void) const;
    void OpenListFile(const QStringList& qlstrListFiles);
    void RedrawAllImage(void);
    void CreateCentralWidget(void);

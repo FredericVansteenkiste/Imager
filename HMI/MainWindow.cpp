@@ -9,13 +9,10 @@ MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
    SetMenuAndToolbar();
    CreateCentralWidget();
    CreateConnection();
-
-   ReadSettings();
 }
 
 MainWindow::~MainWindow()
 {
-   WriteSettings();
 }
 
 void MainWindow::SetMenuAndToolbar(void)
@@ -52,20 +49,6 @@ void MainWindow::SetMenuAndToolbar(void)
    fileToolBar->addAction(pActionOpen);
 }
 
-void MainWindow::ReadSettings(void)
-{
-   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
-
-   restoreGeometry(qSettings.value("geometry").toByteArray());
-}
-
-void MainWindow::WriteSettings(void) const
-{
-   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
-
-   qSettings.setValue("geometry", saveGeometry());
-}
-
 void MainWindow::OpenFiles(const QString& qstrFile)
 {
    QStringList qlstrListFiles = qstrFile.split("\n");
@@ -75,13 +58,10 @@ void MainWindow::OpenFiles(const QString& qstrFile)
 
 void MainWindow::OpenFile(void)
 {
-   // On demande à l'utilisateur l'adresse des images à afficher
-   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
-
    QStringList qlstrListFiles = QFileDialog::getOpenFileNames(
                               this,
                               "Select one or more image files to open",
-                              qSettings.value(STR_CURRENT_DIRECTORY).toString(),
+                              QString(),
                               "Images (*.png *.bmp *.jpg)");
 
    OpenListFile(qlstrListFiles);
@@ -95,10 +75,6 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
    }
 
    QFileInfo qFileInfoTmp(qlstrListFiles.first());
-
-   // On enregistre le répertoire courant
-   QSettings qSettings(ORGANISATION, NAME_APPLICATION);
-   qSettings.setValue(STR_CURRENT_DIRECTORY, qFileInfoTmp.absolutePath());
 
    // On ajoute les images sélectionnés sur le widget central
    MdiArea* pqMdiArea = dynamic_cast<MdiArea*>(centralWidget());

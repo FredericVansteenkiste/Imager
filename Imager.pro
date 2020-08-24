@@ -18,8 +18,7 @@ SOURCES += main.cpp \
     HMI/WidgetManipImage/ImageScene.cpp \
     HMI/WidgetManipImage/ImageView.cpp \
     HMI/WidgetManipImage/GraphicsPixmapItem.cpp \
-    HMI/MdiArea.cpp \
-    global.cpp
+    HMI/MdiArea.cpp
 
 HEADERS += \
     HMI/MainWindow.h \
@@ -28,8 +27,7 @@ HEADERS += \
     HMI/WidgetManipImage/ImageScene.h \
     HMI/WidgetManipImage/ImageView.h \
     HMI/WidgetManipImage/GraphicsPixmapItem.h \
-    HMI/MdiArea.h \
-    global.h
+    HMI/MdiArea.h
 
 RESOURCES += \
     Imager.qrc

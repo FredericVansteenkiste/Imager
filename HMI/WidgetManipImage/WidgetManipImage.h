@@ -6,7 +6,6 @@
 
 #include "ImageScene.h"
 #include "ImageView.h"
-#include "../../global.h"
 
 class ImageView;
 class ImageScene;
