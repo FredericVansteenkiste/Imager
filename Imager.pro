@@ -29,8 +29,7 @@ HEADERS += \
     HMI/WidgetManipImage/GraphicsPixmapItem.h \
     HMI/MdiArea.h
 
-RESOURCES += \
-    Imager.qrc
+RESOURCES +=
 
 OTHER_FILES +=
 
