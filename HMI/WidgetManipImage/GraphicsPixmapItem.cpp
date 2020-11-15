@@ -3,6 +3,7 @@
 GraphicsPixmapItem::GraphicsPixmapItem(QGraphicsItem* pParent):
                                                    QGraphicsPixmapItem(pParent)
 {
+   setCacheMode(QGraphicsItem::ItemCoordinateCache);
 }
 
 GraphicsPixmapItem::GraphicsPixmapItem(const QPixmap& qPixmap,

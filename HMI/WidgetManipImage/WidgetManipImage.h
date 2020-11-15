@@ -30,7 +30,7 @@ public:
 
    operator QWidget*();
 
-   ImageView* pImageView(void);
+   ImageView* pqImageView(void);
 
 private:
    // Scene where the image is drawn

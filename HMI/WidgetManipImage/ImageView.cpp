@@ -183,6 +183,8 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
 void ImageView::paintEvent(QPaintEvent* pqEvent)
 {
    qDebug() << "Call to the event QGraphicsView::paintEvent()";
+   qDebug() << "PixmapItem.boundingRect() = " << pqImageScene()->pqPixmapItem()->boundingRect();
+   qDebug() << "PixmapItem.zValue() = " << pqImageScene()->pqPixmapItem()->zValue();
 
    QGraphicsView::paintEvent(pqEvent);
 }

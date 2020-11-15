@@ -53,7 +53,7 @@ WidgetManipImage::operator QWidget*()
    return m_pqGraphicsView;
 }
 
-ImageView* WidgetManipImage::pImageView(void)
+ImageView* WidgetManipImage::pqImageView(void)
 {
    return m_pqGraphicsView;
 }

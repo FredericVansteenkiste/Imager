@@ -65,7 +65,8 @@ void SubWindow::closeEvent(QCloseEvent* pqEvent)
 
 void SubWindow::Redraw(void)
 {
-   m_pqWidgetManipImage->pImageView()->resetCachedContent();
+   m_pqWidgetManipImage->pqImageView()->resetCachedContent();
+   m_pqWidgetManipImage->pqImageView()->pqImageScene()->pqPixmapItem()->update(m_pqWidgetManipImage->pqImageView()->pqImageScene()->pqPixmapItem()->boundingRect());
 }
 
 WidgetManipImage& SubWindow::GetWidgetManipImage(void)
