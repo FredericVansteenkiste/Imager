@@ -6,6 +6,7 @@
 
 #include "WidgetManipImage/WidgetManipImage.h"
 #include "WidgetPalette/WidgetPalette.h"
+#include "MainWindow.h"
 
 class WidgetManipImage;
 class WidgetPalette;
@@ -25,8 +26,7 @@ public:
    void SetActionSelectImage(QAction* pActionSelectImage);
    QAction* pqActionSelectImage(void);
    void Redraw(void);
-   QPixmap qPixmap(void) const;
-   QImage  qImage(void) const;
+   QImage& qImage(void) const;
    WidgetManipImage& GetWidgetManipImage(void);
    bool bIsPalette(void) const;
    WidgetPalette* pqWidgetPalette(void) const;
@@ -61,7 +61,6 @@ private:
    WidgetManipImage* m_pqWidgetManipImage;
    WidgetPalette*    m_pqWidgetPalette;
    QFileInfo         m_qFileInfo;
-   QImage            m_qImage;
    QAction*          m_pqActionSelectImage;
 
    // J'interdis toute forme de recopie de ma classe:

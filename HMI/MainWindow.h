@@ -11,8 +11,8 @@
 #include "WidgetManipColor/WidgetManipColor.h"
 #include "../CExceptionMessagerie/CExceptionMessagerie.h"
 
-class SubWindow;
 class WidgetManipColor;
+class SubWindow;
 
 class MainWindow : public QMainWindow
 {

@@ -1,86 +1,103 @@
 #include "WidgetManipImage.h"
 
-WidgetManipImage::WidgetManipImage(QWidget* pParent):QObject(),
-                                                     m_pqGraphicsScene(nullptr),
-                                                     m_pqGraphicsView(nullptr)
+WidgetManipImage::WidgetManipImage(const QImage& qImage,
+                                   const QBrush& qBckgrndBrush,
+                                   QWidget* pParent):
+                                                QAbstractScrollArea(pParent),
+                                                m_qImage(qImage),
+                                                m_qBckgrndBrush(),
+                                                m_qPenCadre(),
+                                                m_dScale(1)
 {
-   // Create the scene
-   m_pqGraphicsScene = new ImageScene(pParent);
-
-   // Create the view and add it to this widget
-   m_pqGraphicsView = new ImageView(pParent);
-
-   // Add the scene to the QGraphicsView
-   m_pqGraphicsView->setScene(m_pqGraphicsScene);
+   // J'appel setBackgroundBrush() au lieu d'initialiser directement dans le
+   // constructeur pour qu'il y ait une mise à jour de m_qPenCadre en fonction
+   // de m_qBckgrndBrush.
+   setBackgroundBrush(qBckgrndBrush);
 
    // Initialize contextual menu
-   m_pqGraphicsView->setContextMenu();
+   setContextMenu();
 }
 
 WidgetManipImage::~WidgetManipImage()
 {
 }
 
-void WidgetManipImage::setImage(const QImage& qImage)
+void WidgetManipImage::SetImage(const QImage& qImage)
 {
-   // Update the pixmap in the scene
-   QPixmap qPixmap = QPixmap(qImage.size());
-   qPixmap.fill(QColor(0x0, 0x0, 0x0, 0x0));
-   QPainter qPainter(&qPixmap);
-   qPainter.drawPixmap(QPoint(), QPixmap::fromImage(qImage));
+   m_qImage = qImage;
 
-   m_pqGraphicsScene->setPixmap(qPixmap);
+   update();
+//   // Update the pixmap in the scene
+//   QPixmap qPixmap = QPixmap(qImage.size());
+//   qPixmap.fill(QColor(0x0, 0x0, 0x0, 0x0));
+//   QPainter qPainter(&qPixmap);
+//   qPainter.drawPixmap(QPoint(), QPixmap::fromImage(qImage));
+
+//   m_pqGraphicsScene->setPixmap(qPixmap);
 }
+
+QImage& WidgetManipImage::qImage(void)
+{
+   return m_qImage;
+}
+
 
 void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
 {
    // J'indique quel arrière plan l'on désire
-   m_pqGraphicsView->setBackgroundBrush(qBckgrndBrush);
+   m_qBckgrndBrush = qBckgrndBrush;
 
    // J'indique comment dessiner le cadre autour de l'image
-   if(m_pqGraphicsView->backgroundBrush().style() == Qt::TexturePattern)
+   if(m_qBckgrndBrush.style() == Qt::TexturePattern)
    {
       // Si l'arrière plan est une image, je mets un cadre en pointillé noir
-      m_pqGraphicsScene->pqCadreItem()->setPen(QPen(QBrush(Qt::black,
-                                                           Qt::SolidPattern),
-                                                    1,
-                                                    Qt::DashLine,
-                                                    Qt::SquareCap,
-                                                    Qt::BevelJoin));
+      m_qPenCadre = QPen(QBrush(Qt::black,
+                                Qt::SolidPattern),
+                         1,
+                         Qt::DashLine,
+                         Qt::SquareCap,
+                         Qt::BevelJoin);
    }
    else
    {
       // Si l'arrière plan est une couleur, je mets l'inverse de la couleur en
       // pointillé
-      QColor qBckGrndColor = qBckgrndBrush.color();
+      QColor qBckGrndColor = m_qBckgrndBrush.color();
       qBckGrndColor.setRed(iRevertColor(qBckGrndColor.red()));
       qBckGrndColor.setBlue(iRevertColor(qBckGrndColor.blue()));
       qBckGrndColor.setGreen(iRevertColor(qBckGrndColor.green()));
-      m_pqGraphicsScene->pqCadreItem()->setPen(QPen(QBrush(qBckGrndColor,
-                                                           Qt::SolidPattern),
-                                                    1,
-                                                    Qt::DashLine,
-                                                    Qt::SquareCap,
-                                                    Qt::BevelJoin));
+      m_qPenCadre = QPen(QBrush(qBckGrndColor,
+                                Qt::SolidPattern),
+                         1,
+                         Qt::DashLine,
+                         Qt::SquareCap,
+                         Qt::BevelJoin);
    }
 }
 
 QBrush WidgetManipImage::backgroundBrush() const
 {
-   return m_pqGraphicsView->backgroundBrush();
+   return m_qBckgrndBrush;
 }
 
-QPixmap WidgetManipImage::qPixmap(void) const
+void WidgetManipImage::setContextMenu(void)
 {
-   return m_pqGraphicsScene->qPixmap();
+   setContextMenuPolicy(Qt::CustomContextMenu);
+   connect(this, &QWidget::customContextMenuRequested,
+           this, &WidgetManipImage::showContextMenu);
 }
 
-WidgetManipImage::operator QWidget*()
+void WidgetManipImage::showContextMenu(const QPoint& qPos)
 {
-   return m_pqGraphicsView;
+   // Create the menu and add action
+   QMenu contextMenu;
+   contextMenu.addAction("Reset zoom", this, &WidgetManipImage::ResetZoom);
+
+   // Display the menu
+   contextMenu.exec(qPos);
 }
 
-ImageView* WidgetManipImage::pImageView(void)
+void WidgetManipImage::ResetZoom(void)
 {
-   return m_pqGraphicsView;
+   m_dScale = 1;
 }

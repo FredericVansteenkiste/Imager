@@ -235,15 +235,13 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       // dimensions.
       QSize qSizeSubWindow = pSubWindow->size();
       QScrollBar* pHorScrollBar = pSubWindow->GetWidgetManipImage()
-                                             .pImageView()
-                                            ->horizontalScrollBar();
+                                             .horizontalScrollBar();
       if(pHorScrollBar->isHidden() == false)
       {
          qSizeSubWindow.rheight() += pHorScrollBar->height();
       }
       QScrollBar* pVerScrollBar = pSubWindow->GetWidgetManipImage()
-                                             .pImageView()
-                                            ->verticalScrollBar();
+                                             .verticalScrollBar();
       if(pVerScrollBar->isHidden() == false)
       {
          qSizeSubWindow.rwidth() += pVerScrollBar->width();
@@ -272,11 +270,11 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       connect(pSubWindow, &SubWindow::UpdateWidgetManipColor,
               this,       &MainWindow::UpdateWidgetManipColor);
 
-      ImageView* pImageView = pSubWindow->GetWidgetManipImage().pImageView();
-      connect(pImageView, &ImageView::CoordMouse,
-              this,       &MainWindow::UpdateLabelCoordMouse);
-      connect(pImageView, &ImageView::ColorPixel,
-              this,       &MainWindow::UpdateLabelColorPixel);
+      WidgetManipImage* pWidgetManipImage = &pSubWindow->GetWidgetManipImage();
+      connect(pWidgetManipImage, &WidgetManipImage::CoordMouse,
+              this,              &MainWindow::UpdateLabelCoordMouse);
+      connect(pWidgetManipImage, &WidgetManipImage::ColorPixel,
+              this,              &MainWindow::UpdateLabelColorPixel);
    }
 }
 

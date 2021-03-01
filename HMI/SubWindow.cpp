@@ -8,42 +8,41 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
                            m_pqWidgetManipImage(nullptr),
                            m_pqWidgetPalette(nullptr),
                            m_qFileInfo(qFileInfo),
-                           m_qImage(qImage),
                            m_pqActionSelectImage(nullptr)
 {
-   m_pqWidgetManipImage = new WidgetManipImage(this);
-
-   setMouseTracking(true);
-   setAttribute(Qt::WA_DeleteOnClose);
-   setWindowTitle(m_qFileInfo.fileName());
-   setWindowIcon(QIcon(":HMI/Icones/image.png"));
-
-   m_pqWidgetManipImage->setImage(m_qImage);
-   setWidget(*m_pqWidgetManipImage);
-
-   // On crée la palette correspondante à notre image
-   m_pqWidgetPalette = new WidgetPalette(m_qImage.colorTable(), this);
-   m_pqMainWindow->pWidgetManipColor()
-                 ->pqPaletteLayout()
-                 ->insertWidget(1, m_pqWidgetPalette);
-
-   // On met à jour la variable QSettings
+   // On met à jour la variable QSettings et on regarde dans celle-ci pour voir
+   // s'il y a déjà un pinceau décrit pour l'arrière plan
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    QVariant qVarBckgrndBrush = qSettings.value(  m_qFileInfo.absoluteFilePath()
                                                + "/QBrush");
    if(qVarBckgrndBrush == QVariant())
    {
       // Si l'arrière plan n'a pas été définis, par défaut on le met en noir
-      m_pqWidgetManipImage->setBackgroundBrush(Qt::black);
+      m_pqWidgetManipImage = new WidgetManipImage(qImage, Qt::black, this);
       qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                          + "/QBrush",
                          m_pqWidgetManipImage->backgroundBrush());
    }
    else
    {
-      m_pqWidgetManipImage->setBackgroundBrush(
-                                             qVarBckgrndBrush.value<QBrush>());
+      m_pqWidgetManipImage = new WidgetManipImage(
+                                             qImage,
+                                             qVarBckgrndBrush.value<QBrush>(),
+                                             this);
    }
+
+   setMouseTracking(true);
+   setAttribute(Qt::WA_DeleteOnClose);
+   setWindowTitle(m_qFileInfo.fileName());
+   setWindowIcon(QIcon(":HMI/Icones/image.png"));
+
+   setWidget(m_pqWidgetManipImage);
+
+   // On crée la palette correspondante à notre image
+   m_pqWidgetPalette = new WidgetPalette(qImage.colorTable(), this);
+   m_pqMainWindow->pWidgetManipColor()
+                 ->pqPaletteLayout()
+                 ->insertWidget(1, m_pqWidgetPalette);
 }
 
 SubWindow::~SubWindow()
@@ -71,12 +70,12 @@ void SubWindow::ResizeTransparency(void)
    // On recherche où se trouve les bords de l'image
    int  iFirstLineVisible(0);
    bool bIsFound = false;
-   for(int y = 0; y < m_qImage.height(); y++)
+   for(int y = 0; y < qImage().height(); y++)
    {
       iFirstLineVisible = y;
-      for(int x = 0; x < m_qImage.width(); x++)
+      for(int x = 0; x < qImage().width(); x++)
       {
-         QRgb qColorPixel = m_qImage.pixel(x, y);
+         QRgb qColorPixel = qImage().pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -91,12 +90,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iLastLineVisible(0);
    bIsFound = false;
-   for(int y = (m_qImage.height() - 1); y >= 0; y--)
+   for(int y = (qImage().height() - 1); y >= 0; y--)
    {
       iLastLineVisible = y;
-      for(int x = 0; x < m_qImage.width(); x++)
+      for(int x = 0; x < qImage().width(); x++)
       {
-         QRgb qColorPixel = m_qImage.pixel(x, y);
+         QRgb qColorPixel = qImage().pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -111,12 +110,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iFirstColumnVisible(0);
    bIsFound = false;
-   for(int x = 0; x < m_qImage.width(); x++)
+   for(int x = 0; x < qImage().width(); x++)
    {
       iFirstColumnVisible = x;
-      for(int y = 0; y < m_qImage.height(); y++)
+      for(int y = 0; y < qImage().height(); y++)
       {
-         QRgb qColorPixel = m_qImage.pixel(x, y);
+         QRgb qColorPixel = qImage().pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -131,12 +130,12 @@ void SubWindow::ResizeTransparency(void)
 
    int  iLastColumnVisible(0);
    bIsFound = false;
-   for(int x = (m_qImage.width() - 1); x >= 0; x--)
+   for(int x = (qImage().width() - 1); x >= 0; x--)
    {
       iLastColumnVisible = x;
-      for(int y = 0; y < m_qImage.height(); y++)
+      for(int y = 0; y < qImage().height(); y++)
       {
-         QRgb qColorPixel = m_qImage.pixel(x, y);
+         QRgb qColorPixel = qImage().pixel(x, y);
          if(qAlpha(qColorPixel) != 0)
          {
             bIsFound = true;
@@ -152,17 +151,18 @@ void SubWindow::ResizeTransparency(void)
    // Si aucun changement n'est recquis, on quitte la macro:
    if(  (iFirstColumnVisible == 0)
       &&(iFirstLineVisible   == 0)
-      &&(iLastColumnVisible  == (m_qImage.width() - 1))
-      &&(iLastLineVisible    == (m_qImage.height() - 1)))
+      &&(iLastColumnVisible  == (qImage().width() - 1))
+      &&(iLastLineVisible    == (qImage().height() - 1)))
    {
       return;
    }
 
    // J'extrais la partie de l'image qui nous intéresse
-   m_qImage = m_qImage.copy(iFirstColumnVisible,
-                            iFirstLineVisible,
-                            iLastColumnVisible - iFirstColumnVisible + 1,
-                            iLastLineVisible - iFirstLineVisible + 1);
+   m_pqWidgetManipImage->SetImage(
+               qImage().copy(iFirstColumnVisible,
+                             iFirstLineVisible,
+                             iLastColumnVisible - iFirstColumnVisible + 1,
+                             iLastLineVisible - iFirstLineVisible + 1));
    // Je copie le fichier dans un nouveau nom indiquant les coordonnées de la
    // nouvelle image dans l'ancienne
    QString qstrSuffix = m_qFileInfo.suffix();
@@ -175,11 +175,10 @@ void SubWindow::ResizeTransparency(void)
                .append(".")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-   m_qImage.save(m_qFileInfo.absoluteFilePath());
+   qImage().save(m_qFileInfo.absoluteFilePath());
 
    // Et l'image crée devient la nouvelle image de la fenêtre
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->setImage(m_qImage);
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -210,19 +209,19 @@ void SubWindow::AppelMacro(void)
 //   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    // Changement de couleur
-   for(int i = 0; i < m_qImage.width(); i++)
+   for(int i = 0; i < qImage().width(); i++)
    {
-      for(int j = 0; j < m_qImage.height(); j++)
+      for(int j = 0; j < qImage().height(); j++)
       {
-         if(m_qImage.pixelColor(i, j).alpha() == 0)
+         if(qImage().pixelColor(i, j).alpha() == 0)
          {
             continue;
          }
-         QColor qColorPixel(m_qImage.pixelColor(i, j));
+         QColor qColorPixel(qImage().pixelColor(i, j));
          qColorPixel.setRed(223);
          qColorPixel.setGreen(65);
          qColorPixel.setBlue(19);
-         m_qImage.setPixelColor(i, j, qColorPixel);
+         qImage().setPixelColor(i, j, qColorPixel);
       }
    }
    QString qstrSuffix = m_qFileInfo.suffix();
@@ -232,24 +231,24 @@ void SubWindow::AppelMacro(void)
                .append(".")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-   m_qImage.save(m_qFileInfo.absoluteFilePath());
+   qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
 void SubWindow::CreatePalette(void)
 {
    // Si l'image courante à déjà une palette ...
-   if(m_qImage.format() == QImage::Format_Indexed8)
+   if(qImage().format() == QImage::Format_Indexed8)
    {
       // ... alors on sort de la fonction sans rien faire.
       return;
    }
 
    // On crée une palette pour l'image.
-   m_qImage = m_qImage.convertToFormat(QImage::Format_Indexed8,
+   qImage() = qImage().convertToFormat(QImage::Format_Indexed8,
                                          Qt::ColorOnly
                                        | Qt::ThresholdDither
                                        | Qt::DiffuseAlphaDither
@@ -263,10 +262,10 @@ void SubWindow::CreatePalette(void)
                .append("_WithPalette.")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-   m_qImage.save(m_qFileInfo.absoluteFilePath());
+   qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -275,14 +274,14 @@ void SubWindow::CreatePalette(void)
 void SubWindow::SupprPalette(void)
 {
    // Si l'image courante n'a pas de palette ...
-   if(m_qImage.format() != QImage::Format_Indexed8)
+   if(qImage().format() != QImage::Format_Indexed8)
    {
       // ... alors on sort de la fonction sans rien faire.
       return;
    }
 
    // On convertit l'image à un format sans palette.
-   m_qImage = m_qImage.convertToFormat(QImage::Format_ARGB32);
+   qImage() = qImage().convertToFormat(QImage::Format_ARGB32);
 
    // On sauvegarde notre image
    QString qstrSuffix = m_qFileInfo.suffix();
@@ -291,10 +290,10 @@ void SubWindow::SupprPalette(void)
                .append("_WithoutPalette.")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-   m_qImage.save(m_qFileInfo.absoluteFilePath());
+   qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->setImage(m_qImage);
+   m_pqWidgetManipImage->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -388,7 +387,7 @@ void SubWindow::closeEvent(QCloseEvent* event)
 
 void SubWindow::Redraw(void)
 {
-   m_pqWidgetManipImage->pImageView()->resetCachedContent();
+   m_pqWidgetManipImage->update();
 }
 
 WidgetManipImage& SubWindow::GetWidgetManipImage(void)
@@ -398,7 +397,7 @@ WidgetManipImage& SubWindow::GetWidgetManipImage(void)
 
 bool SubWindow::bIsPalette(void) const
 {
-   if(m_qImage.colorCount() == 0)
+   if(qImage().colorCount() == 0)
    {
       return false;
    }
@@ -416,11 +415,11 @@ WidgetPalette* SubWindow::pqWidgetPalette(void) const
 unsigned int SubWindow::uiNbColorDefined(void) const
 {
    QMap<QRgba64, unsigned int> qmapColor;
-   for(int x = 0; x < m_qImage.width(); x++)
+   for(int x = 0; x < qImage().width(); x++)
    {
-      for(int y = 0; y < m_qImage.height(); y++)
+      for(int y = 0; y < qImage().height(); y++)
       {
-         QColor qColorPix = m_qImage.pixelColor(x, y);
+         QColor qColorPix = qImage().pixelColor(x, y);
          qmapColor[qColorPix.rgba64()]++;
       }
    }
@@ -428,12 +427,7 @@ unsigned int SubWindow::uiNbColorDefined(void) const
    return static_cast<unsigned int>(qmapColor.size());
 }
 
-QPixmap SubWindow::qPixmap(void) const
+QImage& SubWindow::qImage(void) const
 {
-   return m_pqWidgetManipImage->qPixmap();
-}
-
-QImage SubWindow::qImage(void) const
-{
-   return m_qImage;
+   return m_pqWidgetManipImage->qImage();
 }
