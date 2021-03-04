@@ -9,6 +9,9 @@ WidgetManipImage::WidgetManipImage(const QImage& qImage,
                                                 m_qPenCadre(),
                                                 m_dScale(1)
 {
+   // Allow mouse tracking even if no button is pressed
+   setMouseTracking(true);
+
    // J'appel setBackgroundBrush() au lieu d'initialiser directement dans le
    // constructeur pour qu'il y ait une mise à jour de m_qPenCadre en fonction
    // de m_qBckgrndBrush.
@@ -16,6 +19,21 @@ WidgetManipImage::WidgetManipImage(const QImage& qImage,
 
    // Initialize contextual menu
    setContextMenu();
+
+   // Sur windows, je dois activer les scrollbars en permance, sinon si j'ouvre
+   // un grand nombre d'image j'ai des resizeEvent qui sont continuellement
+   // émis. Causes inconnues : à explorer
+   // Ce problème n'apparait pas sous Linux; YES vive linux !!!
+#ifdef Q_OS_WIN
+   // Enable scroll bar to avoid an unwanted resize recursion
+   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+#endif   // Q_OS_WIN
+
+   // J'installe le filtre sur les événements pour intercepter les événements
+   // arrivant sur les barres de défilement.
+   horizontalScrollBar()->installEventFilter(this);
+   verticalScrollBar()->installEventFilter(this);
 }
 
 WidgetManipImage::~WidgetManipImage()
@@ -27,13 +45,6 @@ void WidgetManipImage::SetImage(const QImage& qImage)
    m_qImage = qImage;
 
    update();
-//   // Update the pixmap in the scene
-//   QPixmap qPixmap = QPixmap(qImage.size());
-//   qPixmap.fill(QColor(0x0, 0x0, 0x0, 0x0));
-//   QPainter qPainter(&qPixmap);
-//   qPainter.drawPixmap(QPoint(), QPixmap::fromImage(qImage));
-
-//   m_pqGraphicsScene->setPixmap(qPixmap);
 }
 
 QImage& WidgetManipImage::qImage(void)
@@ -80,6 +91,36 @@ QBrush WidgetManipImage::backgroundBrush() const
    return m_qBckgrndBrush;
 }
 
+void WidgetManipImage::paintEvent(QPaintEvent *pqEvent)
+{
+   Q_UNUSED(pqEvent)
+
+   QPainter qPainter(this);
+   qPainter.setRenderHint(QPainter::Antialiasing, false);
+   qPainter.drawEllipse(80, 80, 400, 240);
+   qDebug() << qPainter.window();
+}
+
+bool WidgetManipImage::eventFilter(QObject* pqObj, QEvent* pqEvent)
+{
+   if(  (pqObj == verticalScrollBar())
+      ||(pqObj == horizontalScrollBar())
+      ||(pqObj == cornerWidget()))
+   {
+      if(pqEvent->type() == QEvent::Enter)
+      {
+         unsetCursor();
+      }
+
+      return false;
+   }
+   else
+   {
+      // pass the event to the parent class
+      return QAbstractScrollArea::eventFilter(pqObj, pqEvent);
+   }
+}
+
 void WidgetManipImage::setContextMenu(void)
 {
    setContextMenuPolicy(Qt::CustomContextMenu);
@@ -94,10 +135,27 @@ void WidgetManipImage::showContextMenu(const QPoint& qPos)
    contextMenu.addAction("Reset zoom", this, &WidgetManipImage::ResetZoom);
 
    // Display the menu
-   contextMenu.exec(qPos);
+   contextMenu.exec(qPos);    // ?? vérifier la valeur de qPos pour que le menu contextuel se pose correctement ...
 }
 
 void WidgetManipImage::ResetZoom(void)
 {
    m_dScale = 1;
+}
+
+// La fonction suivante permet de retrouver l'état de la souris.
+CSubStateMouse::e_state_machine WidgetManipImage::eGetStateMouse(void)
+{
+   return pMainWindow()->pWidgetManipColor()->eCurrentState();
+}
+
+MainWindow* WidgetManipImage::pMainWindow(void) const
+{
+   return dynamic_cast<MainWindow*>(parentWidget()->parentWidget()
+                                                  ->parentWidget());
+}
+
+SubWindow* WidgetManipImage::pSubWindow(void) const
+{
+   return dynamic_cast<SubWindow*>(parentWidget());
 }

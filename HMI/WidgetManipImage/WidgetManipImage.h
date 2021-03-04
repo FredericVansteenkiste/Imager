@@ -5,7 +5,16 @@
 #include <QtWidgets>
 
 #include "../../global.h"
+#include "../WidgetManipColor/CStateMouse.h"
+#include "../MainWindow.h"
 
+class MainWindow;
+class SubWindow;
+
+// Default zoom factors
+#define DEFAULT_ZOOM_FACTOR               (1.15)
+#define DEFAULT_ZOOM_CTRL_FACTOR          (1.01)
+#define SCALE_MAX                         (15)
 #define ADRESS_CHECKED_BACKGROUND_PICTURE (":/Icones/ArrierePlan.png")
 
 class WidgetManipImage : public QAbstractScrollArea
@@ -28,6 +37,13 @@ public:
    void setBackgroundBrush(const QBrush& qBckgrndBrush);
    QBrush backgroundBrush() const;
 
+protected:
+   // Overload this event to draw the widget
+   virtual void paintEvent(QPaintEvent *pqEvent);
+
+   // Overload to intercept the event which are going to the scroll bar
+   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
+
 private:
    // Le membre suivant enregistre l'image affichée par le widget.
    QImage m_qImage;
@@ -41,6 +57,14 @@ private:
    qreal m_dScale;
 
    void setContextMenu(void);
+
+   // La fonction suivante permet de retrouver l'état de la souris.
+   CSubStateMouse::e_state_machine eGetStateMouse(void);
+
+   // Les méthodes suivantes permettent de retrouver des pointeurs sur
+   // MainWindow et SubWindow
+   MainWindow* pMainWindow(void) const;
+   SubWindow*  pSubWindow(void) const;
 
    // J'interdis toute forme de recopie de ma classe:
    WidgetManipImage(const WidgetManipImage&);

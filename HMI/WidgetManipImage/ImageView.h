@@ -26,7 +26,7 @@ public:
                       QBrush   qBckgrndBrush = QBrush());
    virtual ~ImageView();
 
-   void setContextMenu(void);
+   // void setContextMenu(void);
 
    // Set the zoom factor when the CTRL key is not pressed
    // param factor            zoom factor (>1)
@@ -70,7 +70,7 @@ protected:
    virtual void mouseMoveEvent(QMouseEvent* pqEvent);
 
    // Overload to intercept the event which are going to the scroll bar
-   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
+//   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
 
 private:
    // Zoom factor
@@ -91,12 +91,12 @@ private:
    ImageView& operator=(const ImageView&);
 
 private slots:
-   // Display the contextual menu (on right click)
-   // Position of the mouse in the widget
-   virtual void showContextMenu(const QPoint& qPos);
+   // // Display the contextual menu (on right click)
+   // // Position of the mouse in the widget
+   // virtual void showContextMenu(const QPoint& qPos);
 
-   // This function set the zoom to 1
-   void ResetZoom(void);
+   // // This function set the zoom to 1
+   // void ResetZoom(void);
 
 signals:
    void SizeImage(const QString& qstrLabel);

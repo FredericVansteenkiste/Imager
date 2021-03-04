@@ -187,10 +187,10 @@ void SubWindow::ResizeTransparency(void)
 void SubWindow::AppelMacro(void)
 {
    // Changement de taille
-//   int x(20);
-//   int y(364);
-//   int iWidth(149);
-//   int iHeight(70);
+//   int x(206);
+//   int y(725);
+//   int iWidth(68);
+//   int iHeight(52);
 //   m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
 //   QString qstrSuffix = m_qFileInfo.suffix();
 //   QString qstrFileName = m_qFileInfo.fileName();
@@ -213,15 +213,14 @@ void SubWindow::AppelMacro(void)
    {
       for(int j = 0; j < qImage().height(); j++)
       {
-         if(qImage().pixelColor(i, j).alpha() == 0)
-         {
-            continue;
-         }
          QColor qColorPixel(qImage().pixelColor(i, j));
-         qColorPixel.setRed(223);
-         qColorPixel.setGreen(65);
-         qColorPixel.setBlue(19);
-         qImage().setPixelColor(i, j, qColorPixel);
+         if(qColorPixel.red() != 0)
+         {
+            qColorPixel.setRed(227);
+            qColorPixel.setGreen(90);
+            qColorPixel.setBlue(0);
+            qImage().setPixelColor(i, j, qColorPixel);
+         }
       }
    }
    QString qstrSuffix = m_qFileInfo.suffix();
@@ -234,8 +233,38 @@ void SubWindow::AppelMacro(void)
    qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
+   // Inversion du haut
+//   int x(0);
+//   int y(0);
+//   int iWidth(65);
+//   int iHeight(40);
+//   QImage qImage = m_qImage.copy(x, y, iWidth, iHeight);
+//   for(int i = 0; i < m_qImage.width(); i++)
+//   {
+//      for(int j = 0; j < 25; j++)
+//      {
+//         QRgb qPixel(m_qImage.pixel(m_qImage.width() - (1+i), j));
+//         qImage.setPixel(i, j, qPixel);
+//      }
+//   }
+//   m_qImage = qImage;
+//   QString qstrSuffix = m_qFileInfo.suffix();
+//   QString qstrFileName = m_qFileInfo.fileName();
+//   qstrFileName.replace("." + qstrSuffix, "")
+//               .append("_")
+//               .append(QString::number(x))
+//               .append("x")
+//               .append(QString::number(y))
+//               .append(".")
+//               .append(qstrSuffix);
+//   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+//   m_qImage.save(m_qFileInfo.absoluteFilePath());
+
+//   setWindowTitle(m_qFileInfo.fileName());
+//   m_pqWidgetManipImage->setImage(m_qImage);
+//   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 
 void SubWindow::CreatePalette(void)

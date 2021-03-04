@@ -6,8 +6,8 @@ ImageView::ImageView(QWidget* pParent,
                                     m_dZoomFactor(DEFAULT_ZOOM_FACTOR),
                                     m_dZoomCtrlFactor(DEFAULT_ZOOM_CTRL_FACTOR)
 {
-   // Allow mouse tracking even if no button is pressed
-   setMouseTracking(true);
+   // // Allow mouse tracking even if no button is pressed
+   // setMouseTracking(true);
 
    // Update all the view port when needed, otherwise, the drawInViewPort may
    // experience trouble
@@ -15,15 +15,15 @@ ImageView::ImageView(QWidget* pParent,
 
    setCacheMode(QGraphicsView::CacheBackground);
 
-   // Sur windows, je dois activer les scrollbars en permance, sinon si j'ouvre
-   // un grand nombre d'image j'ai des resizeEvent qui sont continuellement
-   // émis. Causes inconnues : à explorer
-   // Ce problème n'apparait pas sous Linux; YES vive linux !!!
-#ifdef Q_OS_WIN
-   // Enable scroll bar to avoid an unwanted resize recursion
-   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-#endif   // Q_OS_WIN
+   // // Sur windows, je dois activer les scrollbars en permance, sinon si j'ouvre
+   // // un grand nombre d'image j'ai des resizeEvent qui sont continuellement
+   // // émis. Causes inconnues : à explorer
+   // // Ce problème n'apparait pas sous Linux; YES vive linux !!!
+// #ifdef Q_OS_WIN
+   // // Enable scroll bar to avoid an unwanted resize recursion
+   // setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+   // setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+// #endif   // Q_OS_WIN
 
    if(qBckgrndBrush == QBrush())
    {
@@ -34,22 +34,22 @@ ImageView::ImageView(QWidget* pParent,
       setBackgroundBrush(qBckgrndBrush);
    }
 
-   // J'installe le filtre sur les événements pour intercepter les événements
-   // arrivant sur les barres de défilement.
-   horizontalScrollBar()->installEventFilter(this);
-   verticalScrollBar()->installEventFilter(this);
+   // // J'installe le filtre sur les événements pour intercepter les événements
+   // // arrivant sur les barres de défilement.
+   // horizontalScrollBar()->installEventFilter(this);
+   // verticalScrollBar()->installEventFilter(this);
 }
 
 ImageView::~ImageView()
 {
 }
 
-void ImageView::setContextMenu(void)
-{
-   setContextMenuPolicy(Qt::CustomContextMenu);
-   connect(this, &QWidget::customContextMenuRequested,
-           this, &ImageView::showContextMenu);
-}
+// void ImageView::setContextMenu(void)
+// {
+   // setContextMenuPolicy(Qt::CustomContextMenu);
+   // connect(this, &QWidget::customContextMenuRequested,
+           // this, &ImageView::showContextMenu);
+// }
 
 void ImageView::setZoomFactor(const double dFactor)
 {
@@ -309,25 +309,25 @@ void ImageView::mouseMoveEvent(QMouseEvent* pqEvent)
    QGraphicsView::mouseMoveEvent(pqEvent);
 }
 
-bool ImageView::eventFilter(QObject* pqObj, QEvent* pqEvent)
-{
-   if(  (pqObj == verticalScrollBar())
-      ||(pqObj == horizontalScrollBar())
-      ||(pqObj == cornerWidget()))
-   {
-      if(pqEvent->type() == QEvent::Enter)
-      {
-         unsetCursor();
-      }
+// bool ImageView::eventFilter(QObject* pqObj, QEvent* pqEvent)
+// {
+   // if(  (pqObj == verticalScrollBar())
+      // ||(pqObj == horizontalScrollBar())
+      // ||(pqObj == cornerWidget()))
+   // {
+      // if(pqEvent->type() == QEvent::Enter)
+      // {
+         // unsetCursor();
+      // }
 
-      return false;
-   }
-   else
-   {
-      // pass the event to the parent class
-      return QGraphicsView::eventFilter(pqObj, pqEvent);
-   }
-}
+      // return false;
+   // }
+   // else
+   // {
+      // // pass the event to the parent class
+      // return QGraphicsView::eventFilter(pqObj, pqEvent);
+   // }
+// }
 
 QString ImageView::setToolTipText(QPoint qImageCoordinates)
 {
@@ -336,23 +336,23 @@ QString ImageView::setToolTipText(QPoint qImageCoordinates)
    return QString("");
 }
 
-void ImageView::showContextMenu(const QPoint& qPos)
-{
-   // Get the mouse position in the scene
-   QPoint qGlobalPos = mapToGlobal(qPos);
+// void ImageView::showContextMenu(const QPoint& qPos)
+// {
+   // // Get the mouse position in the scene
+   // QPoint qGlobalPos = mapToGlobal(qPos);
 
-   // Create the menu and add action
-   QMenu contextMenu;
-   contextMenu.addAction("Reset zoom", this, &ImageView::ResetZoom);
+   // // Create the menu and add action
+   // QMenu contextMenu;
+   // contextMenu.addAction("Reset zoom", this, &ImageView::ResetZoom);
 
-   // Display the menu
-   contextMenu.exec(qGlobalPos);
-}
+   // // Display the menu
+   // contextMenu.exec(qGlobalPos);
+// }
 
-void ImageView::ResetZoom(void)
-{
-   pqImageScene()->ScaleImage(1);
-}
+// void ImageView::ResetZoom(void)
+// {
+   // pqImageScene()->ScaleImage(1);
+// }
 
 // La fonction suivante permet de retrouver l'état de la souris.
 CSubStateMouse::e_state_machine ImageView::eGetStateMouse(void)
