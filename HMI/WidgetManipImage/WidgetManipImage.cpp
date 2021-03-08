@@ -7,6 +7,7 @@ WidgetManipImage::WidgetManipImage(const QImage& qImage,
                                                 m_qImage(qImage),
                                                 m_qBckgrndBrush(),
                                                 m_qPenCadre(),
+                                                m_qTopLeftCorner(),
                                                 m_dScale(1)
 {
    // Allow mouse tracking even if no button is pressed
@@ -44,7 +45,7 @@ void WidgetManipImage::SetImage(const QImage& qImage)
 {
    m_qImage = qImage;
 
-   update();
+   viewport()->update();
 }
 
 QImage& WidgetManipImage::qImage(void)
@@ -84,6 +85,8 @@ void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
                          Qt::SquareCap,
                          Qt::BevelJoin);
    }
+
+   viewport()->update();
 }
 
 QBrush WidgetManipImage::backgroundBrush() const
@@ -91,14 +94,37 @@ QBrush WidgetManipImage::backgroundBrush() const
    return m_qBckgrndBrush;
 }
 
-void WidgetManipImage::paintEvent(QPaintEvent *pqEvent)
+void WidgetManipImage::resizeEvent(QResizeEvent *pqEvent)
+{
+   CheckCoordTopLeftImage();
+
+   QAbstractScrollArea::resizeEvent(pqEvent);
+}
+
+void WidgetManipImage::paintEvent(QPaintEvent* pqEvent)
 {
    Q_UNUSED(pqEvent)
 
-   QPainter qPainter(this);
+   // On définit le painter sur le widget que l'on veut peindre et je désactive
+   // l'antialiasing car je veux voir les "pixels" de mon image quand je zoome à
+   // l'intérieur.
+   QPainter qPainter(viewport());
    qPainter.setRenderHint(QPainter::Antialiasing, false);
-   qPainter.drawEllipse(80, 80, 400, 240);
-   qDebug() << qPainter.window();
+
+   // On dessine l'arrière plan
+   qPainter.fillRect(qPainter.window(), m_qBckgrndBrush);
+
+   // On dessine l'image
+   qPainter.drawImage(QRectF(m_qTopLeftCorner, m_qImage.size() * m_dScale),
+                      m_qImage,
+                      QRectF(QPointF(),
+                             m_qImage.size()));
+
+   // On dessine le cadre
+   qPainter.setPen(m_qPenCadre);
+   qPainter.setBrush(Qt::NoBrush);
+   qPainter.drawRect(QRectF(m_qTopLeftCorner - QPointF(1, 1),
+                            m_qImage.size() * m_dScale + QSize(2, 2)));
 }
 
 bool WidgetManipImage::eventFilter(QObject* pqObj, QEvent* pqEvent)
@@ -158,4 +184,56 @@ MainWindow* WidgetManipImage::pMainWindow(void) const
 SubWindow* WidgetManipImage::pSubWindow(void) const
 {
    return dynamic_cast<SubWindow*>(parentWidget());
+}
+
+void WidgetManipImage::CheckCoordTopLeftImage(void)
+{
+   // On lit la taille du viewport
+   QSize qSizeViewport(viewport()->size());
+
+   // On s'assure que l'image reste bien dans le viewport en largeur
+   if(static_cast<qreal>(qSizeViewport.width())
+                           >= (static_cast<qreal>(m_qImage.width()) * m_dScale))
+   {
+      m_qTopLeftCorner.rx() = (qSizeViewport.width()
+                                             - m_qImage.width() * m_dScale) / 2;
+   }
+   else
+   {
+      int iMin_x(-1 * qRound(  static_cast<qreal>(m_qImage.width()) * m_dScale
+                             - static_cast<qreal>(qSizeViewport.width())
+                             + 0.5));
+
+      if(m_qTopLeftCorner.rx() > 0)
+      {
+         m_qTopLeftCorner.rx() = 0;
+      }
+      else if(m_qTopLeftCorner.rx() < iMin_x)
+      {
+         m_qTopLeftCorner.rx() = iMin_x;
+      }
+   }
+
+   // On s'assure que l'image reste bien dans le viewport en hauteur
+   if(static_cast<qreal>(qSizeViewport.height())
+                        >= (static_cast<qreal>(m_qImage.height()) * m_dScale))
+   {
+      m_qTopLeftCorner.ry() = (qSizeViewport.height()
+                                          - m_qImage.height() * m_dScale) / 2;
+   }
+   else
+   {
+      int iMin_y(-1 * qRound(  static_cast<qreal>(m_qImage.height()) * m_dScale
+                             - static_cast<qreal>(qSizeViewport.height())
+                             + 0.5));
+
+      if(m_qTopLeftCorner.ry() > 0)
+      {
+         m_qTopLeftCorner.ry() = 0;
+      }
+      else if(m_qTopLeftCorner.ry() < iMin_y)
+      {
+         m_qTopLeftCorner.ry() = iMin_y;
+      }
+   }
 }

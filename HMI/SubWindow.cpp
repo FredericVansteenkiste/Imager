@@ -15,6 +15,7 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    QVariant qVarBckgrndBrush = qSettings.value(  m_qFileInfo.absoluteFilePath()
                                                + "/QBrush");
+   resize(qImage.size() + QSize(10, 10));
    if(qVarBckgrndBrush == QVariant())
    {
       // Si l'arrière plan n'a pas été définis, par défaut on le met en noir
@@ -294,7 +295,7 @@ void SubWindow::CreatePalette(void)
    qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->update();
+   m_pqWidgetManipImage->viewport()->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -322,7 +323,7 @@ void SubWindow::SupprPalette(void)
    qImage().save(m_qFileInfo.absoluteFilePath());
 
    setWindowTitle(m_qFileInfo.fileName());
-   m_pqWidgetManipImage->update();
+   m_pqWidgetManipImage->viewport()->update();
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
    emit UpdateWidgetManipColor();
@@ -338,7 +339,6 @@ void SubWindow::setCheckedBackground(void)
    // On applique le damier à l'arrière plan.
    m_pqWidgetManipImage->setBackgroundBrush(QBrush(
                                  QPixmap(ADRESS_CHECKED_BACKGROUND_PICTURE)));
-   m_pqWidgetPalette->repaint();
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
@@ -352,6 +352,7 @@ void SubWindow::askBackgroundColor(void)
    pqColorDialog->setOptions(  QColorDialog::NoButtons
                              | QColorDialog::DontUseNativeDialog);
 
+   qDebug() << "askBackgroundColor";
    connect(pqColorDialog, &QColorDialog::currentColorChanged,
            this,          &SubWindow::setBackgroundColor);
    connect(pqColorDialog, &QColorDialog::colorSelected,
@@ -365,7 +366,6 @@ void SubWindow::setBackgroundColor(const QColor& qColor)
    QColor qTempColor = qColor;
    qTempColor.setAlpha(255);
    m_pqWidgetManipImage->setBackgroundBrush(QBrush(qTempColor));
-   m_pqWidgetPalette->repaint();
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    qSettings.setValue(  m_qFileInfo.absoluteFilePath()
                       + "/QBrush",
@@ -416,7 +416,7 @@ void SubWindow::closeEvent(QCloseEvent* event)
 
 void SubWindow::Redraw(void)
 {
-   m_pqWidgetManipImage->update();
+   m_pqWidgetManipImage->viewport()->update();
 }
 
 WidgetManipImage& SubWindow::GetWidgetManipImage(void)

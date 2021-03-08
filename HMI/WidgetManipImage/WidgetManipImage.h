@@ -38,11 +38,14 @@ public:
    QBrush backgroundBrush() const;
 
 protected:
+   // Overload this event to act on the resize event
+   virtual void resizeEvent(QResizeEvent *pqEvent) override;
+
    // Overload this event to draw the widget
-   virtual void paintEvent(QPaintEvent *pqEvent);
+   virtual void paintEvent(QPaintEvent* pqEvent) override;
 
    // Overload to intercept the event which are going to the scroll bar
-   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent);
+   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent) override;
 
 private:
    // Le membre suivant enregistre l'image affichée par le widget.
@@ -53,6 +56,9 @@ private:
    // Le membre suivant indique quel est le crayon (QPen) a utilisé pour
    // dessiner le pointillé autour de l'image.
    QPen m_qPenCadre;
+   // Le membre suivant enregistre où se trouve le coin TopLeft de l'image dans
+   // le widget
+   QPoint m_qTopLeftCorner;
    // Le membre suivant enregistre la valeur du zoom sur l'image
    qreal m_dScale;
 
@@ -65,6 +71,11 @@ private:
    // MainWindow et SubWindow
    MainWindow* pMainWindow(void) const;
    SubWindow*  pSubWindow(void) const;
+
+   // La méthode suivante permet de s'assurer que l'image reste bien dans le
+   // viewport et qu'elle soit centré si le viewport est plus grand que l'image
+   // en agissant sur le point m_qTopLeftCorner
+   void CheckCoordTopLeftImage(void);
 
    // J'interdis toute forme de recopie de ma classe:
    WidgetManipImage(const WidgetManipImage&);
