@@ -161,7 +161,7 @@ void WidgetManipImage::showContextMenu(const QPoint& qPos)
    contextMenu.addAction("Reset zoom", this, &WidgetManipImage::ResetZoom);
 
    // Display the menu
-   contextMenu.exec(qPos);    // ?? vérifier la valeur de qPos pour que le menu contextuel se pose correctement ...
+   contextMenu.exec(this->mapToGlobal(qPos));
 }
 
 void WidgetManipImage::ResetZoom(void)
