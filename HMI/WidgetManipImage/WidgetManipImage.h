@@ -38,6 +38,18 @@ public:
    QBrush backgroundBrush() const;
 
 protected:
+   // Overload this function to process mouse button pressed
+   // mouse event
+   virtual void mousePressEvent(QMouseEvent* pqEvent);
+
+   // Overload this function to process mouse moves
+   // mouse move event
+   virtual void mouseMoveEvent(QMouseEvent* pqEvent);
+
+   // Overload this function to process mouse button released
+   // mouse event
+   virtual void mouseReleaseEvent(QMouseEvent* pqEvent);
+
    // Overload this event to act on the resize event
    virtual void resizeEvent(QResizeEvent *pqEvent) override;
 
@@ -61,6 +73,9 @@ private:
    QPoint m_qTopLeftCorner;
    // Le membre suivant enregistre la valeur du zoom sur l'image
    qreal m_dScale;
+   // Lorsque la souris clique sur l'image, le membre suivant mémorise où
+   // l'utilisateur a cliqué
+   QPoint m_qCoordMouseClicked;
 
    void setContextMenu(void);
 
@@ -77,6 +92,14 @@ private:
    // en agissant sur le point m_qTopLeftCorner
    void CheckCoordTopLeftImage(void);
 
+   // Les méthodes suivantes permettent de convertir des coordonnées du widget
+   // dans des coordonnées de l'image ou l'inverse.
+   QPointF qMapWidgetToImage(const QPointF qPointInWidgetF) const;
+   QPointF qMapImageToWidget(const QPointF qPointInImageF) const;
+
+   // La méthode suivante indique si l'on a cliqué dans l'image ou pas
+   bool IsPointWidgetInImage(const QPoint& qPointInWidget) const;
+
    // J'interdis toute forme de recopie de ma classe:
    WidgetManipImage(const WidgetManipImage&);
    WidgetManipImage& operator=(const WidgetManipImage&);
@@ -90,7 +113,6 @@ private slots:
    void ResetZoom(void);
 
 signals:
-   void SizeImage(const QString& qstrLabel);
    void CoordMouse(const QString& qstrLabel);
    void ColorPixel(const QString& qstrlabel);
 };

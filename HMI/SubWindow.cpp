@@ -352,7 +352,6 @@ void SubWindow::askBackgroundColor(void)
    pqColorDialog->setOptions(  QColorDialog::NoButtons
                              | QColorDialog::DontUseNativeDialog);
 
-   qDebug() << "askBackgroundColor";
    connect(pqColorDialog, &QColorDialog::currentColorChanged,
            this,          &SubWindow::setBackgroundColor);
    connect(pqColorDialog, &QColorDialog::colorSelected,

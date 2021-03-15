@@ -8,7 +8,8 @@ WidgetManipImage::WidgetManipImage(const QImage& qImage,
                                                 m_qBckgrndBrush(),
                                                 m_qPenCadre(),
                                                 m_qTopLeftCorner(),
-                                                m_dScale(1)
+                                                m_dScale(1),
+                                                m_qCoordMouseClicked()
 {
    // Allow mouse tracking even if no button is pressed
    setMouseTracking(true);
@@ -92,6 +93,142 @@ void WidgetManipImage::setBackgroundBrush(const QBrush& qBckgrndBrush)
 QBrush WidgetManipImage::backgroundBrush() const
 {
    return m_qBckgrndBrush;
+}
+
+void WidgetManipImage::mousePressEvent(QMouseEvent* pqEvent)
+{
+   // Drag mode : change the cursor's shape
+   if(  (pqEvent->button() == Qt::LeftButton)
+      &&(eGetStateMouse() == CSubStateMouse::DEFAULT)
+      &&(IsPointWidgetInImage(pqEvent->pos())))
+   {
+      m_qCoordMouseClicked = pqEvent->pos();
+      setCursor(Qt::DragMoveCursor);
+   }
+   else if(  (pqEvent->button() == Qt::LeftButton)
+           &&(eGetStateMouse() == CSubStateMouse::PIPETTE))
+   {
+      // Si mon pointeur est sur l'image ...
+      if(IsPointWidgetInImage(pqEvent->pos()))
+      {
+         QPointF qMousePointImageF = qMapWidgetToImage(pqEvent->pos());
+         QPoint  qMousePointImage(qFloor(qMousePointImageF.rx()),
+                                  qFloor(qMousePointImageF.ry()));
+         if(m_qImage.colorTable().isEmpty())
+         {
+            QColor qBckgrndColor = m_qBckgrndBrush.color();
+            if(m_qBckgrndBrush.style() == Qt::TexturePattern)
+            {
+               qBckgrndColor = Qt::white;
+            }
+            pMainWindow()->pWidgetManipColor()
+                         ->SetCurrentColor(
+                                          m_qImage.pixelColor(qMousePointImage),
+                                          qBckgrndColor);
+         }
+         else
+         {
+            pSubWindow()->pqWidgetPalette()
+                        ->SetIndElementSelectionne(
+                                       m_qImage.pixelIndex(qMousePointImage));
+         }
+      }
+   }
+
+   QAbstractScrollArea::mousePressEvent(pqEvent);
+}
+
+void WidgetManipImage::mouseMoveEvent(QMouseEvent* pqEvent)
+{
+   QString qstrLabel;
+
+   // On récupére les coordonnées de la souris dans l'image
+   QPointF qMousePointInWidgetF(pqEvent->pos());
+   QPointF qMousePointInImageF = qMapWidgetToImage(qMousePointInWidgetF);
+
+   // On indique quelle est la position de la souris et le code couleur du pixel
+   // correspondant
+   // Si mon pointeur est sur l'image ...
+   if(IsPointWidgetInImage(pqEvent->pos()))
+   {
+      // ... j'indique quelles sont les coordonnées de la souris (dans le repère
+      // de l'image)
+      qstrLabel = "Coord = (%1, %2)";
+      QPoint qMousePointInImage(qFloor(qMousePointInImageF.x()),
+                                qFloor(qMousePointInImageF.y()));
+      qstrLabel = qstrLabel.arg(qMousePointInImage.x())
+                           .arg(qMousePointInImage.y());
+      emit CoordMouse(qstrLabel);
+
+      // J'indique quelles sont les composantes de la couleur du pixel pointé
+      // par la souris
+      // Si mon image est palettisé ...
+      if(m_qImage.colorCount() != 0)
+      {
+         // ... je précise l'index dans la palette et je donne les composants de
+         // la couleur ...
+         QRgb qPixel = m_qImage.pixel(qMousePointInImage);
+         qstrLabel = "\t[%1] => (A = %2 R = %3 G = %4 B = %5)";
+         qstrLabel = qstrLabel.arg(m_qImage.pixelIndex(qMousePointInImage))
+                              .arg(qAlpha(qPixel))
+                              .arg(qRed(qPixel))
+                              .arg(qGreen(qPixel))
+                              .arg(qBlue(qPixel));
+      }
+      else
+      {
+         // ... sinon je précise simplement les composants du pixel
+         QRgb qPixel = m_qImage.pixel(qMousePointInImage);
+         qstrLabel = "A = %1 R = %2 G = %3 B = %4";
+         qstrLabel = qstrLabel.arg(qAlpha(qPixel))
+                              .arg(qRed(qPixel))
+                              .arg(qGreen(qPixel))
+                              .arg(qBlue(qPixel));
+      }
+      emit ColorPixel(qstrLabel);
+
+      // Je sélectionne le pointeur de souris correspondant à l'état de la
+      // machine d'état de WidgetManipColor et je déplace l'image si nécessaire
+      CSubStateMouse::e_state_machine eCurrentState = eGetStateMouse();
+      if(eCurrentState == CSubStateMouse::PEN)
+      {
+         setCursor(QCursor(QPixmap(":/Icones/Pen.png"), 0, 40));
+      }
+      else if(eCurrentState == CSubStateMouse::PIPETTE)
+      {
+         setCursor(QCursor(QPixmap(":/Icones/Pipette.png"), 0, 40));
+      }
+      else if(  (eCurrentState == CSubStateMouse::DEFAULT)
+              &&(cursor() == Qt::DragMoveCursor))
+      {
+         m_qTopLeftCorner += (pqEvent->pos() - m_qCoordMouseClicked);
+         m_qCoordMouseClicked = pqEvent->pos();
+         CheckCoordTopLeftImage();
+         viewport()->update();
+      }
+   }
+   else
+   {
+      qstrLabel = "";
+      emit CoordMouse(qstrLabel);
+      emit ColorPixel(qstrLabel);
+
+      unsetCursor();
+   }
+
+   pqEvent->accept();
+}
+
+void WidgetManipImage::mouseReleaseEvent(QMouseEvent* pqEvent)
+{
+   // Exit drag mode : change the cursor's shape
+   if(  (pqEvent->button() == Qt::LeftButton)
+      &&(eGetStateMouse() == CSubStateMouse::DEFAULT))
+   {
+      setCursor(Qt::ArrowCursor);
+   }
+
+   QAbstractScrollArea::mouseReleaseEvent(pqEvent);
 }
 
 void WidgetManipImage::resizeEvent(QResizeEvent *pqEvent)
@@ -178,6 +315,7 @@ CSubStateMouse::e_state_machine WidgetManipImage::eGetStateMouse(void)
 MainWindow* WidgetManipImage::pMainWindow(void) const
 {
    return dynamic_cast<MainWindow*>(parentWidget()->parentWidget()
+                                                  ->parentWidget()
                                                   ->parentWidget());
 }
 
@@ -236,4 +374,25 @@ void WidgetManipImage::CheckCoordTopLeftImage(void)
          m_qTopLeftCorner.ry() = iMin_y;
       }
    }
+}
+
+QPointF WidgetManipImage::qMapWidgetToImage(const QPointF qPointInWidgetF) const
+{
+   return ((qPointInWidgetF - m_qTopLeftCorner) / m_dScale);
+}
+
+QPointF WidgetManipImage::qMapImageToWidget(const QPointF qPointInImageF) const
+{
+   return (qPointInImageF * m_dScale + m_qTopLeftCorner);
+}
+
+bool WidgetManipImage::IsPointWidgetInImage(const QPoint& qPointInWidget) const
+{
+   // On récupére les coordonnées de la souris dans l'image
+   QPointF qMousePointInImageF = qMapWidgetToImage(qPointInWidget);
+
+   QRectF qRectImageF(QPoint(0, 0),
+                      m_qImage.size());
+
+   return qRectImageF.contains(qMousePointInImageF);
 }
