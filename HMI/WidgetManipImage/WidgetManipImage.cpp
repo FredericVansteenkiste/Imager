@@ -231,6 +231,75 @@ void WidgetManipImage::mouseReleaseEvent(QMouseEvent* pqEvent)
    QAbstractScrollArea::mouseReleaseEvent(pqEvent);
 }
 
+#if QT_CONFIG(wheelevent)
+void WidgetManipImage::wheelEvent(QWheelEvent* pqEvent)
+{
+   // On vérifie s'il s'agit d'un zoom rapide ou non
+   qreal dFactor(0);
+   if(pqEvent->modifiers() & Qt::ControlModifier)
+   {
+      dFactor = DEFAULT_ZOOM_CTRL_FACTOR;
+   }
+   else
+   {
+      dFactor = DEFAULT_ZOOM_FACTOR;
+   }
+
+   // On détermine quelle est la nouvelle valeur du zoom
+   qreal dNewScale(0.0);
+   if(pqEvent->delta() > 0)
+   {
+      if(m_dScale > SCALE_MAX)
+      {
+         return;
+      }
+
+      dNewScale = m_dScale * dFactor;
+      // Je m'assure qu'on repasse par l'unité
+      if(  (dNewScale > 1)
+         &&(m_dScale < 1))
+      {
+         dNewScale = 1;
+      }
+   }
+   else
+   {
+      if(m_dScale < (1.0 / SCALE_MAX))
+      {
+         return;
+      }
+
+      dNewScale = m_dScale / dFactor;
+      // Je m'assure qu'on repasse par l'unité
+      if(  (dNewScale < 1)
+         &&(m_dScale > 1))
+      {
+         dNewScale = 1;
+      }
+   }
+
+   // Je regarde où était la souris sur l'image par rapport au centre de la vue
+   QPointF qCoordMouseInImage(qMapWidgetToImage(pqEvent->pos()));
+
+   // J'applique la nouvelle valeur du zoom ...
+   m_dScale = dNewScale;
+   // ... et je repositionne mon image pour que le pixel de l'image sous la
+   // souris reste le même
+   QPointF qCoordNewPoint(qMapImageToWidget(qCoordMouseInImage));
+   m_qTopLeftCorner -= (   QPoint(qCoordNewPoint.rx(), qCoordNewPoint.ry())
+                         - pqEvent->pos());
+
+   // Je vérifie que l'image est toujours correctement placée dans le widget
+   CheckCoordTopLeftImage();
+
+   // Et je redessine le widget
+   viewport()->update();
+
+   // The event is processed
+   pqEvent->accept();
+}
+#endif
+
 void WidgetManipImage::resizeEvent(QResizeEvent *pqEvent)
 {
    CheckCoordTopLeftImage();
@@ -304,6 +373,8 @@ void WidgetManipImage::showContextMenu(const QPoint& qPos)
 void WidgetManipImage::ResetZoom(void)
 {
    m_dScale = 1;
+   CheckCoordTopLeftImage();
+   viewport()->update();
 }
 
 // La fonction suivante permet de retrouver l'état de la souris.

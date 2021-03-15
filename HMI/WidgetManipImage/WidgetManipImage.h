@@ -40,24 +40,30 @@ public:
 protected:
    // Overload this function to process mouse button pressed
    // mouse event
-   virtual void mousePressEvent(QMouseEvent* pqEvent);
+   void mousePressEvent(QMouseEvent* pqEvent) override;
 
    // Overload this function to process mouse moves
    // mouse move event
-   virtual void mouseMoveEvent(QMouseEvent* pqEvent);
+   void mouseMoveEvent(QMouseEvent* pqEvent) override;
 
    // Overload this function to process mouse button released
    // mouse event
-   virtual void mouseReleaseEvent(QMouseEvent* pqEvent);
+   void mouseReleaseEvent(QMouseEvent* pqEvent) override;
+
+#if QT_CONFIG(wheelevent)
+   // Overload this function to process mouse wheel event
+   // mouse wheel event
+   void wheelEvent(QWheelEvent* pqEvent) override;
+#endif
 
    // Overload this event to act on the resize event
-   virtual void resizeEvent(QResizeEvent *pqEvent) override;
+   void resizeEvent(QResizeEvent *pqEvent) override;
 
    // Overload this event to draw the widget
-   virtual void paintEvent(QPaintEvent* pqEvent) override;
+   void paintEvent(QPaintEvent* pqEvent) override;
 
    // Overload to intercept the event which are going to the scroll bar
-   virtual bool eventFilter(QObject* pqObj, QEvent* pqEvent) override;
+   bool eventFilter(QObject* pqObj, QEvent* pqEvent) override;
 
 private:
    // Le membre suivant enregistre l'image affichée par le widget.
