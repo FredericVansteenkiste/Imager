@@ -205,6 +205,7 @@ void WidgetManipImage::mouseMoveEvent(QMouseEvent* pqEvent)
          m_qCoordMouseClicked = pqEvent->pos();
          CheckCoordTopLeftImage();
          viewport()->update();
+         CheckScroolBar();
       }
    }
    else
@@ -292,6 +293,9 @@ void WidgetManipImage::wheelEvent(QWheelEvent* pqEvent)
    // Je vérifie que l'image est toujours correctement placée dans le widget
    CheckCoordTopLeftImage();
 
+   // Je contrôle la position des scrools bars
+   CheckScroolBar();
+
    // Et je redessine le widget
    viewport()->update();
 
@@ -303,6 +307,8 @@ void WidgetManipImage::wheelEvent(QWheelEvent* pqEvent)
 void WidgetManipImage::resizeEvent(QResizeEvent *pqEvent)
 {
    CheckCoordTopLeftImage();
+
+   CheckScroolBar();
 
    QAbstractScrollArea::resizeEvent(pqEvent);
 }
@@ -342,6 +348,22 @@ bool WidgetManipImage::eventFilter(QObject* pqObj, QEvent* pqEvent)
       if(pqEvent->type() == QEvent::Enter)
       {
          unsetCursor();
+      }
+
+      // Si les scrollbars ont du être redessinées, c'est que leur valeur a
+      // changé
+      if(pqEvent->type() == QEvent::Paint)
+      {
+         if(horizontalScrollBar()->isVisible())
+         {
+            m_qTopLeftCorner.rx() = -1 * horizontalScrollBar()->value();
+            viewport()->update();
+         }
+         if(verticalScrollBar()->isVisible())
+         {
+            m_qTopLeftCorner.ry() = -1 * verticalScrollBar()->value();
+            viewport()->update();
+         }
       }
 
       return false;
@@ -409,9 +431,8 @@ void WidgetManipImage::CheckCoordTopLeftImage(void)
    }
    else
    {
-      int iMin_x(-1 * qRound(  static_cast<qreal>(m_qImage.width()) * m_dScale
-                             - static_cast<qreal>(qSizeViewport.width())
-                             + 0.5));
+      int iMin_x(-1 * qCeil(   static_cast<qreal>(m_qImage.width()) * m_dScale
+                             - static_cast<qreal>(qSizeViewport.width())));
 
       if(m_qTopLeftCorner.rx() > 0)
       {
@@ -432,9 +453,8 @@ void WidgetManipImage::CheckCoordTopLeftImage(void)
    }
    else
    {
-      int iMin_y(-1 * qRound(  static_cast<qreal>(m_qImage.height()) * m_dScale
-                             - static_cast<qreal>(qSizeViewport.height())
-                             + 0.5));
+      int iMin_y(-1 * qCeil(   static_cast<qreal>(m_qImage.height()) * m_dScale
+                             - static_cast<qreal>(qSizeViewport.height())));
 
       if(m_qTopLeftCorner.ry() > 0)
       {
@@ -444,6 +464,54 @@ void WidgetManipImage::CheckCoordTopLeftImage(void)
       {
          m_qTopLeftCorner.ry() = iMin_y;
       }
+   }
+}
+
+void WidgetManipImage::CheckScroolBar(void)
+{
+   // On lit la taille du viewport
+   QSize qSizeViewport(viewport()->size());
+
+   // On lit la taille de l'image
+   QSize qSizeImage(qCeil(qreal(m_qImage.size().width())  * m_dScale),
+                    qCeil(qreal(m_qImage.size().height()) * m_dScale));
+
+   // On gére d'abord le scroolbar horizontal
+   if(qSizeViewport.width() >= qSizeImage.width())
+   {
+      // Alors le scrollbar est inutile
+      horizontalScrollBar()->hide();
+      horizontalScrollBar()->setRange(0, 0);
+   }
+   else
+   {
+      // Alors le scrollbar est utile
+      horizontalScrollBar()->show();
+
+      horizontalScrollBar()->setPageStep(qSizeViewport.width());
+      horizontalScrollBar()->setRange(0,
+                                        qSizeImage.width()
+                                      - qSizeViewport.width());
+      horizontalScrollBar()->setValue(-1 * m_qTopLeftCorner.rx());
+   }
+
+   // Puis on gére le scrollbar vertical
+   if(qSizeViewport.height() >= qSizeImage.height())
+   {
+      // Alors le scrollbar est inutile
+      verticalScrollBar()->hide();
+      verticalScrollBar()->setRange(0, 0);
+   }
+   else
+   {
+      // Alors le scrollbar est utile
+      verticalScrollBar()->show();
+
+      verticalScrollBar()->setPageStep(qSizeViewport.height());
+      verticalScrollBar()->setRange(0,
+                                        qSizeImage.height()
+                                      - qSizeViewport.height());
+      verticalScrollBar()->setValue(-1 * m_qTopLeftCorner.ry());
    }
 }
 

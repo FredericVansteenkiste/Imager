@@ -4,9 +4,9 @@
 
 #include <QtWidgets>
 
-#include "../../global.h"
-#include "../WidgetManipColor/CStateMouse.h"
-#include "../MainWindow.h"
+#include "../global.h"
+#include "WidgetManipColor/CStateMouse.h"
+#include "MainWindow.h"
 
 class MainWindow;
 class SubWindow;
@@ -97,6 +97,10 @@ private:
    // viewport et qu'elle soit centré si le viewport est plus grand que l'image
    // en agissant sur le point m_qTopLeftCorner
    void CheckCoordTopLeftImage(void);
+
+   // La méthode suivante permet de s'assurer que lorsqu'on bouge ou
+   // redimensionne une image, les scrollbars se repositionne correctement.
+   void CheckScroolBar(void);
 
    // Les méthodes suivantes permettent de convertir des coordonnées du widget
    // dans des coordonnées de l'image ou l'inverse.

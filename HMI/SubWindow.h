@@ -4,7 +4,7 @@
 
 #include <QtWidgets>
 
-#include "WidgetManipImage/WidgetManipImage.h"
+#include "WidgetManipImage.h"
 #include "WidgetPalette/WidgetPalette.h"
 #include "MainWindow.h"
 
