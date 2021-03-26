@@ -22,16 +22,6 @@ WidgetManipImage::WidgetManipImage(const QImage& qImage,
    // Initialize contextual menu
    setContextMenu();
 
-   // Sur windows, je dois activer les scrollbars en permance, sinon si j'ouvre
-   // un grand nombre d'image j'ai des resizeEvent qui sont continuellement
-   // émis. Causes inconnues : à explorer
-   // Ce problème n'apparait pas sous Linux; YES vive linux !!!
-#ifdef Q_OS_WIN
-   // Enable scroll bar to avoid an unwanted resize recursion
-   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-#endif   // Q_OS_WIN
-
    // J'installe le filtre sur les événements pour intercepter les événements
    // arrivant sur les barres de défilement.
    horizontalScrollBar()->installEventFilter(this);
@@ -248,7 +238,7 @@ void WidgetManipImage::wheelEvent(QWheelEvent* pqEvent)
 
    // On détermine quelle est la nouvelle valeur du zoom
    qreal dNewScale(0.0);
-   if(pqEvent->delta() > 0)
+   if(pqEvent->angleDelta().y() > 0)
    {
       if(m_dScale > SCALE_MAX)
       {
@@ -280,15 +270,17 @@ void WidgetManipImage::wheelEvent(QWheelEvent* pqEvent)
    }
 
    // Je regarde où était la souris sur l'image par rapport au centre de la vue
-   QPointF qCoordMouseInImage(qMapWidgetToImage(pqEvent->pos()));
+   QPointF qCoordMouseInImage(qMapWidgetToImage(pqEvent->position()));
 
    // J'applique la nouvelle valeur du zoom ...
    m_dScale = dNewScale;
    // ... et je repositionne mon image pour que le pixel de l'image sous la
    // souris reste le même
    QPointF qCoordNewPoint(qMapImageToWidget(qCoordMouseInImage));
-   m_qTopLeftCorner -= (   QPoint(qCoordNewPoint.rx(), qCoordNewPoint.ry())
-                         - pqEvent->pos());
+   m_qTopLeftCorner -= (   QPoint(qCoordNewPoint.rx(),
+                                  qCoordNewPoint.ry())
+                         - QPoint(pqEvent->position().rx(),
+                                  pqEvent->position().ry()));
 
    // Je vérifie que l'image est toujours correctement placée dans le widget
    CheckCoordTopLeftImage();
@@ -410,6 +402,12 @@ MainWindow* WidgetManipImage::pMainWindow(void) const
    return dynamic_cast<MainWindow*>(parentWidget()->parentWidget()
                                                   ->parentWidget()
                                                   ->parentWidget());
+}
+
+MdiArea* WidgetManipImage::pMdiArea(void) const
+{
+   return dynamic_cast<MdiArea*>(parentWidget()->parentWidget()
+                                               ->parentWidget());
 }
 
 SubWindow* WidgetManipImage::pSubWindow(void) const

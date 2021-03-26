@@ -11,6 +11,7 @@
 class WidgetManipImage;
 class WidgetPalette;
 class MainWindow;
+class MdiArea;
 
 class SubWindow : public QMdiSubWindow
 {
@@ -62,6 +63,9 @@ private:
    WidgetPalette*    m_pqWidgetPalette;
    QFileInfo         m_qFileInfo;
    QAction*          m_pqActionSelectImage;
+
+   // La méthode suivante permet de récupérer un pointeur sur la MdiArea
+   MdiArea* pMdiArea(void) const;
 
    // J'interdis toute forme de recopie de ma classe:
    SubWindow(const SubWindow&);

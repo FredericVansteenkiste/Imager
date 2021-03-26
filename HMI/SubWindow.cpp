@@ -15,7 +15,6 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
    QVariant qVarBckgrndBrush = qSettings.value(  m_qFileInfo.absoluteFilePath()
                                                + "/QBrush");
-   resize(qImage.size() + QSize(10, 10));
    if(qVarBckgrndBrush == QVariant())
    {
       // Si l'arrière plan n'a pas été définis, par défaut on le met en noir
@@ -44,6 +43,22 @@ SubWindow::SubWindow(const QFileInfo& qFileInfo,
    m_pqMainWindow->pWidgetManipColor()
                  ->pqPaletteLayout()
                  ->insertWidget(1, m_pqWidgetPalette);
+
+   // On redimensionne le widget
+      // On recherche la hauteur de la barre de titre
+   int iTitleBarHeight(style()->pixelMetric(QStyle::PM_TitleBarHeight));
+      // On recherche la largeur des frames
+   int iFrameWidth(style()->pixelMetric(QStyle::PM_MdiSubWindowFrameWidth));
+      // On recherche la taille de MdiArea
+   QSize qSizeMdiArea(pMdiArea()->size());
+
+      // Le widget contient complétement l'image
+   QSize qSizeWidget(qImage.size());
+   qSizeWidget.rheight() += iTitleBarHeight + iFrameWidth;
+   qSizeWidget.rwidth() += 2 * iFrameWidth;
+   qSizeWidget = qSizeWidget.expandedTo(QSize(150, 150));
+   qSizeWidget = qSizeWidget.boundedTo(qSizeMdiArea);
+   resize(qSizeWidget);
 }
 
 SubWindow::~SubWindow()
@@ -458,4 +473,10 @@ unsigned int SubWindow::uiNbColorDefined(void) const
 QImage& SubWindow::qImage(void) const
 {
    return m_pqWidgetManipImage->qImage();
+}
+
+MdiArea* SubWindow::pMdiArea(void) const
+{
+   return dynamic_cast<MdiArea*>(dynamic_cast<MainWindow*>(
+                                                   parent())->centralWidget());
 }

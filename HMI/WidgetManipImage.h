@@ -10,6 +10,7 @@
 
 class MainWindow;
 class SubWindow;
+class MdiArea;
 
 // Default zoom factors
 #define DEFAULT_ZOOM_FACTOR               (1.15)
@@ -91,6 +92,7 @@ private:
    // Les méthodes suivantes permettent de retrouver des pointeurs sur
    // MainWindow et SubWindow
    MainWindow* pMainWindow(void) const;
+   MdiArea*    pMdiArea(void) const;
    SubWindow*  pSubWindow(void) const;
 
    // La méthode suivante permet de s'assurer que l'image reste bien dans le
