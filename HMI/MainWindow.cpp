@@ -3,17 +3,18 @@
 #define STR_CURRENT_DIRECTORY "currentDirectory"
 
 MainWindow::MainWindow(QWidget* pqParent):QMainWindow(pqParent),
-                                          m_pActionReduceImage(nullptr),
-                                          m_pActionAppelMacro(nullptr),
-                                          m_pActionCreatePalette(nullptr),
-                                          m_pActionSupprPalette(nullptr),
-                                          m_pActionCheckedBckgr(nullptr),
-                                          m_pActionColoredBckgr(nullptr),
-                                          m_pWindowMenu(nullptr),
-                                          m_pActionsWindowMenu(nullptr),
-                                          m_pLabelCoordMouse(nullptr),
-                                          m_pLabelColorPixel(nullptr),
-                                          m_pWidgetManipColor(nullptr)
+                                          m_pqActionReduceImage(nullptr),
+                                          m_pqActionAppelMacro(nullptr),
+                                          m_pqActionCreatePalette(nullptr),
+                                          m_pqActionSupprPalette(nullptr),
+                                          m_pqActionCheckedBckgr(nullptr),
+                                          m_pqActionColoredBckgr(nullptr),
+                                          m_pqWindowMenu(nullptr),
+                                          m_pqActionsWindowMenu(nullptr),
+                                          m_pqLabelCoordMouse(nullptr),
+                                          m_pqLabelColorPixel(nullptr),
+                                          m_pqWidgetManipColor(nullptr),
+                                          m_pqMessagerie(nullptr)
 {
    SetMenuAndToolbar();
    CreateDockWindow();
@@ -38,7 +39,7 @@ MainWindow::~MainWindow()
 
 WidgetManipColor* MainWindow::pWidgetManipColor(void) const
 {
-   return m_pWidgetManipColor;
+   return m_pqWidgetManipColor;
 }
 
 void MainWindow::SetMenuAndToolbar(void)
@@ -58,40 +59,40 @@ void MainWindow::SetMenuAndToolbar(void)
    connect(pActionOpen, &QAction::triggered, this, &MainWindow::OpenFile);
 
 
-   m_pActionReduceImage = new QAction(QIcon(":/Icones/resize.png"),
+   m_pqActionReduceImage = new QAction(QIcon(":/Icones/resize.png"),
                                       tr("Resize"),
                                       this);
-   m_pActionReduceImage->setDisabled(true);
+   m_pqActionReduceImage->setDisabled(true);
 
 
-   m_pActionAppelMacro = new QAction(QIcon(":/Icones/Engrenages.png"),
+   m_pqActionAppelMacro = new QAction(QIcon(":/Icones/Engrenages.png"),
                                      tr("Macro"),
                                      this);
-   m_pActionAppelMacro->setDisabled(true);
+   m_pqActionAppelMacro->setDisabled(true);
 
-   m_pActionCreatePalette = new QAction(
+   m_pqActionCreatePalette = new QAction(
                                     QIcon(":/Icones/CreatePalette.png"),
                                     tr("Creating a palette for the picture(s)"),
                                     this);
-   m_pActionCreatePalette->setDisabled(true);
+   m_pqActionCreatePalette->setDisabled(true);
 
-   m_pActionSupprPalette = new QAction(
+   m_pqActionSupprPalette = new QAction(
                               QIcon(":/Icones/DeletePalette.png"),
                               tr("Deleting a palette for the picture(s)"),
                               this);
-   m_pActionSupprPalette->setDisabled(true);
+   m_pqActionSupprPalette->setDisabled(true);
 
-   m_pActionCheckedBckgr = new QAction(QIcon(ADRESS_CHECKED_BACKGROUND_PICTURE),
+   m_pqActionCheckedBckgr = new QAction(QIcon(ADRESS_CHECKED_BACKGROUND_PICTURE),
                                        tr("Checked background"),
                                        this);
-   m_pActionCheckedBckgr->setDisabled(true);
+   m_pqActionCheckedBckgr->setDisabled(true);
 
    QPixmap qPixmapColoredIcon(25, 25);
    qPixmapColoredIcon.fill(QColor(0, 0, 0));
-   m_pActionColoredBckgr = new QAction(QIcon(qPixmapColoredIcon),
+   m_pqActionColoredBckgr = new QAction(QIcon(qPixmapColoredIcon),
                                        tr("Colored background"),
                                        this);
-   m_pActionColoredBckgr->setDisabled(true);
+   m_pqActionColoredBckgr->setDisabled(true);
 
 #ifdef Q_OS_LINUX
    QAction* pActionAbout = new QAction(QIcon::fromTheme("help-about"),
@@ -113,19 +114,19 @@ void MainWindow::SetMenuAndToolbar(void)
    fileMenu->addAction(pActionExit);
 
    QMenu* macroMenu = menuBar()->addMenu(tr("&Macro"));
-   macroMenu->addAction(m_pActionReduceImage);
-   macroMenu->addAction(m_pActionAppelMacro);
-   macroMenu->addAction(m_pActionCreatePalette);
-   macroMenu->addAction(m_pActionSupprPalette);
+   macroMenu->addAction(m_pqActionReduceImage);
+   macroMenu->addAction(m_pqActionAppelMacro);
+   macroMenu->addAction(m_pqActionCreatePalette);
+   macroMenu->addAction(m_pqActionSupprPalette);
 
    QMenu* bckgrMenu = menuBar()->addMenu(tr("&Background"));
-   bckgrMenu->addAction(m_pActionCheckedBckgr);
-   bckgrMenu->addAction(m_pActionColoredBckgr);
+   bckgrMenu->addAction(m_pqActionCheckedBckgr);
+   bckgrMenu->addAction(m_pqActionColoredBckgr);
 
-   m_pWindowMenu = menuBar()->addMenu(tr("&Window"));
+   m_pqWindowMenu = menuBar()->addMenu(tr("&Window"));
    // Je crée un groupe action pour marquer quelles est la fenêtre sélectionnée.
-   m_pActionsWindowMenu = new QActionGroup(this);
-   m_pActionsWindowMenu->setExclusive(true);
+   m_pqActionsWindowMenu = new QActionGroup(this);
+   m_pqActionsWindowMenu->setExclusive(true);
 
    QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
    helpMenu->addAction(pActionAbout);
@@ -134,15 +135,15 @@ void MainWindow::SetMenuAndToolbar(void)
    fileToolBar->addAction(pActionOpen);
 
    QToolBar* macroToolBar = addToolBar(tr("Macro"));
-   macroToolBar->addAction(m_pActionReduceImage);
-   macroToolBar->addAction(m_pActionAppelMacro);
-   macroToolBar->addAction(m_pActionCreatePalette);
-   macroToolBar->addAction(m_pActionSupprPalette);
+   macroToolBar->addAction(m_pqActionReduceImage);
+   macroToolBar->addAction(m_pqActionAppelMacro);
+   macroToolBar->addAction(m_pqActionCreatePalette);
+   macroToolBar->addAction(m_pqActionSupprPalette);
 
-   m_pLabelCoordMouse = new QLabel("");
-   m_pLabelColorPixel = new QLabel("");
-   statusBar()->addPermanentWidget(m_pLabelCoordMouse);
-   statusBar()->addPermanentWidget(m_pLabelColorPixel);
+   m_pqLabelCoordMouse = new QLabel("");
+   m_pqLabelColorPixel = new QLabel("");
+   statusBar()->addPermanentWidget(m_pqLabelCoordMouse);
+   statusBar()->addPermanentWidget(m_pqLabelColorPixel);
 }
 
 void MainWindow::ReadSettings(void)
@@ -199,6 +200,11 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
    {
       if(bImageExist(qstrFile) == true)
       {
+         QListWidgetItem* pqMsg = new QListWidgetItem(
+                              QIcon(":/Icones/IconeErreur.png"),
+                              "The file \"" + qstrFile + "\" is already open");
+         emit SendMsg(pqMsg);
+
          continue;
       }
 
@@ -208,6 +214,12 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       QImage qImage(qFileInfo.absoluteFilePath());
       if(qImage.isNull() == true)
       {
+         QListWidgetItem* pqMsg = new QListWidgetItem(
+                                    QIcon(":/Icones/IconeErreur.png"),
+                                    "Impossible de lire l'image \"" + qstrFile
+                                    + "\" : format non reconnu");
+         emit SendMsg(pqMsg);
+
          continue;
       }
 
@@ -215,19 +227,19 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       SubWindow* pSubWindow = new SubWindow(qFileInfo, qImage, this);
       pqMdiArea->addSubWindow(pSubWindow);
 
-      m_pActionReduceImage->setEnabled(true);
-      m_pActionAppelMacro->setEnabled(true);
-      m_pActionCreatePalette->setEnabled(true);
-      m_pActionSupprPalette->setEnabled(true);
-      m_pActionCheckedBckgr->setEnabled(true);
-      m_pActionColoredBckgr->setEnabled(true);
-      connect(m_pActionReduceImage, &QAction::triggered,
+      m_pqActionReduceImage->setEnabled(true);
+      m_pqActionAppelMacro->setEnabled(true);
+      m_pqActionCreatePalette->setEnabled(true);
+      m_pqActionSupprPalette->setEnabled(true);
+      m_pqActionCheckedBckgr->setEnabled(true);
+      m_pqActionColoredBckgr->setEnabled(true);
+      connect(m_pqActionReduceImage, &QAction::triggered,
               pSubWindow,           &SubWindow::ResizeTransparency);
-      connect(m_pActionAppelMacro, &QAction::triggered,
+      connect(m_pqActionAppelMacro, &QAction::triggered,
               pSubWindow,          &SubWindow::AppelMacro);
-      connect(m_pActionCreatePalette, &QAction::triggered,
+      connect(m_pqActionCreatePalette, &QAction::triggered,
               pSubWindow,             &SubWindow::CreatePalette);
-      connect(m_pActionSupprPalette, &QAction::triggered,
+      connect(m_pqActionSupprPalette, &QAction::triggered,
               pSubWindow,            &SubWindow::SupprPalette);
       pSubWindow->show();
 
@@ -253,8 +265,8 @@ void MainWindow::OpenListFile(const QStringList& qlstrListFiles)
       connect(pActionSelectImage, &QAction::triggered,
               pSubWindow,         &SubWindow::SelectSubWindow);
       pSubWindow->SetActionSelectImage(pActionSelectImage);
-      m_pWindowMenu->addAction(pActionSelectImage);
-      m_pActionsWindowMenu->addAction(pActionSelectImage);
+      m_pqWindowMenu->addAction(pActionSelectImage);
+      m_pqActionsWindowMenu->addAction(pActionSelectImage);
       pActionSelectImage->setChecked(true);
 
       connect(pSubWindow, &SubWindow::closeWindow,
@@ -290,12 +302,12 @@ void MainWindow::CheckEnabledActionReduceImage(void)
 {
    if(centralWidget() == nullptr)
    {
-      m_pActionReduceImage->setEnabled(false);
-      m_pActionAppelMacro->setEnabled(false);
-      m_pActionCreatePalette->setEnabled(false);
-      m_pActionSupprPalette->setEnabled(false);
-      m_pActionCheckedBckgr->setEnabled(false);
-      m_pActionColoredBckgr->setEnabled(false);
+      m_pqActionReduceImage->setEnabled(false);
+      m_pqActionAppelMacro->setEnabled(false);
+      m_pqActionCreatePalette->setEnabled(false);
+      m_pqActionSupprPalette->setEnabled(false);
+      m_pqActionCheckedBckgr->setEnabled(false);
+      m_pqActionColoredBckgr->setEnabled(false);
 
       return;
    }
@@ -304,40 +316,40 @@ void MainWindow::CheckEnabledActionReduceImage(void)
                                                              ->subWindowList();
    if(qlpSubWindow.isEmpty() == true)
    {
-      m_pActionReduceImage->setEnabled(false);
-      m_pActionAppelMacro->setEnabled(false);
-      m_pActionCreatePalette->setEnabled(false);
-      m_pActionSupprPalette->setEnabled(false);
-      m_pActionCheckedBckgr->setEnabled(false);
-      m_pActionColoredBckgr->setEnabled(false);
+      m_pqActionReduceImage->setEnabled(false);
+      m_pqActionAppelMacro->setEnabled(false);
+      m_pqActionCreatePalette->setEnabled(false);
+      m_pqActionSupprPalette->setEnabled(false);
+      m_pqActionCheckedBckgr->setEnabled(false);
+      m_pqActionColoredBckgr->setEnabled(false);
    }
    else
    {
-      m_pActionReduceImage->setEnabled(true);
-      m_pActionAppelMacro->setEnabled(true);
-      m_pActionCreatePalette->setEnabled(true);
-      m_pActionSupprPalette->setEnabled(true);
-      m_pActionCheckedBckgr->setEnabled(true);
-      m_pActionColoredBckgr->setEnabled(true);
+      m_pqActionReduceImage->setEnabled(true);
+      m_pqActionAppelMacro->setEnabled(true);
+      m_pqActionCreatePalette->setEnabled(true);
+      m_pqActionSupprPalette->setEnabled(true);
+      m_pqActionCheckedBckgr->setEnabled(true);
+      m_pqActionColoredBckgr->setEnabled(true);
    }
 }
 
 void MainWindow::UpdateMenuWindow(SubWindow* pSubWindow)
 {
-   m_pWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
-   m_pActionsWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
+   m_pqWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
+   m_pqActionsWindowMenu->removeAction(pSubWindow->pqActionSelectImage());
 }
 
 void MainWindow::UpdateLabelCoordMouse(const QString& qstrLabel)
 {
    if(qstrLabel.isEmpty() == true)
    {
-      m_pLabelCoordMouse->hide();
+      m_pqLabelCoordMouse->hide();
    }
    else
    {
-      m_pLabelCoordMouse->setText(qstrLabel);
-      m_pLabelCoordMouse->show();
+      m_pqLabelCoordMouse->setText(qstrLabel);
+      m_pqLabelCoordMouse->show();
    }
 }
 
@@ -345,19 +357,24 @@ void MainWindow::UpdateLabelColorPixel(const QString& qstrLabel)
 {
    if(qstrLabel.isEmpty() == true)
    {
-      m_pLabelColorPixel->hide();
+      m_pqLabelColorPixel->hide();
    }
    else
    {
-      m_pLabelColorPixel->setText(qstrLabel);
-      m_pLabelColorPixel->show();
+      m_pqLabelColorPixel->setText(qstrLabel);
+      m_pqLabelColorPixel->show();
    }
+}
+
+void MainWindow::AddToMessagerie(QListWidgetItem* pqMessage)
+{
+   m_pqMessagerie->addItem(pqMessage);
 }
 
 void MainWindow::CleanStatusBar(void)
 {
-   m_pLabelCoordMouse->hide();
-   m_pLabelColorPixel->hide();
+   m_pqLabelCoordMouse->hide();
+   m_pqLabelColorPixel->hide();
 }
 
 void MainWindow::closeEvent(QCloseEvent* pqEvent)
@@ -381,27 +398,27 @@ void MainWindow::SubWindowActivated(QMdiSubWindow* pMdiSubWindow)
 {
    if(pMdiSubWindow == nullptr)
    {
-      m_pWidgetManipColor->hide();
+      m_pqWidgetManipColor->hide();
    }
    else
    {
       SubWindow* pSubWindow = dynamic_cast<SubWindow*>(pMdiSubWindow);
-      m_pWidgetManipColor->SetSizePalette(static_cast<unsigned int>(
+      m_pqWidgetManipColor->SetSizePalette(static_cast<unsigned int>(
                                             pSubWindow->qImage().colorCount()));
-      m_pWidgetManipColor->SetColorNumber(pSubWindow->uiNbColorDefined());
-      m_pWidgetManipColor->SetDepth(static_cast<unsigned int>(
+      m_pqWidgetManipColor->SetColorNumber(pSubWindow->uiNbColorDefined());
+      m_pqWidgetManipColor->SetDepth(static_cast<unsigned int>(
                                                 pSubWindow->qImage().depth()));
-      m_pWidgetManipColor->SetBitsUsedPerPixel(static_cast<unsigned int>(
+      m_pqWidgetManipColor->SetBitsUsedPerPixel(static_cast<unsigned int>(
                                         pSubWindow->qImage().bitPlaneCount()));
-      m_pWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
-      m_pWidgetManipColor->show();
+      m_pqWidgetManipColor->SetSizeImage(pSubWindow->qImage().size());
+      m_pqWidgetManipColor->show();
 
       QColor qColorBckGrnd = pSubWindow->GetWidgetManipImage()
                                         .backgroundBrush()
                                         .color();
       QPixmap qPixmapColoredIcon(25, 25);
       qPixmapColoredIcon.fill(qColorBckGrnd);
-      m_pActionColoredBckgr->setIcon(QIcon(qPixmapColoredIcon));
+      m_pqActionColoredBckgr->setIcon(QIcon(qPixmapColoredIcon));
    }
 }
 
@@ -456,13 +473,25 @@ void MainWindow::RedrawAllImage(void)
 
 void MainWindow::CreateDockWindow(void)
 {
-   QDockWidget* pqDock = new QDockWidget(tr("Color"), this);
-   pqDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+   /* On crée d'abord un dock widget qui contiendra la description de la */
+   /* palette                                                            */
+   QDockWidget* pqDockPalette = new QDockWidget(tr("Color"), this);
+   pqDockPalette->setFeatures(QDockWidget::NoDockWidgetFeatures);
 
-   m_pWidgetManipColor = new WidgetManipColor(this);
-   pqDock->setWidget(m_pWidgetManipColor);
+   m_pqWidgetManipColor = new WidgetManipColor(this);
+   pqDockPalette->setWidget(m_pqWidgetManipColor);
 
-   addDockWidget(Qt::RightDockWidgetArea, pqDock);
+   addDockWidget(Qt::RightDockWidgetArea, pqDockPalette);
+
+   /* On ajoute un dock widget pour la messagerie */
+   QDockWidget* pqDockMessagerie = new QDockWidget(tr("Messagerie"), this);
+   pqDockMessagerie->setFeatures(QDockWidget::NoDockWidgetFeatures);
+
+   m_pqMessagerie = new QListWidget();
+   m_pqMessagerie->setSelectionMode(QAbstractItemView::NoSelection);
+   pqDockMessagerie->setWidget(m_pqMessagerie);
+
+   addDockWidget(Qt::BottomDockWidgetArea, pqDockMessagerie);
 }
 
 void MainWindow::CreateCentralWidget(void)
@@ -477,12 +506,11 @@ void MainWindow::CreateConnection(void)
 
    if(pqMdiArea == nullptr)
    {
-      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
-                               "The central widget has not been created, "
-                               "impossible to do the connection",
-                               __FILE__,
-                               __LINE__);
-      throw Msg;
+      CException qException("The central widget has not been created, "
+                            "impossible to do the connection",
+                            __FILE__,
+                            __LINE__);
+      throw qException;
    }
    else
    {
@@ -491,27 +519,40 @@ void MainWindow::CreateConnection(void)
       connect(pqMdiArea, &QMdiArea::subWindowActivated,
               this,      &MainWindow::SubWindowActivated);
       connect(pqMdiArea,           &QMdiArea::subWindowActivated,
-              m_pWidgetManipColor, &WidgetManipColor::SubWindowActivated);
+              m_pqWidgetManipColor, &WidgetManipColor::SubWindowActivated);
       connect(pqMdiArea, &MdiArea::NewFileReceived,
               this,      &MainWindow::OpenListFile);
    }
 
-   if(  (m_pActionCheckedBckgr == nullptr)
-      ||(m_pActionColoredBckgr == nullptr))
+   if(  (m_pqActionCheckedBckgr == nullptr)
+      ||(m_pqActionColoredBckgr == nullptr))
    {
-      CExceptionMessagerie Msg(QIcon(":/Icones/IconeErreur.png"),
-                               "The action to colorized the background has not "
-                               "yet been defined, impossible to do the "
-                               "connection",
-                               __FILE__,
-                               __LINE__);
-      throw Msg;
+      CException qException("The action to colorized the background has not "
+                            "yet been defined, impossible to do the "
+                            "connection",
+                            __FILE__,
+                            __LINE__);
+      throw qException;
    }
    else
    {
-      connect(m_pActionCheckedBckgr, &QAction::triggered,
+      connect(m_pqActionCheckedBckgr, &QAction::triggered,
               pqMdiArea, &MdiArea::setCheckedBackground);
-      connect(m_pActionColoredBckgr, &QAction::triggered,
+      connect(m_pqActionColoredBckgr, &QAction::triggered,
               pqMdiArea, &MdiArea::askBackgroundColor);
+   }
+
+   if(m_pqMessagerie == nullptr)
+   {
+      CException qException("The messagerie has not yet been defined, "
+                            "impossible to do the connection",
+                            __FILE__,
+                            __LINE__);
+      throw qException;
+   }
+   else
+   {
+      connect(this, &MainWindow::SendMsg,
+              this, &MainWindow::AddToMessagerie);
    }
 }

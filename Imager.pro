@@ -29,7 +29,7 @@ SOURCES += main.cpp \
     HMI/WidgetManipColor/WidgetEditComponentColor.cpp \
     HMI/WidgetPalette/WidgetPaletteElement.cpp \
     HMI/WidgetPalette/WidgetPalette.cpp \
-    CExceptionMessagerie/CExceptionMessagerie.cpp \
+    CException/CException.cpp \
     global.cpp \
     HMI/WidgetManipColor/ComponentColorValidator.cpp
 
@@ -50,7 +50,7 @@ HEADERS += \
     global.h \
     HMI/WidgetPalette/WidgetPaletteElement.h \
     HMI/WidgetPalette/WidgetPalette.h \
-    CExceptionMessagerie/CExceptionMessagerie.h \
+    CException/CException.h \
     HMI/WidgetManipColor/ComponentColorValidator.h
 
 RESOURCES += \

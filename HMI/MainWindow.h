@@ -9,7 +9,7 @@
 #include "MdiArea.h"
 #include "SubWindow.h"
 #include "WidgetManipColor/WidgetManipColor.h"
-#include "../CExceptionMessagerie/CExceptionMessagerie.h"
+#include "../CException/CException.h"
 
 class WidgetManipColor;
 class SubWindow;
@@ -27,22 +27,24 @@ public:
 public slots:
    void OpenFiles(const QString& qstrFile);
    void UpdateLabelColorPixel(const QString& qstrLabel);
+   void AddToMessagerie(QListWidgetItem* pqMessage);
 
 protected:
    virtual void closeEvent(QCloseEvent* pqEvent);
 
 private:
-   QAction*          m_pActionReduceImage;
-   QAction*          m_pActionAppelMacro;
-   QAction*          m_pActionCreatePalette;
-   QAction*          m_pActionSupprPalette;
-   QAction*          m_pActionCheckedBckgr;
-   QAction*          m_pActionColoredBckgr;
-   QMenu*            m_pWindowMenu;
-   QActionGroup*     m_pActionsWindowMenu;
-   QLabel*           m_pLabelCoordMouse;
-   QLabel*           m_pLabelColorPixel;
-   WidgetManipColor* m_pWidgetManipColor;
+   QAction*          m_pqActionReduceImage;
+   QAction*          m_pqActionAppelMacro;
+   QAction*          m_pqActionCreatePalette;
+   QAction*          m_pqActionSupprPalette;
+   QAction*          m_pqActionCheckedBckgr;
+   QAction*          m_pqActionColoredBckgr;
+   QMenu*            m_pqWindowMenu;
+   QActionGroup*     m_pqActionsWindowMenu;
+   QLabel*           m_pqLabelCoordMouse;
+   QLabel*           m_pqLabelColorPixel;
+   WidgetManipColor* m_pqWidgetManipColor;
+   QListWidget*      m_pqMessagerie;
 
    void SetMenuAndToolbar(void);
    void ReadSettings(void);
@@ -68,6 +70,9 @@ private slots:
    void CleanStatusBar(void);
    void SubWindowActivated(QMdiSubWindow* pMdiSubWindow);
    void UpdateWidgetManipColor(void);
+
+signals:
+   void SendMsg(QListWidgetItem* pqMessage);
 };
 
 #endif // MAINWINDOW_H
