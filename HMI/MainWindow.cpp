@@ -151,6 +151,7 @@ void MainWindow::ReadSettings(void)
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
 
    restoreGeometry(qSettings.value("geometry").toByteArray());
+   restoreState(qSettings.value("windowState").toByteArray());
 }
 
 void MainWindow::WriteSettings(void) const
@@ -158,6 +159,7 @@ void MainWindow::WriteSettings(void) const
    QSettings qSettings(ORGANISATION, NAME_APPLICATION);
 
    qSettings.setValue("geometry", saveGeometry());
+   qSettings.setValue("windowState", saveState());
 }
 
 void MainWindow::OpenFiles(const QString& qstrFile)
@@ -492,6 +494,9 @@ void MainWindow::CreateDockWindow(void)
    pqDockMessagerie->setWidget(m_pqMessagerie);
 
    addDockWidget(Qt::BottomDockWidgetArea, pqDockMessagerie);
+
+   /* La palette occupe tout le coté droit de l'objet central */
+   setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 }
 
 void MainWindow::CreateCentralWidget(void)
