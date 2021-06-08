@@ -54,6 +54,7 @@ private:
    void CreateDockWindow(void);
    void CreateCentralWidget(void);
    void CreateConnection(void);
+   QImage qExtractImageFromRaw(const QFileInfo& qFileInfo);
 
    bool bImageExist(const QString& qstrAbsoluteFilePath) const;
 
