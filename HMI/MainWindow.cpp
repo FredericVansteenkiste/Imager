@@ -574,59 +574,83 @@ void MainWindow::CreateConnection(void)
 QImage MainWindow::qExtractImageFromRaw(const QFileInfo& qFileInfo)
 {
    QFile qFile(qFileInfo.absoluteFilePath());
-   qFile.open(QIODevice::ReadOnly);
+   if(qFile.open(QIODevice::ReadOnly) == false)
+   {
+      QListWidgetItem* pqMsg = new QListWidgetItem(
+                                 QIcon(":/Icones/IconeErreur.png"),
+                                 "Le fichier \"" + qFileInfo.absoluteFilePath()
+                                 + "\" n'a pas pu être ouvert");
+      emit SendMsg(pqMsg);
+
+      return QImage();
+   }
+
    QDataStream qDataFile(&qFile);
-   qint64 qint64Data;
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
+   qint64 qi64Title1;
+   qDataFile >> qi64Title1;
+   qint64 qi64Title2;
+   qDataFile >> qi64Title2;
+
+   // Si le format de l'image RAW n'est pas reconnue
+   // https://github.com/lclevy/libcraw2/blob/master/docs/cr2_poster.pdf
+   if(  ((qi64Title1 & 0xFFFFFF0000000000) != 0x49492A0000000000)
+      ||((qi64Title2 & 0xFFFFFF0000000000) != 0x4352020000000000))
+   {
+      QListWidgetItem* pqMsg = new QListWidgetItem(
+                                 QIcon(":/Icones/IconeErreur.png"),
+                                 "Le format raw du fichier \""
+                                 + qFileInfo.absoluteFilePath()
+                                 + "\" n'est pas reconnu");
+      emit SendMsg(pqMsg);
+
+      return QImage();
+   }
+
    // Je me mets au début de IFD#3
-   qint64Data =   ((qint64Data & 0xFF0000) >> 8)
-                | ((qint64Data & 0xFF000000) >> 24);
-   qFile.seek(qint64Data);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qint64 qint64Data2;
-   qDataFile >> qint64Data2;
-   qDebug() << QString::number(qint64Data2, 16);
-   qint64 qint64OffsetImage =   ((qint64Data2 & 0xFF00000000000000) >> 40)
-                              | ((qint64Data & 0xFF) << 8)
-                              | ((qint64Data & 0xFF00) >> 8);
+   qint64 qi64AdressIFD_3 =   ((qi64Title2 & 0xFF0000) >> 8)
+                            | ((qi64Title2 & 0xFF000000) >> 24);
+   qFile.seek(qi64AdressIFD_3);
+
+   // Je cherche l'adresse de l'image dans le fichier
+   qint64 qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qint64 qi64Temp2;
+   qDataFile >> qi64Temp2;
+   qint64 qint64OffsetImage =   ((qi64Temp2 & 0xFF00000000000000) >> 40)
+                              | ((qi64Temp1 & 0xFF) << 8)
+                              | ((qi64Temp1 & 0xFF00) >> 8);
    qDebug() << "Addresse = 0x" << QString::number(qint64OffsetImage, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qint64 qint64DataLength =   ((qint64Data & 0xFF0000) << 8)
-                             | ((qint64Data & 0xFF000000) >> 8)
-                             | ((qint64Data & 0xFF00000000) >> 24)
-                             | ((qint64Data & 0xFF0000000000) >> 40);
+
+   // Je cherche quelle est la quantitée de donnée
+   qint64 qint64DataLength;
+   qDataFile >> qint64DataLength;
+   qint64DataLength =   ((qint64DataLength & 0xFF0000) << 8)
+                      | ((qint64DataLength & 0xFF000000) >> 8)
+                      | ((qint64DataLength & 0xFF00000000) >> 24)
+                      | ((qint64DataLength & 0xFF0000000000) >> 40);
    qDebug() << "DataLength = 0x" << QString::number(qint64DataLength, 16) << " => " << qint64DataLength << " octets";
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qDataFile >> qint64Data;
-   qDebug() << QString::number(qint64Data, 16);
-   qint64 qint64NbreSlice =   ((qint64Data & 0xFF00000000) >> 24)
-                            | ((qint64Data & 0xFF0000000000) >> 40);
-   qint64 qint64WidthSlice =   ((qint64Data & 0xFF0000) >> 8)
-                             | ((qint64Data & 0xFF000000) >> 24);
-   qint64 qint64WidthLastSlice =   ((qint64Data & 0xFF) << 8)
-                                 | ((qint64Data & 0xFF00) >> 8);
+
+   // Je lis le nombre de slice qui constitue l'image et leur taille
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qDataFile >> qi64Temp1;
+   qint64 qint64NbreSlice =   ((qi64Temp1 & 0xFF00000000) >> 24)
+                            | ((qi64Temp1 & 0xFF0000000000) >> 40);
+   qint64 qint64WidthSlice =   ((qi64Temp1 & 0xFF0000) >> 8)
+                             | ((qi64Temp1 & 0xFF000000) >> 24);
+   qint64 qint64WidthLastSlice =   ((qi64Temp1 & 0xFF) << 8)
+                                 | ((qi64Temp1 & 0xFF00) >> 8);
    qDebug() << "(offset to [" << qint64NbreSlice << ", 0x" << QString::number(qint64WidthSlice, 16) << ", 0x" << QString::number(qint64WidthLastSlice, 16) << "])";
-   qint64 qint64WidthImage = qint64NbreSlice * qint64WidthSlice + qint64WidthLastSlice;
+
+   // J'en déduis la taille compléte de l'image
+   qint64 qint64WidthImage =   qint64NbreSlice * qint64WidthSlice
+                             + qint64WidthLastSlice;
    qDebug() << "The image size is (" << qint64WidthImage << ", 4051) => " << qint64WidthImage * 4051 << " pixels";
 
    qFile.close();
