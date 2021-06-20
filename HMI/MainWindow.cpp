@@ -653,6 +653,41 @@ QImage MainWindow::qExtractImageFromRaw(const QFileInfo& qFileInfo)
                              + qint64WidthLastSlice;
    qDebug() << "The image size is (" << qint64WidthImage << ", 4051) => " << qint64WidthImage * 4051 << " pixels";
 
+   // Je saute au début du codage de l'image
+   qFile.seek(qint64OffsetImage);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16) << endl << endl;
+
+   qFile.seek(qint64OffsetImage + 4);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qFile.seek(qint64OffsetImage + 4 + 0x42);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16) << endl << endl;
+
+   qFile.seek(qint64OffsetImage + 6);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16);
+   qDataFile >> qi64Temp1;
+   qDebug() << "0x" << QString::number(qi64Temp1, 16) << endl << endl;
    qFile.close();
 
    return QImage();
