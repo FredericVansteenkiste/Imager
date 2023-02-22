@@ -203,46 +203,18 @@ void SubWindow::ResizeTransparency(void)
 void SubWindow::AppelMacro(void)
 {
    // Changement de taille
-//   int x(206);
-//   int y(725);
-//   int iWidth(68);
-//   int iHeight(52);
-//   m_qImage = m_qImage.copy(x, y, iWidth, iHeight);
-//   QString qstrSuffix = m_qFileInfo.suffix();
-//   QString qstrFileName = m_qFileInfo.fileName();
-//   qstrFileName.replace("." + qstrSuffix, "")
-//               .append("_")
-//               .append(QString::number(x))
-//               .append("x")
-//               .append(QString::number(y))
-//               .append(".")
-//               .append(qstrSuffix);
-//   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-//   m_qImage.save(m_qFileInfo.absoluteFilePath());
-
-//   setWindowTitle(m_qFileInfo.fileName());
-//   m_pqWidgetManipImage->setImage(m_qImage);
-//   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
-
-   // Changement de couleur
-   for(int i = 0; i < qImage().width(); i++)
-   {
-      for(int j = 0; j < qImage().height(); j++)
-      {
-         QColor qColorPixel(qImage().pixelColor(i, j));
-         if(qColorPixel.red() != 0)
-         {
-            qColorPixel.setRed(227);
-            qColorPixel.setGreen(90);
-            qColorPixel.setBlue(0);
-            qImage().setPixelColor(i, j, qColorPixel);
-         }
-      }
-   }
+   int x(71);
+   int y(364);
+   int iWidth(98);
+   int iHeight(70);
+   qImage() = qImage().copy(x, y, iWidth, iHeight);
    QString qstrSuffix = m_qFileInfo.suffix();
    QString qstrFileName = m_qFileInfo.fileName();
    qstrFileName.replace("." + qstrSuffix, "")
-               .append("EnRouge")
+               .append("_")
+               .append(QString::number(x))
+               .append("x")
+               .append(QString::number(y))
                .append(".")
                .append(qstrSuffix);
    m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
@@ -251,21 +223,48 @@ void SubWindow::AppelMacro(void)
    setWindowTitle(m_qFileInfo.fileName());
    m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 
+   // Changement de couleur
+//   for(int i = 0; i < qImage().width(); i++)
+//   {
+//      for(int j = 0; j < qImage().height(); j++)
+//      {
+//         QColor qColorPixel(qImage().pixelColor(i, j));
+//         if(qColorPixel.red() != 0)
+//         {
+//            qColorPixel.setRed(227);
+//            qColorPixel.setGreen(90);
+//            qColorPixel.setBlue(0);
+//            qImage().setPixelColor(i, j, qColorPixel);
+//         }
+//      }
+//   }
+//   QString qstrSuffix = m_qFileInfo.suffix();
+//   QString qstrFileName = m_qFileInfo.fileName();
+//   qstrFileName.replace("." + qstrSuffix, "")
+//               .append("EnRouge")
+//               .append(".")
+//               .append(qstrSuffix);
+//   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
+//   qImage().save(m_qFileInfo.absoluteFilePath());
+
+//   setWindowTitle(m_qFileInfo.fileName());
+//   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
+
    // Inversion du haut
 //   int x(0);
 //   int y(0);
 //   int iWidth(65);
 //   int iHeight(40);
-//   QImage qImage = m_qImage.copy(x, y, iWidth, iHeight);
-//   for(int i = 0; i < m_qImage.width(); i++)
+//   QImage qCopyImage = qImage().copy(x, y, iWidth, iHeight);
+//   for(int i = 0; i < qCopyImage.width(); i++)
 //   {
 //      for(int j = 0; j < 25; j++)
 //      {
-//         QRgb qPixel(m_qImage.pixel(m_qImage.width() - (1+i), j));
-//         qImage.setPixel(i, j, qPixel);
+//         QRgb qPixel(qCopyImage.pixel(qCopyImage.width() - (1+i), j));
+//         qCopyImage.setPixel(i, j, qPixel);
 //      }
 //   }
-//   m_qImage = qImage;
+//   qImage() = qCopyImage;
 //   QString qstrSuffix = m_qFileInfo.suffix();
 //   QString qstrFileName = m_qFileInfo.fileName();
 //   qstrFileName.replace("." + qstrSuffix, "")
@@ -276,10 +275,9 @@ void SubWindow::AppelMacro(void)
 //               .append(".")
 //               .append(qstrSuffix);
 //   m_qFileInfo.setFile(m_qFileInfo.absolutePath() + "/" + qstrFileName);
-//   m_qImage.save(m_qFileInfo.absoluteFilePath());
+//   qImage().save(m_qFileInfo.absoluteFilePath());
 
 //   setWindowTitle(m_qFileInfo.fileName());
-//   m_pqWidgetManipImage->setImage(m_qImage);
 //   m_pqActionSelectImage->setText(m_qFileInfo.fileName());
 }
 

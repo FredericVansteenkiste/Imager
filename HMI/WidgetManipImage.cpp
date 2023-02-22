@@ -487,9 +487,8 @@ void WidgetManipImage::CheckScroolBar(void)
       horizontalScrollBar()->show();
 
       horizontalScrollBar()->setPageStep(qSizeViewport.width());
-      horizontalScrollBar()->setRange(0,
-                                        qSizeImage.width()
-                                      - qSizeViewport.width());
+      horizontalScrollBar()->setRange(0,  qSizeImage.width()
+                                        - qSizeViewport.width());
       horizontalScrollBar()->setValue(-1 * m_qTopLeftCorner.rx());
    }
 
@@ -506,8 +505,7 @@ void WidgetManipImage::CheckScroolBar(void)
       verticalScrollBar()->show();
 
       verticalScrollBar()->setPageStep(qSizeViewport.height());
-      verticalScrollBar()->setRange(0,
-                                        qSizeImage.height()
+      verticalScrollBar()->setRange(0,  qSizeImage.height()
                                       - qSizeViewport.height());
       verticalScrollBar()->setValue(-1 * m_qTopLeftCorner.ry());
    }

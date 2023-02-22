@@ -573,13 +573,12 @@ void MainWindow::CreateConnection(void)
 
 QImage MainWindow::qExtractImageFromRaw(const QFileInfo& qFileInfo)
 {
-   // We use the program dcraw to convert the image from CR2 to ppm
-   QString qConvertFile(qFileInfo.absolutePath() + "/"
-                        + qFileInfo.completeBaseName() + ".ppm");
-   QString qInstruction("dcraw " + qFileInfo.absoluteFilePath());
 
-   // On convertie l'image de CR2 à ppm
-   int iResult = QProcess::execute(qInstruction);
+   // We use the program dcraw to convert the image from CR2 to ppm
+    QString qInstruction("dcraw " + qFileInfo.absoluteFilePath());
+
+    // On convertie l'image de CR2 à ppm
+   int iResult = QProcess::execute("dcraw", QStringList(qFileInfo.absoluteFilePath()));
 
    if(iResult == -2)
    {
@@ -614,10 +613,12 @@ QImage MainWindow::qExtractImageFromRaw(const QFileInfo& qFileInfo)
    }
 
    // On créé l'image à partir du fichier convertie
+   QString qConvertFile(qFileInfo.absolutePath() + "/"
+                        + qFileInfo.completeBaseName() + ".ppm");
    QImage qImage(qConvertFile);
 
    // Et on supprime l'image intermédiaire devenue inutile
-   QProcess::execute("rm " + qConvertFile);
+   QProcess::execute("rm", QStringList(qConvertFile));
 
    return qImage;
 }
